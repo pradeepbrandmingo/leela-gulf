@@ -1,0 +1,415 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   LEELA GULF FZC - PRODUCTION TYPOGRAPHY DESIGN SYSTEM
+   Single Source of Truth for Fonts, Sizes, Line Heights, and Letter Spacing.
+   
+   If in future client changes font size or font family, 
+   update ONLY the CSS variables in :root below.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. FONT FAMILIES (Single Source of Truth)
+     ------------------------------------------------------------------------ */
+  /* Heading & CTA Font: Modulus Pro (with clean system fallbacks) */
+  --font-family-modulus-pro: "Modulus Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Subheading & Body Font: Raleway (from Next.js google font loader) */
+  --font-family-raleway: var(--font-raleway), "Raleway", sans-serif;
+
+  /* Primary Typography Mappings */
+  --font-family-heading: var(--font-family-modulus-pro);
+  --font-family-subheading: var(--font-family-raleway);
+  --font-family-cta: var(--font-family-modulus-pro);
+  --font-family-body: var(--font-family-raleway);
+
+  /* ------------------------------------------------------------------------
+     2. TYPOGRAPHY TOKENS (From Discovery Spec Sheet)
+     ------------------------------------------------------------------------ */
+
+  /* [HEADING] Modulus Pro | 48pt | Tracking: -25 (-0.025em) | Leading: 47pt */
+  --heading-font-family: var(--font-family-heading);
+  --heading-font-size: 48px;
+  --heading-line-height: 47px;
+  --heading-letter-spacing: -0.025em;
+  --heading-font-weight: 500;
+
+  /* [SUBHEADING] Raleway | 28pt | Tracking: -25 (-0.025em) | Leading: 27pt | Light Italic */
+  --subheading-font-family: var(--font-family-subheading);
+  --subheading-font-size: 28px;
+  --subheading-line-height: 27px;
+  --subheading-letter-spacing: -0.025em;
+  --subheading-font-weight: 300;
+  --subheading-font-style: italic;
+
+  /* [IMPORTANT TEXT / CALL TO ACTION] | 18pt | Tracking: 200 (0.2em) | Leading: 30pt | Uppercase */
+  --cta-font-family: var(--font-family-cta);
+  --cta-font-size: 18px;
+  --cta-line-height: 30px;
+  --cta-letter-spacing: 0.2em;
+  --cta-font-weight: 600;
+  --cta-text-transform: uppercase;
+
+  /* [PARAGRAPH / BODY COPY] | Proportional body copy */
+  --body-font-family: var(--font-family-body);
+  --body-font-size: 16px;
+  --body-line-height: 26px;
+  --body-letter-spacing: 0em;
+  --body-font-weight: 400;
+
+  /* Small / Caption Text */
+  --caption-font-size: 14px;
+  --caption-line-height: 20px;
+  --caption-letter-spacing: 0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   Local Font-Face Setup for Modulus Pro (Full OpenType Support)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Extra Light.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Semi Bold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Extra Bold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Modulus Pro";
+  src: url("/fonts/Arkitype - Modulus Pro Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   LEELA GULF FZC - PRODUCTION COLOR PALETTE & ANIMATION DESIGN SYSTEM
+   Single Source of Truth for Colors, Running Gold Shimmer, & Animations.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. BRAND COLOR TOKENS (From Client Discovery Specification)
+     ------------------------------------------------------------------------ */
+
+  /* PRIMARY COLOR (Rich Dark / Enterprise Charcoal) */
+  --color-primary: #1a1a1a;
+  --color-primary-light: #262626;
+  --color-primary-dark: #0f0f0f;
+
+  /* SECONDARY COLOR PALETTE (Gold / Warm Ochre Family) */
+  --color-secondary-main: #c4842f;
+  --color-secondary-light: #e8b958;
+  --color-secondary-dark: #9e6417;
+  --color-secondary-accent: #f7d27e;
+  --color-secondary-bg: #fbf6ee;
+
+  /* GOLD GRADIENT PRESETS */
+  --gold-gradient-static: linear-gradient(135deg, #c4842f 0%, #f7d27e 50%, #9e6417 100%);
+  --gold-gradient-animated: linear-gradient(90deg, #c4842f 0%, #f7d27e 25%, #e09b2d 50%, #fce4a6 75%, #c4842f 100%);
+
+  /* NEUTRAL COLOR PALETTE (Exact Spec Hex Codes) */
+  --color-neutral-900: #1D1F21; /* Dark Charcoal Base */
+  --color-neutral-800: #393C3F; /* Medium Slate */
+  --color-neutral-700: #575B5E; /* Muted Slate */
+  --color-neutral-600: #787C7F; /* Mid Gray */
+  --color-neutral-500: #9FA2A5; /* Light Gray */
+  --color-neutral-300: #C3C7C9; /* Border Gray */
+  --color-neutral-100: #F0F1F2; /* Off-White Surface */
+  --color-neutral-50:  #FAFAFA; /* Pure Off-White */
+  --color-white:       #FFFFFF;
+
+  /* SEMANTIC STATE COLORS */
+  --color-success: #059669;
+  --color-error:   #DC2626;
+  --color-warning: #D97706;
+}
+
+/* ==========================================================================
+   GLOBAL SMOOTH SCROLLING & BASE REVEAL SETTINGS
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for Luxury Enterprise Feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-primary-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-800);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary-main);
+}
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS (Running Gold Shimmer & Smooth Section Reveals)
+   ========================================================================== */
+
+/* Running Gold Gradient Animation */
+@keyframes goldGradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Smooth Fade In Up Animation for Sections */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Infinite Marquee Scroll Keyframes - Slow Luxury Glide */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marqueeScrollReverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 120s linear infinite;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marqueeScrollReverse 120s linear infinite;
+}
+
+.animate-marquee:hover,
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+/* Subtle Shimmer Glow pulse */
+@keyframes goldPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(196, 132, 47, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(247, 210, 126, 0.55);
+  }
+}
+
+/* ==========================================================================
+   GLOBAL UTILITY CLASSES (Use Anywhere in Web Application)
+   ========================================================================== */
+
+/* 1. ANIMATED GOLD TEXT (Heading & Accent Titles) */
+.text-gradient-gold-animated {
+  background: var(--gold-gradient-animated);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldGradientMove 6s ease infinite;
+}
+
+/* Static Gold Text & Background */
+.text-gold {
+  color: var(--color-secondary-main);
+}
+.bg-gold {
+  background-color: var(--color-secondary-main);
+}
+.text-gold-light {
+  color: var(--color-secondary-accent);
+}
+
+/* 2. ANIMATED RUNNING GOLD BUTTONS & BACKGROUNDS */
+.bg-gradient-gold-animated {
+  background: var(--gold-gradient-animated);
+  background-size: 300% 300%;
+  animation: goldGradientMove 5s ease infinite;
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.bg-gradient-gold-animated:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(196, 132, 47, 0.4);
+}
+
+/* Running Border Effect */
+.border-gradient-gold-animated {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--color-primary), var(--color-primary)) padding-box,
+              var(--gold-gradient-animated) border-box;
+  background-size: 100% 100%, 300% 300%;
+  animation: goldGradientMove 6s ease infinite;
+}
+
+/* 3. SECTION ENTRANCE ANIMATION CLASSES */
+.animate-section-reveal {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   TAILWIND UTILITY EXTENSIONS FOR COLORS
+   ========================================================================== */
+@utility bg-brand-primary {
+  background-color: var(--color-primary);
+}
+
+@utility bg-brand-neutral-100 {
+  background-color: var(--color-neutral-100);
+}
+
+@utility text-brand-gold {
+  color: var(--color-secondary-main);
+}
+
+@utility text-brand-neutral-700 {
+  color: var(--color-neutral-700);
+}
+
+/* Headings */
+h1, .heading-primary, .heading-1 {
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size);
+  line-height: var(--heading-line-height);
+  letter-spacing: var(--heading-letter-spacing);
+  font-weight: var(--heading-font-weight);
+}
+
+/* Subheadings */
+h2, .subheading-primary, .subheading-1 {
+  font-family: var(--subheading-font-family);
+  font-size: var(--subheading-font-size);
+  line-height: var(--subheading-line-height);
+  letter-spacing: var(--subheading-letter-spacing);
+  font-weight: var(--subheading-font-weight);
+  font-style: var(--subheading-font-style);
+}
+
+/* CTA / Important Text */
+.text-cta, .cta-text, .btn-cta-text {
+  font-family: var(--cta-font-family);
+  font-size: var(--cta-font-size);
+  line-height: var(--cta-line-height);
+  letter-spacing: var(--cta-letter-spacing);
+  font-weight: var(--cta-font-weight);
+  text-transform: var(--cta-text-transform);
+}
+
+/* Body Paragraphs */
+p, .body-copy {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--body-letter-spacing);
+  font-weight: var(--body-font-weight);
+}
+
+/* Captions / Small Notes */
+small, .text-caption {
+  font-size: var(--caption-font-size);
+  line-height: var(--caption-line-height);
+  letter-spacing: var(--caption-letter-spacing);
+}
+
+/* ==========================================================================
+   TAILWIND UTILITY EXTENSIONS (For inline utility class usage)
+   ========================================================================== */
+@utility font-heading {
+  font-family: var(--heading-font-family);
+}
+
+@utility font-subheading {
+  font-family: var(--subheading-font-family);
+}
+
+@utility font-cta {
+  font-family: var(--cta-font-family);
+}
+
+@utility font-body {
+  font-family: var(--body-font-family);
+}
