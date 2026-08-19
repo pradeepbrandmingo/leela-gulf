@@ -67,8 +67,52 @@ export const en = {
 
   // Client Logos Slider Section
   clientSlider: {
-    titlePrefix: "Worldwide 1300+ Trusted Clients with ",
+    titlePrefix: "Worldwide 1300+ Trusted Clients with",
     titleHighlight: "Leela Gulf",
+  },
+
+  // Mission & Vision Section
+  missionVision: {
+    titlePrefix: "Our",
+    titleHighlight: "Mission & Vision",
+    missionTitle: "Mission",
+    missionIndex: "— 01",
+    missionDesc: "At Leela Partner Limited, We Are Committed To Becoming A Globally Recognized, Sustainable, And Customer-Centric Leader In The Chemical Industry. Our Mission Is To Deliver World-Class Products And Integrated Solutions, Continually Evolving To Meet Dynamic Market Needs.",
+    visionTitle: "Vision",
+    visionIndex: "— 02",
+    visionDesc: "At Leela Partner Limited, We Are Committed To Becoming A Globally Recognized, Sustainable, And Customer-Centric Leader In The Chemical Industry. Our Mission Is To Deliver World-Class Products And Integrated Solutions, Continually Evolving To Meet Dynamic Market Needs.",
+  },
+
+  // About Us Stats Counter Banner Section
+  aboutStats: {
+    stat1Number: 85,
+    stat1Suffix: "+",
+    stat1Label: "Countries",
+    stat2Number: 800,
+    stat2Suffix: "+",
+    stat2Label: "TEUs / Quarter",
+    stat3Number: 11,
+    stat3Suffix: "",
+    stat3Label: "Core Industrial Sectors",
+    stat4Number: 1300,
+    stat4Suffix: "+",
+    stat4Label: "Trusted Clients",
+  },
+
+  // Guiding Principles Section
+  guidingPrinciples: {
+    titlePrefix: "Our Guiding",
+    titleHighlight: "Principles",
+    p1Title: "1. Quality Without Compromise",
+    p1Desc: "Every batch is sourced from pre-audited facilities and tested against strict specifications. If it doesn't meet spec, it doesn't ship.",
+    p2Title: "2. Precision in Every Shipment",
+    p2Desc: "Pre-cleared documentation, coordinated port operations, and optimized trade routes keep your supply chain predictable — no surprises, no delays.",
+    p3Title: "3. Manufacturer Relationships, Not Middleman Guesswork",
+    p3Desc: "We work directly with audited primary manufacturers, visiting facilities and monitoring output to protect your pipeline at the source.",
+    p4Title: "4. Expertise Across Every Vertical",
+    p4Desc: "From pharmaceutical-grade intermediates to technical-grade solvents, our technical team matches specifications to your exact requirements across all 11 industries we serve.",
+    p5Title: "5. Delivery You Can Build a Schedule Around",
+    p5Desc: "We eliminate transit friction — securing vessel space early, clearing documentation in advance, and tracking every container from origin to plant.",
   },
 
   // Footer & Generic

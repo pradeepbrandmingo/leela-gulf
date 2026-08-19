@@ -6,13 +6,13 @@ import { useLanguage } from "@/context/LanguageContext";
 /**
  * AboutHero - Hero section component for the About Us page.
  * Uses /images/aboutpage/aboutnew.png with zero-gap 100% natural aspect ratio fit.
- * Clean, subtle lighting around image box without heavy dark shadow-2xl halos.
+ * Standardized global section spacing (pb-10 sm:pb-14 md:pb-16).
  */
 export default function AboutHero() {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="relative w-full bg-[var(--color-primary)] text-white overflow-hidden pt-28 sm:pt-32 md:pt-36 pb-12 sm:pb-14 md:pb-16">
+    <section className="relative w-full bg-[var(--color-primary)] text-white overflow-hidden pt-28 sm:pt-32 md:pt-36 pb-10 sm:pb-14 md:pb-16">
       {/* Subtle Ambient Background Gradient Glow */}
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-[var(--color-secondary-main)]/5 rounded-full blur-3xl pointer-events-none" />
 

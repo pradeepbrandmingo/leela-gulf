@@ -3,9 +3,6 @@
 /* ==========================================================================
    LEELA GULF FZC - PRODUCTION TYPOGRAPHY DESIGN SYSTEM
    Single Source of Truth for Fonts, Sizes, Line Heights, and Letter Spacing.
-   
-   If in future client changes font size or font family, 
-   update ONLY the CSS variables in :root below.
    ========================================================================== */
 
 :root {
@@ -35,13 +32,13 @@
   --heading-letter-spacing: -0.025em;
   --heading-font-weight: 500;
 
-  /* [SUBHEADING] Raleway | 28pt | Tracking: -25 (-0.025em) | Leading: 27pt | Light Italic */
+  /* [SUBHEADING] Raleway | 28pt | Tracking: -25 (-0.025em) | Leading: 27pt */
   --subheading-font-family: var(--font-family-subheading);
   --subheading-font-size: 28px;
   --subheading-line-height: 27px;
   --subheading-letter-spacing: -0.025em;
   --subheading-font-weight: 300;
-  --subheading-font-style: italic;
+  --subheading-font-style: normal;
 
   /* [IMPORTANT TEXT / CALL TO ACTION] | 18pt | Tracking: 200 (0.2em) | Leading: 30pt | Uppercase */
   --cta-font-family: var(--font-family-cta);
@@ -137,10 +134,6 @@
    ========================================================================== */
 
 :root {
-  /* ------------------------------------------------------------------------
-     1. BRAND COLOR TOKENS (From Client Discovery Specification)
-     ------------------------------------------------------------------------ */
-
   /* PRIMARY COLOR (Rich Dark / Enterprise Charcoal) */
   --color-primary: #1a1a1a;
   --color-primary-light: #262626;
@@ -158,14 +151,14 @@
   --gold-gradient-animated: linear-gradient(90deg, #c4842f 0%, #f7d27e 25%, #e09b2d 50%, #fce4a6 75%, #c4842f 100%);
 
   /* NEUTRAL COLOR PALETTE (Exact Spec Hex Codes) */
-  --color-neutral-900: #1D1F21; /* Dark Charcoal Base */
-  --color-neutral-800: #393C3F; /* Medium Slate */
-  --color-neutral-700: #575B5E; /* Muted Slate */
-  --color-neutral-600: #787C7F; /* Mid Gray */
-  --color-neutral-500: #9FA2A5; /* Light Gray */
-  --color-neutral-300: #C3C7C9; /* Border Gray */
-  --color-neutral-100: #F0F1F2; /* Off-White Surface */
-  --color-neutral-50:  #FAFAFA; /* Pure Off-White */
+  --color-neutral-900: #1D1F21;
+  --color-neutral-800: #393C3F;
+  --color-neutral-700: #575B5E;
+  --color-neutral-600: #787C7F;
+  --color-neutral-500: #9FA2A5;
+  --color-neutral-300: #C3C7C9;
+  --color-neutral-100: #F0F1F2;
+  --color-neutral-50:  #FAFAFA;
   --color-white:       #FFFFFF;
 
   /* SEMANTIC STATE COLORS */
@@ -207,7 +200,6 @@ body {
    KEYFRAME ANIMATIONS (Running Gold Shimmer & Smooth Section Reveals)
    ========================================================================== */
 
-/* Running Gold Gradient Animation */
 @keyframes goldGradientMove {
   0% {
     background-position: 0% 50%;
@@ -220,7 +212,6 @@ body {
   }
 }
 
-/* Smooth Fade In Up Animation for Sections */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -232,7 +223,6 @@ body {
   }
 }
 
-/* Infinite Marquee Scroll Keyframes - Slow Luxury Glide */
 @keyframes marqueeScroll {
   0% {
     transform: translateX(0%);
@@ -266,16 +256,6 @@ body {
 .animate-marquee:hover,
 .animate-marquee-reverse:hover {
   animation-play-state: paused;
-}
-
-/* Subtle Shimmer Glow pulse */
-@keyframes goldPulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(196, 132, 47, 0.25);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(247, 210, 126, 0.55);
-  }
 }
 
 /* ==========================================================================
@@ -317,99 +297,59 @@ body {
   box-shadow: 0 8px 24px rgba(196, 132, 47, 0.4);
 }
 
-/* Running Border Effect */
-.border-gradient-gold-animated {
-  border: 1px solid transparent;
-  background: linear-gradient(var(--color-primary), var(--color-primary)) padding-box,
-              var(--gold-gradient-animated) border-box;
-  background-size: 100% 100%, 300% 300%;
-  animation: goldGradientMove 6s ease infinite;
-}
-
-/* 3. SECTION ENTRANCE ANIMATION CLASSES */
-.animate-section-reveal {
-  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* 3. GLOBAL SECTION HEADING BASE CSS CLASS (Strict Single Source of Truth) */
+.heading-section, .h2-global {
+  font-family: var(--font-family-heading) !important;
+  font-weight: 500;
+  font-style: normal !important;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
 }
 
 /* ==========================================================================
-   TAILWIND UTILITY EXTENSIONS FOR COLORS
+   TAILWIND UTILITY EXTENSIONS FOR COLORS & FONTS
    ========================================================================== */
 @utility bg-brand-primary {
   background-color: var(--color-primary);
-}
-
-@utility bg-brand-neutral-100 {
-  background-color: var(--color-neutral-100);
 }
 
 @utility text-brand-gold {
   color: var(--color-secondary-main);
 }
 
-@utility text-brand-neutral-700 {
-  color: var(--color-neutral-700);
-}
-
 /* Headings */
 h1, .heading-primary, .heading-1 {
-  font-family: var(--heading-font-family);
-  font-size: var(--heading-font-size);
-  line-height: var(--heading-line-height);
+  font-family: var(--font-family-heading);
+  font-weight: 700;
   letter-spacing: var(--heading-letter-spacing);
-  font-weight: var(--heading-font-weight);
 }
 
-/* Subheadings */
 h2, .subheading-primary, .subheading-1 {
-  font-family: var(--subheading-font-family);
-  font-size: var(--subheading-font-size);
-  line-height: var(--subheading-line-height);
-  letter-spacing: var(--subheading-letter-spacing);
-  font-weight: var(--subheading-font-weight);
-  font-style: var(--subheading-font-style);
+  font-family: var(--font-family-heading);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: var(--heading-letter-spacing);
 }
 
-/* CTA / Important Text */
-.text-cta, .cta-text, .btn-cta-text {
-  font-family: var(--cta-font-family);
-  font-size: var(--cta-font-size);
-  line-height: var(--cta-line-height);
-  letter-spacing: var(--cta-letter-spacing);
-  font-weight: var(--cta-font-weight);
-  text-transform: var(--cta-text-transform);
+h3, .heading-tertiary {
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: var(--heading-letter-spacing);
 }
 
-/* Body Paragraphs */
 p, .body-copy {
-  font-family: var(--body-font-family);
+  font-family: var(--font-family-body);
   font-size: var(--body-font-size);
   line-height: var(--body-line-height);
   letter-spacing: var(--body-letter-spacing);
   font-weight: var(--body-font-weight);
 }
 
-/* Captions / Small Notes */
-small, .text-caption {
-  font-size: var(--caption-font-size);
-  line-height: var(--caption-line-height);
-  letter-spacing: var(--caption-letter-spacing);
-}
-
-/* ==========================================================================
-   TAILWIND UTILITY EXTENSIONS (For inline utility class usage)
-   ========================================================================== */
 @utility font-heading {
-  font-family: var(--heading-font-family);
+  font-family: var(--font-family-heading);
 }
 
 @utility font-subheading {
-  font-family: var(--subheading-font-family);
-}
-
-@utility font-cta {
-  font-family: var(--cta-font-family);
-}
-
-@utility font-body {
-  font-family: var(--body-font-family);
+  font-family: var(--font-family-subheading);
 }
