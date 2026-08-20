@@ -6,16 +6,12 @@ import { Target, Eye } from "lucide-react";
 
 /**
  * MissionVision - Mission & Vision section component for the About Us page.
- * 100% Exact Match to Client Reference UI Spec (Screenshots 1, 2, & 3):
- * 1. Compact 1040px Max Width layout for elegant, well-proportioned card dimensions.
- * 2. Authentic Tabbed Folder Cutout Notch using CSS polygon clip-path
- * 3. Top-Right Dark Tab Shelf with Gold Dash (—) & Index Number (01 & 02)
- * 4. Flat Gold Circular Icon Badges with Industry-Standard Lucide Icons (Target & Eye)
+ * Fully responsive across LTR (English) and RTL (Arabic) languages with symmetrical card notch clipping & padding.
  */
 export default function MissionVision() {
   const { t, isRTL } = useLanguage();
 
-  // CSS Polygon clip-path matching reference UI cutout notch (Screenshot 1 & 2)
+  // CSS Polygon clip-path matching reference UI cutout notch for LTR & RTL
   const folderClipLTR = "polygon(0% 0%, 60% 0%, 68% 32px, 100% 32px, 100% 100%, 0% 100%)";
   const folderClipRTL = "polygon(0% 32px, 32% 32px, 40% 0%, 100% 0%, 100% 100%, 0% 100%)";
 
@@ -41,12 +37,23 @@ export default function MissionVision() {
               ═══════════════════════════════════════════ */}
           <div className="relative group filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.5)]">
             
-            {/* Top-Right Dark Shelf Index Badge (— 01) */}
+            {/* Top Shelf Index Badge (— 01) */}
             <div className={`absolute top-1.5 ${isRTL ? "left-4 sm:left-6" : "right-4 sm:right-6"} z-20 flex items-center gap-2 pointer-events-none`}>
-              <span className="w-5 sm:w-6 h-[2px] bg-[var(--color-secondary-main)] inline-block" />
-              <span className="font-heading font-bold text-sm sm:text-base text-[var(--color-secondary-main)] tracking-widest">
-                01
-              </span>
+              {isRTL ? (
+                <>
+                  <span className="font-heading font-bold text-sm sm:text-base text-[var(--color-secondary-main)] tracking-widest">
+                    01
+                  </span>
+                  <span className="w-5 sm:w-6 h-[2px] bg-[var(--color-secondary-main)] inline-block" />
+                </>
+              ) : (
+                <>
+                  <span className="w-5 sm:w-6 h-[2px] bg-[var(--color-secondary-main)] inline-block" />
+                  <span className="font-heading font-bold text-sm sm:text-base text-[var(--color-secondary-main)] tracking-widest">
+                    01
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Folder Cutout White Card Surface */}
@@ -57,7 +64,7 @@ export default function MissionVision() {
               }}
             >
               {/* Card Header: Flat Gold Circle Badge + Title */}
-              <div className="flex items-center gap-4 sm:gap-5 mb-6 sm:mb-8 pr-16 sm:pr-20">
+              <div className={`flex items-center gap-4 sm:gap-5 mb-6 sm:mb-8 ${isRTL ? "pl-16 sm:pl-20" : "pr-16 sm:pr-20"}`}>
                 <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-[#d49b29] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
                   <Target className="w-8 h-8 sm:w-10 sm:h-10 text-black stroke-[2.2]" />
                 </div>
@@ -79,12 +86,23 @@ export default function MissionVision() {
               ═══════════════════════════════════════════ */}
           <div className="relative group filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.5)]">
             
-            {/* Top-Right Dark Shelf Index Badge (— 02) */}
+            {/* Top Shelf Index Badge (— 02) */}
             <div className={`absolute top-1.5 ${isRTL ? "left-4 sm:left-6" : "right-4 sm:right-6"} z-20 flex items-center gap-2 pointer-events-none`}>
-              <span className="w-5 sm:w-6 h-[2px] bg-[var(--color-secondary-main)] inline-block" />
-              <span className="font-heading font-bold text-sm sm:text-base text-[var(--color-secondary-main)] tracking-widest">
-                02
-              </span>
+              {isRTL ? (
+                <>
+                  <span className="font-heading font-bold text-sm sm:text-base text-[var(--color-secondary-main)] tracking-widest">
+                    02
+                  </span>
+                  <span className="w-5 sm:w-6 h-[2px] bg-[var(--color-secondary-main)] inline-block" />
+                </>
+              ) : (
+                <>
+                  <span className="w-5 sm:w-6 h-[2px] bg-[var(--color-secondary-main)] inline-block" />
+                  <span className="font-heading font-bold text-sm sm:text-base text-[var(--color-secondary-main)] tracking-widest">
+                    02
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Folder Cutout White Card Surface */}
@@ -95,7 +113,7 @@ export default function MissionVision() {
               }}
             >
               {/* Card Header: Flat Gold Circle Badge + Title */}
-              <div className="flex items-center gap-4 sm:gap-5 mb-6 sm:mb-8 pr-16 sm:pr-20">
+              <div className={`flex items-center gap-4 sm:gap-5 mb-6 sm:mb-8 ${isRTL ? "pl-16 sm:pl-20" : "pr-16 sm:pr-20"}`}>
                 <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-[#d49b29] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
                   <Eye className="w-8 h-8 sm:w-10 sm:h-10 text-black stroke-[2.2]" />
                 </div>

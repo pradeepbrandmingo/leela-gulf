@@ -34,42 +34,51 @@ export function LanguageProvider({ children }) {
   /**
    * Universal translation helper t(pathKey)
    * Supports dot notation like t("hero.waterTreatment") as well as direct key search.
+   * Properly preserves empty strings ("") without falling back to English.
    */
   const t = (key) => {
     const currentDict = translations[lang] || translations["en"];
     const fallbackDict = translations["en"];
 
     // 1. Direct key match (e.g. t("waterTreatment"))
-    if (currentDict[key]) return currentDict[key];
-    if (fallbackDict[key]) return fallbackDict[key];
+    if (currentDict[key] !== undefined && currentDict[key] !== null) return currentDict[key];
+    if (fallbackDict[key] !== undefined && fallbackDict[key] !== null) return fallbackDict[key];
 
     // 2. Dot notation match (e.g. t("hero.waterTreatment"))
     const keys = key.split(".");
     let result = currentDict;
     for (const k of keys) {
-      result = result?.[k];
-      if (!result) break;
+      if (result && typeof result === "object" && k in result) {
+        result = result[k];
+      } else {
+        result = undefined;
+        break;
+      }
     }
 
-    if (result) return result;
+    if (result !== undefined && result !== null) return result;
 
     // Fallback dot notation in English
     let fallbackResult = fallbackDict;
     for (const k of keys) {
-      fallbackResult = fallbackResult?.[k];
-      if (!fallbackResult) break;
+      if (fallbackResult && typeof fallbackResult === "object" && k in fallbackResult) {
+        fallbackResult = fallbackResult[k];
+      } else {
+        fallbackResult = undefined;
+        break;
+      }
     }
 
-    if (fallbackResult) return fallbackResult;
+    if (fallbackResult !== undefined && fallbackResult !== null) return fallbackResult;
 
     // 3. Search inside top-level categories if passed short key
     for (const category in currentDict) {
-      if (typeof currentDict[category] === "object" && currentDict[category][key]) {
+      if (typeof currentDict[category] === "object" && currentDict[category][key] !== undefined && currentDict[category][key] !== null) {
         return currentDict[category][key];
       }
     }
     for (const category in fallbackDict) {
-      if (typeof fallbackDict[category] === "object" && fallbackDict[category][key]) {
+      if (typeof fallbackDict[category] === "object" && fallbackDict[category][key] !== undefined && fallbackDict[category][key] !== null) {
         return fallbackDict[category][key];
       }
     }
