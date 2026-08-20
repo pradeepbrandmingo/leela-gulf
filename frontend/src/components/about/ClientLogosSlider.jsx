@@ -7,6 +7,7 @@ import SectionHeading from "@/components/common/SectionHeading";
 /**
  * ClientLogosSlider - Continuous infinite marquee logo slider component.
  * Standardized global section vertical spacing (py-10 sm:py-14 md:py-16).
+ * Uses dir="ltr" on marquee track so CSS animation never breaks or hides logos during language switch.
  */
 export default function ClientLogosSlider() {
   const { t } = useLanguage();
@@ -43,8 +44,8 @@ export default function ClientLogosSlider() {
         />
       </div>
 
-      {/* ── INFINITE MARQUEE SLIDER WRAPPER ── */}
-      <div className="relative w-full overflow-hidden flex items-center py-3">
+      {/* ── INFINITE MARQUEE SLIDER WRAPPER (Locked LTR direction for 100% smooth animation in English & Arabic) ── */}
+      <div className="relative w-full overflow-hidden flex items-center py-3" dir="ltr">
         {/* Compact Edge Masks for Mobile (w-8) so center remains clear & visible */}
         <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 md:w-48 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/80 to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 md:w-48 bg-gradient-to-l from-[var(--color-primary)] via-[var(--color-primary)]/80 to-transparent z-10 pointer-events-none" />
@@ -62,6 +63,7 @@ export default function ClientLogosSlider() {
                 alt={logo.alt}
                 width={280}
                 height={120}
+                unoptimized
                 className="h-16 sm:h-22 md:h-26 lg:h-32 max-w-[180px] sm:max-w-[240px] md:max-w-[280px] w-auto object-contain brightness-0 invert opacity-80 group-hover:brightness-100 group-hover:invert-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
               />
             </div>

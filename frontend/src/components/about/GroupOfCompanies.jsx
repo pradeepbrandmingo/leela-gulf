@@ -6,11 +6,9 @@ import SectionHeading from "@/components/common/SectionHeading";
 
 /**
  * GroupOfCompanies - Group of Companies brand logos section for the About Us page.
- * 100% Match to Client Reference UI Spec:
- * 1. 0 default card shadow & 0 background ambient glow spot.
- * 2. Golden shadow glow ONLY on hover.
- * 3. Pure White logos by default, smoothly revealing Original Vivid Colors on hover.
- * 4. Slightly enlarged logo sizes inside cards.
+ * 100% Match to Client Request:
+ * 1. Default: Dark matte grey card (bg-[#1d1d1d]), pure white logo filter (brightness-0 invert).
+ * 2. Hover: Card smoothly turns clean WHITE (hover:bg-white) with gold border glow, revealing original vivid logo colors so black logo text is 100% clearly visible and premium!
  */
 export default function GroupOfCompanies() {
   const { t } = useLanguage();
@@ -69,12 +67,12 @@ export default function GroupOfCompanies() {
           className="mb-8 sm:mb-12"
         />
 
-        {/* 8 Company Logo Cards Grid (0 Default Shadow, Gold Glow ONLY on Hover) */}
+        {/* 8 Company Logo Cards Grid (White Hover Background for Perfect Logo Contrast) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 max-w-[1140px] mx-auto">
           {companies.map((company) => (
             <div
               key={company.id}
-              className="bg-[#1d1d1d] border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 flex items-center justify-center h-[140px] sm:h-[165px] md:h-[185px] shadow-none transition-all duration-500 hover:bg-[#242424] hover:border-[#d49b29]/50 hover:shadow-[0_15px_35px_rgba(212,155,41,0.25)] hover:-translate-y-2 group cursor-pointer"
+              className="bg-[#1d1d1d] border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 flex items-center justify-center h-[140px] sm:h-[165px] md:h-[185px] shadow-none transition-all duration-500 hover:bg-white hover:border-[var(--color-secondary-main)] hover:shadow-[0_15px_35px_rgba(196,132,47,0.3)] hover:-translate-y-2 group cursor-pointer"
             >
               <div className="relative w-full h-full flex items-center justify-center p-1">
                 <Image

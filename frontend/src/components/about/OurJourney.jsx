@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import SectionHeading from "@/components/common/SectionHeading";
 import { MapPin, Flag } from "lucide-react";
 
 /**
@@ -166,22 +165,21 @@ export default function OurJourney() {
     <section className="relative w-full bg-[var(--color-primary)] py-12 sm:py-16 md:py-20 text-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 relative z-10">
         
-        {/* Header Title & Subtitle */}
-        <div className="text-center mb-14 sm:mb-20">
-          <SectionHeading
-            prefix={t("ourJourney.titlePrefix")}
-            highlight={t("ourJourney.titleHighlight")}
-          />
-
-          <p className="font-subheading text-gray-300 text-base sm:text-lg max-w-3xl mx-auto mt-4 text-center leading-relaxed">
-            {t("ourJourney.subtitle")}
+        {/* Full Client Heading as One Cohesive Block */}
+        <div className="text-center mb-14 sm:mb-20 max-w-4xl mx-auto">
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight">
+            <span className="text-white">{t("ourJourney.titleLine1")}</span>{" "}
+            <span className="text-[var(--color-secondary-light)]">{t("ourJourney.titleHighlight")}</span>
+          </h2>
+          <p className="font-heading text-lg sm:text-xl md:text-2xl text-gray-300 mt-3 leading-relaxed tracking-tight">
+            {t("ourJourney.titleLine2")}
           </p>
         </div>
 
         {/* ═══════════════════════════════════════════
             MAIN ROADMAP PATH WRAPPER
             ═══════════════════════════════════════════ */}
-        <div ref={wrapperRef} className="relative max-w-[1100px] mx-auto py-10">
+        <div ref={wrapperRef} className="relative max-w-[1100px] mx-auto py-10" dir="ltr">
           
           {/* Underlay SVG Winding Road Canvas (Desktop & Tablet) */}
           <svg
@@ -238,7 +236,8 @@ export default function OurJourney() {
           {/* Milestone Steps Container */}
           <div className="relative z-10 flex flex-col gap-16 sm:gap-24 md:gap-32">
             {steps.map((item) => {
-              const isLeft = isRTL ? item.align === "right" : item.align === "left";
+              // Layout is always LTR (dir="ltr" on wrapper) so SVG road and card positions stay aligned
+              const isLeft = item.align === "left";
               const isActive = activeCardId === item.id;
 
               return (
@@ -266,6 +265,7 @@ export default function OurJourney() {
                       ═══════════════════════════════════════════ */}
                   <div
                     onClick={() => handleCardClick(item.id)}
+                    dir={isRTL ? "rtl" : "ltr"}
                     className="w-full max-w-[460px] bg-[#1d1d1d] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:-translate-y-2 hover:bg-[#222222] hover:border-[#c4842f]/50 hover:shadow-[0_15px_30px_rgba(196,132,47,0.15)] group cursor-pointer select-none"
                   >
                     {/* Header Bar */}

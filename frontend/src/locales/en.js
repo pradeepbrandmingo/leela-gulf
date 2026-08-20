@@ -86,9 +86,9 @@ export const en = {
   // Our Journey Timeline Section (Exact User Content)
   ourJourney: {
     badge: "THE LEELA GROUP",
-    titlePrefix: "Our",
-    titleHighlight: "Journey",
-    subtitle: "A Decade of Chemical Trade, Waste Management & Global Expansion",
+    titleLine1: "Our Journey:",
+    titleHighlight: "The Leela Group",
+    titleLine2: "— A Decade of Chemical Trade, Waste Management & Global Expansion",
     hoverHint: "Hover to View Visual ✦",
     
     // Milestones

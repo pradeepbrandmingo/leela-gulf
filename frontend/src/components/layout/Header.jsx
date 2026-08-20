@@ -54,14 +54,14 @@ export default function Header() {
         }`}
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 flex items-center justify-between">
-          {/* LOGO (Reduced Size) */}
-          <Link href="/" className="flex items-center">
+          {/* LOGO (Clean Crisp Single Layer, No Hover Scale Ghosting) */}
+          <Link href="/" className="flex items-center shrink-0">
             <Image
               src="/logos/logo.png"
               alt="Leela Gulf Logo"
               width={320}
               height={100}
-              className="h-11 md:h-12 lg:h-14 w-auto object-contain scale-100 origin-left transition-transform hover:scale-105"
+              className="h-11 md:h-12 lg:h-14 w-auto object-contain transition-opacity hover:opacity-90"
               priority
             />
           </Link>
@@ -71,7 +71,7 @@ export default function Header() {
             {/* Language Switcher Badge (Hidden on Mobile, Visible on Desktop md:flex) */}
             <button
               onClick={() => setLang(lang === "en" ? "ar" : "en")}
-              className="hidden md:flex w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] items-center justify-center font-bold text-xs md:text-sm shadow-lg transition-transform hover:scale-110 cursor-pointer"
+              className="hidden md:flex w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] items-center justify-center font-bold text-xs md:text-sm shadow-lg transition-transform hover:scale-105 cursor-pointer"
               title={lang === "en" ? "Switch to Arabic" : "Switch to English"}
               aria-label="Switch Language"
             >
@@ -144,7 +144,7 @@ export default function Header() {
             <div className="pt-4 flex justify-end rtl:justify-start border-t border-[#393C3F]/30 mt-4">
               <button
                 onClick={() => setLang(lang === "en" ? "ar" : "en")}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] flex items-center justify-center font-bold text-xs md:text-sm shadow-xl transition-transform hover:scale-110 cursor-pointer"
+                className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] flex items-center justify-center font-bold text-xs md:text-sm shadow-xl transition-transform hover:scale-105 cursor-pointer"
                 aria-label="Language Switcher"
               >
                 文A

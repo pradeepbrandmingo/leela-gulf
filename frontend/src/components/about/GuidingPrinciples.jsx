@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
  * - Standardized global section vertical spacing (py-10 sm:py-14 md:py-16).
  */
 export default function GuidingPrinciples() {
-  const { t, isRTL } = useLanguage();
+  const { t } = useLanguage();
 
   const principles = [
     {
@@ -42,15 +42,12 @@ export default function GuidingPrinciples() {
       <div className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-[var(--color-secondary-main)]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-[1440px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16 xl:px-20 relative z-10">
-        
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-[1320px] mx-auto">
-          
           {/* ═══════════════════════════════════════════
               LEFT COLUMN: Guiding.png Image + Ellipse.png Gold Circle
               (100% Match to Reference Screenshot)
               ═══════════════════════════════════════════ */}
           <div className="lg:col-span-5 relative flex justify-center items-center">
-            
             <div className="relative w-full max-w-[500px]">
               {/* Direct Guiding.png Image (No Outer Border Box) */}
               <Image
@@ -62,12 +59,8 @@ export default function GuidingPrinciples() {
                 priority={false}
               />
 
-              {/* Exact Ellipse.png Image centered 100% vertically & horizontally inside notch curvature */}
-              <div
-                className={`absolute top-[54.5%] -translate-y-1/2 ${
-                  isRTL ? "left-[-18px] sm:left-[-24px]" : "right-[-18px] sm:right-[-24px]"
-                } z-10 flex items-center justify-center`}
-              >
+              {/* Exact Ellipse.png Image centered 100% vertically & horizontally inside notch curvature on the right side */}
+              <div className="absolute top-[54.5%] -translate-y-1/2 right-[-18px] sm:right-[-24px] z-10 flex items-center justify-center">
                 <Image
                   src="/images/aboutpage/Ellipse.png"
                   alt="Gold Circle Accent"
@@ -77,25 +70,29 @@ export default function GuidingPrinciples() {
                 />
               </div>
             </div>
-
           </div>
 
           {/* ═══════════════════════════════════════════
               RIGHT COLUMN: Heading + 5 Compact Principles Cards List
               ═══════════════════════════════════════════ */}
           <div className="lg:col-span-7 flex flex-col justify-center">
-            
             {/* Section Title */}
             <h2 className="font-heading font-medium text-[26px] sm:text-[32px] md:text-[38px] lg:text-[44px] text-white tracking-tight leading-tight mb-5 text-left">
               <span
                 className="font-heading text-white font-medium not-italic mr-2 inline"
-                style={{ fontFamily: "var(--font-family-heading)", fontStyle: "normal" }}
+                style={{
+                  fontFamily: "var(--font-family-heading)",
+                  fontStyle: "normal",
+                }}
               >
                 {t("guidingPrinciples.titlePrefix")}
               </span>
               <span
                 className="font-heading text-gradient-gold-animated font-semibold not-italic inline"
-                style={{ fontFamily: "var(--font-family-heading)", fontStyle: "normal" }}
+                style={{
+                  fontFamily: "var(--font-family-heading)",
+                  fontStyle: "normal",
+                }}
               >
                 {t("guidingPrinciples.titleHighlight")}
               </span>
@@ -117,11 +114,8 @@ export default function GuidingPrinciples() {
                 </div>
               ))}
             </div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );
