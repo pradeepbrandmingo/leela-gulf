@@ -7,14 +7,15 @@ import { useLanguage } from "@/context/LanguageContext";
  * HeroSection - Full-viewport hero with looping video background
  * and creative typography grid of 11 clickable Industry links.
  *
- * Exact match to Client Reference UI across all breakpoints (Desktop, Laptop, Tablet, Mobile):
- * Multi-item rows remain side-by-side with fluid scaling and comfortable line spacing!
+ * Grand, Bold & Prominent Typography (Uncompact):
+ * - Keeps original large, bold text sizes.
+ * - Reclaims vertical padding (pt-16 pb-2) so ZERO top-to-bottom scrollbar appears on laptops/desktops!
  */
 export default function HeroSection() {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="relative w-full min-h-[100svh] overflow-hidden flex items-center">
+    <section className="relative w-full h-[100svh] max-h-[100svh] min-h-[580px] overflow-hidden flex items-center">
       {/* ── VIDEO BACKGROUND ── */}
       <video
         autoPlay
@@ -54,25 +55,25 @@ export default function HeroSection() {
       </a>
 
       {/* ── TYPOGRAPHY GRID CONTENT ── */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16 xl:px-20 pt-20 pb-8 sm:pt-28 sm:pb-8 md:pt-24 min-h-[100svh] flex flex-col justify-center overflow-hidden">
-        {/* Constrain width: 88% on mobile (so tab doesn't overlap), ~72% on Desktop */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16 xl:px-20 pt-16 pb-2 sm:pt-20 sm:pb-3 md:pt-20 md:pb-3 h-full flex flex-col justify-center overflow-hidden">
+        {/* Constrain width: 92% on mobile, ~85%-88% on Laptop/Desktop */}
         <div
-          className={`w-[88%] sm:w-full max-w-3xl lg:max-w-[72%] flex flex-col justify-center my-auto ${isRTL ? "text-right" : "text-left"}`}
+          className={`w-[92%] sm:w-full max-w-5xl lg:max-w-[85%] xl:max-w-[88%] flex flex-col justify-center my-auto ${isRTL ? "text-right" : "text-left"}`}
         >
           {/* ═══════════════════════════════════════════
               ROW 1: "Industrial" (NON-ITALIC) + "Chemicals" (gold bold)
                      + "Fertilizers" / "chemicals" (2 lines white beside)
               ═══════════════════════════════════════════ */}
-          <div className="flex flex-wrap items-end gap-x-3 sm:gap-x-4 md:gap-x-6 gap-y-1 mb-2.5 sm:mb-1 md:mb-1.5">
+          <div className="flex flex-wrap items-end gap-x-3 sm:gap-x-4 md:gap-x-6 gap-y-1 mb-1 sm:mb-1.5 md:mb-2">
             {/* Industrial Chemicals */}
             <Link
               href="/industries/industrial-chemicals"
               className="group block"
             >
-              <span className="block font-heading font-medium not-italic text-sm sm:text-base md:text-lg text-gradient-gold-animated tracking-tight leading-tight mb-0.5">
+              <span className="block font-heading font-medium not-italic text-xs sm:text-base md:text-lg text-gradient-gold-animated tracking-tight leading-tight mb-0.5">
                 {t("industrial")}
               </span>
-              <span className="block font-heading font-bold text-4xl sm:text-4xl md:text-5xl lg:text-[3.8rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity">
+              <span className="block font-heading font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity">
                 {t("industrialChemicals")}
               </span>
             </Link>
@@ -82,10 +83,10 @@ export default function HeroSection() {
               href="/industries/fertilizers-chemicals"
               className="block mb-0.5 md:mb-1 hover:text-gradient-gold-animated transition-colors"
             >
-              <span className="font-heading font-medium text-xs sm:text-xs md:text-sm text-white leading-tight block mb-0.5 sm:mb-1">
+              <span className="font-heading font-medium text-[11px] sm:text-xs md:text-sm text-white leading-tight block mb-0.5 sm:mb-1">
                 {t("fertilizers")}
               </span>
-              <span className="font-heading font-medium text-xs sm:text-xs md:text-sm text-white leading-tight block">
+              <span className="font-heading font-medium text-[11px] sm:text-xs md:text-sm text-white leading-tight block">
                 {t("fertilizersChemicals")}
               </span>
             </Link>
@@ -94,10 +95,10 @@ export default function HeroSection() {
           {/* ═══════════════════════════════════════════
               ROW 2: "Water Treatment" (white bold)
               ═══════════════════════════════════════════ */}
-          <div className="mb-2.5 sm:mb-1 md:mb-1.5">
+          <div className="mb-1 sm:mb-1.5 md:mb-2">
             <Link
               href="/industries/water-treatment"
-              className="font-heading font-bold text-[1.85rem] sm:text-3xl md:text-4xl lg:text-[3.2rem] text-white leading-none tracking-tight hover:text-gradient-gold-animated transition-colors inline-block"
+              className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] text-white leading-none tracking-tight hover:text-gradient-gold-animated transition-colors inline-block"
             >
               {t("waterTreatment")}
             </Link>
@@ -106,10 +107,10 @@ export default function HeroSection() {
           {/* ═══════════════════════════════════════════
               ROW 3: "Textile Chemicals" (gold bold)
               ═══════════════════════════════════════════ */}
-          <div className="mb-2.5 sm:mb-1.5 md:mb-2">
+          <div className="mb-1 sm:mb-1.5 md:mb-2">
             <Link
               href="/industries/textile-chemicals"
-              className="font-heading font-bold text-[1.85rem] sm:text-3xl md:text-4xl lg:text-[3.2rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity inline-block"
+              className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity inline-block"
             >
               {t("textileChemicals")}
             </Link>
@@ -118,10 +119,10 @@ export default function HeroSection() {
           {/* ═══════════════════════════════════════════
               ROW 4: "Food & Beverage chemicals" (2 lines) | divider | "Home Care & Personal Care" (2 lines)
               ═══════════════════════════════════════════ */}
-          <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 md:gap-x-5 gap-y-1 mb-2.5 sm:mb-1.5 md:mb-2">
+          <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 md:gap-x-6 gap-y-1 mb-1 sm:mb-1.5 md:mb-2">
             <Link
               href="/industries/food-beverage-chemicals"
-              className="font-heading font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-white leading-tight hover:text-gradient-gold-animated transition-colors"
+              className="font-heading font-bold text-base sm:text-xl md:text-2xl lg:text-3xl text-white leading-tight hover:text-gradient-gold-animated transition-colors"
             >
               <span className="block mb-0.5 sm:mb-1">{t("foodAnd")}</span>
               <span className="block">{t("beverageChemicals")}</span>
@@ -135,7 +136,7 @@ export default function HeroSection() {
 
             <Link
               href="/industries/home-care-personal-care"
-              className="font-heading font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-gradient-gold-animated leading-tight hover:opacity-90 transition-opacity"
+              className="font-heading font-bold text-base sm:text-xl md:text-2xl lg:text-3xl text-gradient-gold-animated leading-tight hover:opacity-90 transition-opacity"
             >
               <span className="block mb-0.5 sm:mb-1">{t("homeCare")}</span>
               <span className="block">{t("personalCare")}</span>
@@ -145,10 +146,10 @@ export default function HeroSection() {
           {/* ═══════════════════════════════════════════
               ROW 5: "Pharmaceuticals API & Excipients" (gold)
               ═══════════════════════════════════════════ */}
-          <div className="mb-2.5 sm:mb-1.5 md:mb-2">
+          <div className="mb-1 sm:mb-1.5 md:mb-2">
             <Link
               href="/industries/pharmaceuticals-api-excipients"
-              className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-[2.2rem] text-gradient-gold-animated leading-tight tracking-tight hover:opacity-90 transition-opacity inline-block"
+              className="font-heading font-bold text-xl sm:text-2xl md:text-3xl lg:text-[2.6rem] text-gradient-gold-animated leading-tight tracking-tight hover:opacity-90 transition-opacity inline-block"
             >
               {t("pharmaceuticalsApiExcipients")}
             </Link>
@@ -157,15 +158,15 @@ export default function HeroSection() {
           {/* ═══════════════════════════════════════════
               ROW 6: "CASE" + 2 lines subscript | divider | "Packaging & Paper Pulp" (2 lines)
               ═══════════════════════════════════════════ */}
-          <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 md:gap-x-5 gap-y-1 mb-2.5 sm:mb-1.5 md:mb-2.5">
+          <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 md:gap-x-6 gap-y-1 mb-1.5 sm:mb-2 md:mb-2.5">
             <Link
               href="/industries/case-coatings-adhesives"
               className="group hover:text-gradient-gold-animated transition-colors flex items-center gap-1.5 sm:gap-2"
             >
-              <span className="font-heading font-black text-3xl sm:text-3xl md:text-4xl text-gradient-gold-animated leading-none tracking-tight inline-block">
+              <span className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-gradient-gold-animated leading-none tracking-tight inline-block">
                 {t("caseTitle")}
               </span>
-              <span className="font-heading font-medium text-[10.5px] sm:text-xs md:text-xs text-white leading-tight block max-w-[125px] sm:max-w-[140px] md:max-w-[180px]">
+              <span className="font-heading font-medium text-[10.5px] sm:text-xs md:text-xs text-white leading-tight block max-w-[130px] sm:max-w-[150px] md:max-w-[180px]">
                 <span className="block mb-0.5 sm:mb-1">{t("caseSubscriptLine1")}</span>
                 <span className="block">{t("caseSubscriptLine2")}</span>
               </span>
@@ -179,7 +180,7 @@ export default function HeroSection() {
 
             <Link
               href="/industries/packaging-paper-pulp"
-              className="font-heading font-bold text-sm sm:text-base md:text-lg text-white leading-tight hover:text-gradient-gold-animated transition-colors"
+              className="font-heading font-bold text-sm sm:text-base md:text-xl text-white leading-tight hover:text-gradient-gold-animated transition-colors"
             >
               <span className="block mb-0.5 sm:mb-1">{t("packagingAnd")}</span>
               <span className="block">{t("paperPulp")}</span>
@@ -189,15 +190,15 @@ export default function HeroSection() {
           {/* ═══════════════════════════════════════════
               ROW 7: "LEEPOL®" + "Oil & Gas"
               ═══════════════════════════════════════════ */}
-          <div className="flex flex-wrap items-baseline gap-x-3 sm:gap-x-5 md:gap-x-8 gap-y-1">
+          <div className="flex flex-wrap items-baseline gap-x-4 sm:gap-x-6 md:gap-x-10 gap-y-1">
             <Link
               href="/industries/home-care-personal-care"
-              className="font-heading font-black text-[2.75rem] sm:text-5xl md:text-6xl lg:text-[4.8rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity inline-flex items-baseline"
+              className="font-heading font-black text-5xl sm:text-6xl md:text-7xl lg:text-[5.2rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity inline-flex items-baseline"
             >
               <span>{t("leepolBrand")}</span>
               {/* Perfectly Centered Registered Trademark Vector Badge */}
               <svg
-                className={`w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#c4842f] align-super self-start mt-0.5 sm:mt-1 inline-block ${isRTL ? "mr-0.5 sm:mr-1" : "ml-0.5 sm:ml-1"}`}
+                className={`w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-[#c4842f] align-super self-start mt-0.5 sm:mt-1 inline-block ${isRTL ? "mr-0.5 sm:mr-1" : "ml-0.5 sm:ml-1"}`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -215,7 +216,7 @@ export default function HeroSection() {
 
             <Link
               href="/industries/oil-gas"
-              className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] text-white leading-none tracking-tight hover:text-gradient-gold-animated transition-colors inline-block"
+              className="font-heading font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] text-white leading-none tracking-tight hover:text-gradient-gold-animated transition-colors inline-block"
             >
               {t("oilGas")}
             </Link>
