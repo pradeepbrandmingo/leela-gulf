@@ -29,15 +29,12 @@ export default function AboutHero() {
 
             {/* Main Section Heading */}
             <h1 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl lg:text-[3.2rem] leading-[1.15] tracking-tight mb-6 sm:mb-8">
-              <span className="text-white block sm:inline">{t("aboutHero.titlePart1")} </span>
-              <span className="text-gradient-gold-animated inline">{t("aboutHero.titlePart2")} </span>
-              <br className="hidden sm:block" />
-              <span className="text-gradient-gold-animated inline">{t("aboutHero.titlePart3")} </span>
-              <span className="text-white inline">{t("aboutHero.titlePart4")}</span>
+              <span className="text-white inline">{t("aboutHero.titlePart1")}{" "}</span>
+              <span className="text-gradient-gold-animated inline">{t("aboutHero.titlePart2")}</span>
             </h1>
 
             {/* Paragraph Descriptions */}
-            <div className="space-y-4 sm:space-y-5 text-gray-300/90 font-subheading text-sm sm:text-base md:text-[1.05rem] leading-relaxed">
+            <div className="space-y-4 sm:space-y-5 text-gray-300/90 font-subheading text-sm sm:text-base md:text-[1.02rem] leading-relaxed">
               <p className="hover:text-white transition-colors duration-300">
                 {t("aboutHero.p1")}
               </p>
@@ -46,6 +43,9 @@ export default function AboutHero() {
               </p>
               <p className="hover:text-white transition-colors duration-300">
                 {t("aboutHero.p3")}
+              </p>
+              <p className="hover:text-white transition-colors duration-300">
+                {t("aboutHero.p4")}
               </p>
             </div>
 

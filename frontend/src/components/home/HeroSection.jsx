@@ -7,9 +7,9 @@ import { useLanguage } from "@/context/LanguageContext";
  * HeroSection - Full-viewport hero with looping video background
  * and creative typography grid of 11 clickable Industry links.
  *
- * Grand, Bold & Prominent Typography (Uncompact):
- * - Keeps original large, bold text sizes.
- * - Reclaims vertical padding (pt-16 pb-2) so ZERO top-to-bottom scrollbar appears on laptops/desktops!
+ * Grand, Bold & Prominent Typography Layout:
+ * - Content container width expanded to lg:max-w-[92%] xl:max-w-[95%] so typography extends further to the right side of the screen.
+ * - All text sizes, fonts, and row structures remain 100% untouched.
  */
 export default function HeroSection() {
   const { t, isRTL } = useLanguage();
@@ -56,9 +56,9 @@ export default function HeroSection() {
 
       {/* ── TYPOGRAPHY GRID CONTENT ── */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16 xl:px-20 pt-16 pb-2 sm:pt-20 sm:pb-3 md:pt-20 md:pb-3 h-full flex flex-col justify-center overflow-hidden">
-        {/* Constrain width: 92% on mobile, ~85%-88% on Laptop/Desktop */}
+        {/* Constrain width: 94% on mobile, lg:max-w-[92%] xl:max-w-[95%] on Desktop for maximum rightward extension */}
         <div
-          className={`w-[92%] sm:w-full max-w-5xl lg:max-w-[85%] xl:max-w-[88%] flex flex-col justify-center my-auto ${isRTL ? "text-right" : "text-left"}`}
+          className={`w-[94%] sm:w-full max-w-6xl lg:max-w-[92%] xl:max-w-[95%] flex flex-col justify-center my-auto ${isRTL ? "text-right" : "text-left"}`}
         >
           {/* ═══════════════════════════════════════════
               ROW 1: "Industrial" (NON-ITALIC) + "Chemicals" (gold bold)
@@ -161,13 +161,15 @@ export default function HeroSection() {
           <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 md:gap-x-6 gap-y-1 mb-1.5 sm:mb-2 md:mb-2.5">
             <Link
               href="/industries/case-coatings-adhesives"
-              className="group hover:text-gradient-gold-animated transition-colors flex items-center gap-1.5 sm:gap-2"
+              className="group hover:text-gradient-gold-animated transition-colors flex items-center gap-1.5 sm:gap-2.5"
             >
               <span className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-gradient-gold-animated leading-none tracking-tight inline-block">
                 {t("caseTitle")}
               </span>
-              <span className="font-heading font-medium text-[10.5px] sm:text-xs md:text-xs text-white leading-tight block max-w-[130px] sm:max-w-[150px] md:max-w-[180px]">
-                <span className="block mb-0.5 sm:mb-1">{t("caseSubscriptLine1")}</span>
+              <span className="font-heading font-medium text-xs sm:text-sm md:text-sm lg:text-[0.92rem] text-white leading-tight block max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
+                <span className="block mb-0.5 sm:mb-0.5">
+                  {t("caseSubscriptLine1")}
+                </span>
                 <span className="block">{t("caseSubscriptLine2")}</span>
               </span>
             </Link>

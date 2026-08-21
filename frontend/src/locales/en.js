@@ -54,21 +54,22 @@ export const en = {
 
   // About Page Hero Section
   aboutHero: {
-    titlePart1: "To Be The",
-    titlePart2: "Leading Global",
-    titlePart3: "Chemical",
-    titlePart4: "Company",
-    p1: "Leela Gulf Fzc Is A Leading Service Provider In A Wide Range Of Hazardous Waste For Sectors Of Chemicals, Pharma, Dyes, Pigments, Intermediates Industries And Having Its Base In Ahmedabad (Gujarat, India).",
-    p2: "We Offer These Products At Clients Required Specification And Deliver These Within The Promised Time Frame. Under The Headship Of Our Well Qualified And Experienced Team, We Have Gained A Huge Clientele Across India And Overseas.",
-    p3: "Common Hazardous Waste Treatment Storage And Disposal Services At Leela Partner Limited To Protect And Preserve Our Natural Resources And Build A Sustainable Future By Implementing Innovative & Cost Effective Solutions Through Advanced Technologies Of Waste Management And Creating A Green Environment.",
+    titlePart1: "Your Global Gateway to",
+    titlePart2: "Reliable Chemical Supply",
+    titlePart3: "",
+    titlePart4: "",
+    p1: "LEELA GULF FZC is a global chemical sourcing and supply partner, strategically based in the UAE, with international trade desks across India and the USA. We serve a diverse range of industries including Pharmaceuticals, Water Treatment, Coatings, Polymers, Food Processing, Personal Care, and other critical industrial sectors, with a global presence spanning 85+ countries.",
+    p2: "We source and deliver high-grade industrial and specialty chemicals according to our clients’ required specifications, ensuring consistent quality, complete documentation, and reliable delivery within committed timelines. With 200+ active industrial clients and more than 800 TEUs handled every quarter, we connect trusted global producers with manufacturing facilities worldwide.",
+    p3: "Backed by a qualified and experienced team, LEELA GULF FZC focuses on building dependable, end-to-end chemical supply infrastructure. Every producer within our network undergoes stringent quality audits, while consignments are supported with Certificates of Analysis (CoA), Safety Data Sheets (SDS), and verified customs documentation.",
+    p4: "Our objective is to provide reliable, transparent, and secure chemical supply solutions that minimize production disruptions, maintain specification consistency, and help our customers keep their operations running efficiently across global markets.",
     badgeTitle: "Excellence In Action",
     badgeSubtitle: "Pioneering Sustainable Chemical Solutions Globally",
   },
 
   // Client Logos Slider Section
   clientSlider: {
-    titlePrefix: "Worldwide 1300+ Trusted Clients with",
-    titleHighlight: "Leela Gulf",
+    titlePrefix: "Trusted by 200+ Active Industrial Clients",
+    titleHighlight: "Worldwide",
   },
 
   // Mission & Vision Section
@@ -77,10 +78,10 @@ export const en = {
     titleHighlight: "Mission & Vision",
     missionTitle: "Mission",
     missionIndex: "— 01",
-    missionDesc: "At Leela Partner Limited, We Are Committed To Becoming A Globally Recognized, Sustainable, And Customer-Centric Leader In The Chemical Industry. Our Mission Is To Deliver World-Class Products And Integrated Solutions, Continually Evolving To Meet Dynamic Market Needs.",
+    missionDesc: "To engineer the supply chain infrastructure that global manufacturing cannot afford to be without. We exist to remove the single greatest threat to industrial production: an unreliable raw material pipeline. Every audit we run, every certificate we verify, and every container we track exists for one reason: so that the enterprises we serve never have to choose between growth and supply security. We don't sell chemicals. We sell the certainty that your factory floor never stops for a reason we could have prevented.",
     visionTitle: "Vision",
     visionIndex: "— 02",
-    visionDesc: "At Leela Partner Limited, We Are Committed To Becoming A Globally Recognized, Sustainable, And Customer-Centric Leader In The Chemical Industry. Our Mission Is To Deliver World-Class Products And Integrated Solutions, Continually Evolving To Meet Dynamic Market Needs.",
+    visionDesc: "To be the world's most trusted name in chemical supply chain infrastructure, where verified quality, full traceability, and guaranteed delivery reliability make raw material sourcing the most predictable link in global manufacturing, not the riskiest.",
   },
 
   // Our Journey Timeline Section (Exact User Content)
@@ -88,9 +89,9 @@ export const en = {
     badge: "THE LEELA GROUP",
     titleLine1: "Our Journey:",
     titleHighlight: "The Leela Group",
-    titleLine2: "— A Decade of Chemical Trade, Waste Management & Global Expansion",
+    titleLine2: "A Decade of Chemical Trade, Waste Management & Global Expansion",
     hoverHint: "Hover to View Visual ✦",
-    
+
     // Milestones
     s1Tag: "FOUNDATION",
     s1Year: "2016",
@@ -195,7 +196,7 @@ export const en = {
     leader1Name: "Ujas Patel",
     leader1Role: "Managing Director",
     leader1Quote: "Our journey is built on trust, consistency, and a relentless focus on quality. As we grow, our commitment to our partners and customers remains at the heart of every decision we make.",
-    
+
     leader2Name: "Abhishek Panchal",
     leader2Role: "International Director",
     leader2Quote: "Our global outlook drives us to build strong relationships across international markets. We are expanding our reach thoughtfully, ensuring every partnership reflects our commitment to quality and reliability.",

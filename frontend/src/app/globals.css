@@ -353,3 +353,113 @@ p, .body-copy {
 @utility font-subheading {
   font-family: var(--font-family-subheading);
 }
+
+/* ==========================================================================
+   REACT-PHONE-NUMBER-INPUT CUSTOM LUXURY DARK THEME STYLING
+   ========================================================================== */
+.PhoneInput {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: #16181f;
+  border: 1px solid #2b2f3a;
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  transition: all 0.2s ease;
+}
+.PhoneInput:hover {
+  border-color: #404656;
+}
+.PhoneInput:focus-within {
+  border-color: #c4842f;
+  box-shadow: 0 0 0 1px #c4842f;
+}
+.PhoneInputInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  width: 100%;
+}
+.PhoneInputInput::placeholder {
+  color: #6b7280;
+}
+.PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.PhoneInputCountrySelect {
+  background-color: #16181f;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.PhoneInputCountryIcon {
+  width: 1.4rem;
+  height: 1.05rem;
+  border-radius: 2px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.6);
+  overflow: hidden;
+}
+.PhoneInputCountryIconImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.PhoneInputCountrySelectArrow {
+  color: #9ca3af;
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   NATIVE SELECT OPTION DARK THEME STYLING OVERRIDE
+   ========================================================================== */
+select option {
+  background-color: #14161d !important;
+  color: #ffffff !important;
+  padding: 10px 14px !important;
+}
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked {
+  background-color: #2b2f3a !important;
+  color: #c4842f !important;
+}
+
+/* ==========================================================================
+   PREVENT BROWSER AUTOFILL WHITE / LIGHT BLUE / BLACK TEXT OVERRIDE
+   ========================================================================== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-internal-autofill-selected,
+input:autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+textarea:-internal-autofill-selected,
+textarea:autofill,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active,
+select:-internal-autofill-selected,
+select:autofill {
+  -webkit-box-shadow: 0 0 0 1000px #16181f inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 50000s ease-in-out 0s, color 50000s ease-in-out 0s;
+}
+
+input, textarea, select {
+  color: #ffffff;
+}
+
+
