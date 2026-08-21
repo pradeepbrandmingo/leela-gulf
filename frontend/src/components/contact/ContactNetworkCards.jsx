@@ -5,9 +5,7 @@ import { Phone, Mail, Globe, Globe2, Handshake, Warehouse } from "lucide-react";
 
 /**
  * ContactNetworkCards - Premium Compact Contact Information Bar & Global Network Banner Component.
- * Responsive Layout:
- * - Desktop: Compact height, sleek proportions, tight padding.
- * - Mobile: Clean 3-row vertical stack matching Reference Screenshot 2.
+ * Subtle 1px gold border (border border-[#e8b958]/40) without heavy bold lines or shadow glow.
  */
 export default function ContactNetworkCards() {
   const { isRTL } = useLanguage();
@@ -18,13 +16,13 @@ export default function ContactNetworkCards() {
       {/* ═════════════════════════════════════════════════════════════════
           CARD 1: DIRECT CONTACT BAR ("Prefer to talk?")
           ═════════════════════════════════════════════════════════════════ */}
-      <div className="bg-[#0e1014]/90 backdrop-blur-xl border border-[#c4842f]/35 rounded-2xl p-5 sm:p-6 md:p-7 shadow-xl relative overflow-hidden transition-all duration-300 hover:border-[#c4842f]/50">
+      <div className="bg-[#0e1014]/90 backdrop-blur-xl border border-[#e8b958]/40 rounded-2xl p-5 sm:p-6 md:p-7 shadow-xl relative overflow-hidden transition-all duration-300 hover:border-[#e8b958]/70">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 lg:gap-8">
           
           {/* Left Column: Phone Icon & "Prefer to talk?" */}
           <div className="flex items-center gap-4 shrink-0">
-            <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-[var(--color-secondary-main)]/15 border border-[var(--color-secondary-main)]/40 flex items-center justify-center shrink-0 shadow-lg shadow-[var(--color-secondary-main)]/10">
-              <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary-main)]" />
+            <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-[#c4842f]/20 border border-[#e8b958]/60 flex items-center justify-center shrink-0 shadow-lg shadow-[#c4842f]/10">
+              <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-[#e8b958]" />
             </div>
             <div>
               <h4 className="font-heading font-bold text-base sm:text-lg text-white">
@@ -40,7 +38,7 @@ export default function ContactNetworkCards() {
           <div className="text-left lg:text-center">
             <a
               href="tel:+97165265627"
-              className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white hover:text-[var(--color-secondary-main)] transition-colors tracking-tight block"
+              className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white hover:text-[#e8b958] transition-colors tracking-tight block"
             >
               +971 6 526 5627
             </a>
@@ -51,7 +49,7 @@ export default function ContactNetworkCards() {
 
           {/* Right Column: Other Ways to Reach Us (No Underline) */}
           <div className="flex flex-col items-start lg:items-end shrink-0">
-            <span className="font-heading font-bold text-xs sm:text-sm text-[#c4842f] mb-1.5 uppercase tracking-wider">
+            <span className="font-heading font-bold text-xs sm:text-sm text-gradient-gold-animated mb-1.5 uppercase tracking-wider">
               {isRTL ? "طرق أخرى للتواصل معنا" : "OTHER WAYS TO REACH US"}
             </span>
 
@@ -59,9 +57,9 @@ export default function ContactNetworkCards() {
               {/* Email */}
               <a
                 href="mailto:sales@leelagulf.com"
-                className="flex items-center gap-2 text-gray-200 hover:text-[var(--color-secondary-main)] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-[#e8b958] transition-colors group"
               >
-                <Mail className="w-4 h-4 text-[var(--color-secondary-main)] group-hover:scale-110 transition-transform" />
+                <Mail className="w-4 h-4 text-[#e8b958] group-hover:scale-110 transition-transform" />
                 <span className="font-medium">
                   sales@leelagulf.com
                 </span>
@@ -72,9 +70,9 @@ export default function ContactNetworkCards() {
                 href="https://leelagulf.com"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 text-gray-200 hover:text-[var(--color-secondary-main)] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-[#e8b958] transition-colors group"
               >
-                <Globe className="w-4 h-4 text-[var(--color-secondary-main)] group-hover:scale-110 transition-transform" />
+                <Globe className="w-4 h-4 text-[#e8b958] group-hover:scale-110 transition-transform" />
                 <span className="font-medium">
                   leelagulf.com
                 </span>
@@ -88,7 +86,7 @@ export default function ContactNetworkCards() {
       {/* ═════════════════════════════════════════════════════════════════
           CARD 2: GLOBAL NETWORK BANNER WITH COMPACT HEIGHT & CLEAR GOLD MAP
           ═════════════════════════════════════════════════════════════════ */}
-      <div className="bg-[#0b0d11] border border-[#c4842f]/40 rounded-3xl p-6 sm:p-8 md:p-9 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-[#c4842f]/60 min-h-[300px] flex flex-col justify-between">
+      <div className="bg-[#0b0d11] border border-[#e8b958]/40 rounded-3xl p-6 sm:p-8 md:p-9 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-[#e8b958]/70 min-h-[300px] flex flex-col justify-between">
         
         {/* Background Map Image with Bright Clear Gold Contours */}
         <div 
@@ -103,8 +101,8 @@ export default function ContactNetworkCards() {
           
           {/* Top Badge */}
           <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-5 h-[2px] bg-[#c4842f] inline-block" />
-            <span className="font-heading font-bold text-xs sm:text-sm tracking-widest text-[#c4842f] uppercase">
+            <span className="w-5 h-[2px] bg-gradient-gold-animated inline-block" />
+            <span className="font-heading font-bold text-xs sm:text-sm tracking-widest text-gradient-gold-animated uppercase">
               {isRTL ? "الشبكة العالمية" : "GLOBAL NETWORK"}
             </span>
           </div>
@@ -114,12 +112,12 @@ export default function ContactNetworkCards() {
             {isRTL ? (
               <>
                 ربط الصناعات. <br />
-                <span className="text-[#c4842f]">عبر الخليج.</span>
+                <span className="text-gradient-gold-animated">عبر الخليج.</span>
               </>
             ) : (
               <>
                 Connecting Industries. <br />
-                <span className="text-[#c4842f]">Across the Gulf.</span>
+                <span className="text-gradient-gold-animated">Across the Gulf.</span>
               </>
             )}
           </h2>
@@ -134,12 +132,12 @@ export default function ContactNetworkCards() {
 
         {/* Bottom Metrics Glass Container (Pixel-Perfect Mobile Vertical Stack & Desktop Horizontal Row) */}
         <div className="relative z-10 max-w-2xl">
-          <div className="bg-[#12141c]/90 backdrop-blur-md border border-[#2e3344] rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 sm:gap-6 shadow-xl">
+          <div className="bg-[#12141c]/90 backdrop-blur-md border border-[#e8b958]/35 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 sm:gap-6 shadow-xl">
             
             {/* Stat 1: Countries Served */}
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--color-secondary-main)]/15 border border-[var(--color-secondary-main)]/30 flex items-center justify-center shrink-0">
-                <Globe2 className="w-4.5 h-4.5 text-[var(--color-secondary-main)]" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
+                <Globe2 className="w-4.5 h-4.5 text-[#e8b958]" />
               </div>
               <div>
                 <h5 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">
@@ -153,8 +151,8 @@ export default function ContactNetworkCards() {
 
             {/* Stat 2: Supply Partners */}
             <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-[#282d3d] pt-3 sm:pt-0 pl-0 sm:pl-5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--color-secondary-main)]/15 border border-[var(--color-secondary-main)]/30 flex items-center justify-center shrink-0">
-                <Handshake className="w-4.5 h-4.5 text-[var(--color-secondary-main)]" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
+                <Handshake className="w-4.5 h-4.5 text-[#e8b958]" />
               </div>
               <div>
                 <h5 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">
@@ -168,8 +166,8 @@ export default function ContactNetworkCards() {
 
             {/* Stat 3: Distribution Hub */}
             <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-[#282d3d] pt-3 sm:pt-0 pl-0 sm:pl-5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[var(--color-secondary-main)]/15 border border-[var(--color-secondary-main)]/30 flex items-center justify-center shrink-0">
-                <Warehouse className="w-4.5 h-4.5 text-[var(--color-secondary-main)]" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
+                <Warehouse className="w-4.5 h-4.5 text-[#e8b958]" />
               </div>
               <div>
                 <h5 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">

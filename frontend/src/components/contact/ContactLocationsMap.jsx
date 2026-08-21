@@ -42,8 +42,7 @@ const LOCATIONS = [
 
 /**
  * ContactLocationsMap - Interactive Office Locations Map Component.
- * - Mobile (< md): Clean stacked layout (Address Card on top, 300px Map below).
- * - Desktop (>= md): Full map with Floating Dark Luxury Overlay Card.
+ * Using global gold theme variables and animated gold gradients matching website design system.
  */
 export default function ContactLocationsMap() {
   const { isRTL } = useLanguage();
@@ -54,7 +53,7 @@ export default function ContactLocationsMap() {
   return (
     <div className="w-full mt-8 sm:mt-10">
       {/* Outer Card Container */}
-      <div className="bg-[#0e1014] border border-[#c4842f]/40 rounded-3xl overflow-hidden shadow-2xl relative">
+      <div className="bg-[#0e1014] border border-[var(--color-secondary-main)]/40 rounded-3xl overflow-hidden shadow-2xl relative">
         
         <div className="flex flex-col md:block relative w-full md:h-[470px]">
           
@@ -76,7 +75,7 @@ export default function ContactLocationsMap() {
                       onClick={() => setActiveTab(loc.id)}
                       className={`py-3 px-2 text-xs font-heading font-bold transition-all relative cursor-pointer text-center ${
                         isActive
-                          ? "text-[#c4842f] bg-[#141620]"
+                          ? "text-gradient-gold-animated bg-[#141620]"
                           : "text-gray-400 hover:text-white bg-[#0e1014]"
                       }`}
                     >
@@ -84,7 +83,7 @@ export default function ContactLocationsMap() {
                       
                       {/* Gold Active Bottom Indicator Line */}
                       {isActive && (
-                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#c4842f] animate-fadeIn" />
+                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-gold-animated animate-fadeIn" />
                       )}
                     </button>
                   );
@@ -96,7 +95,7 @@ export default function ContactLocationsMap() {
                 
                 {/* ADDRESS SECTION */}
                 <div>
-                  <span className="block font-heading font-bold text-[10px] text-[#c4842f] uppercase tracking-wider mb-0.5">
+                  <span className="block font-heading font-bold text-[10px] text-gradient-gold-animated uppercase tracking-wider mb-0.5">
                     {isRTL ? "العنوان" : "ADDRESS"}
                   </span>
                   <p className="font-subheading text-xs text-gray-200 leading-relaxed">
@@ -106,12 +105,12 @@ export default function ContactLocationsMap() {
 
                 {/* EMAIL SECTION */}
                 <div>
-                  <span className="block font-heading font-bold text-[10px] text-[#c4842f] uppercase tracking-wider mb-0.5">
+                  <span className="block font-heading font-bold text-[10px] text-gradient-gold-animated uppercase tracking-wider mb-0.5">
                     {isRTL ? "البريد الإلكتروني" : "EMAIL"}
                   </span>
                   <a
                     href={`mailto:${currentLocation.email}`}
-                    className="font-subheading text-xs text-gray-200 hover:text-[#c4842f] transition-colors inline-block"
+                    className="font-subheading text-xs text-gray-200 hover:text-[var(--color-secondary-main)] transition-colors inline-block"
                   >
                     {currentLocation.email}
                   </a>
@@ -119,7 +118,7 @@ export default function ContactLocationsMap() {
 
                 {/* PHONE SECTION */}
                 <div>
-                  <span className="block font-heading font-bold text-[10px] text-[#c4842f] uppercase tracking-wider mb-0.5">
+                  <span className="block font-heading font-bold text-[10px] text-gradient-gold-animated uppercase tracking-wider mb-0.5">
                     {isRTL ? "الهاتف" : "PHONE"}
                   </span>
                   <div className="space-y-0.5">
@@ -127,7 +126,7 @@ export default function ContactLocationsMap() {
                       <a
                         key={pIdx}
                         href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
-                        className="block font-subheading text-xs text-gray-200 hover:text-[#c4842f] transition-colors"
+                        className="block font-subheading text-xs text-gray-200 hover:text-[var(--color-secondary-main)] transition-colors"
                       >
                         {phone}
                       </a>
@@ -141,10 +140,10 @@ export default function ContactLocationsMap() {
                     href={currentLocation.directionsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 font-heading font-bold text-xs text-[#c4842f] hover:brightness-125 transition-all"
+                    className="inline-flex items-center gap-1.5 font-heading font-bold text-xs hover:brightness-125 transition-all group"
                   >
-                    <span>{isRTL ? "احصل على الاتجاهات" : "Get Directions"}</span>
-                    <ExternalLink className="w-3 h-3" />
+                    <span className="text-gradient-gold-animated">{isRTL ? "احصل على الاتجاهات" : "Get Directions"}</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-[var(--color-secondary-main)] group-hover:scale-110 transition-transform" />
                   </a>
                 </div>
 

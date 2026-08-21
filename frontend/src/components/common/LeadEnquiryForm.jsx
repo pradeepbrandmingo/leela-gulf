@@ -9,8 +9,8 @@ import { Send, CheckCircle2, AlertCircle, Loader2, ChevronDown, Search, Check, R
 
 /**
  * LeadEnquiryForm - Master Production-Ready Reusable Contact & Lead Capture Form Component.
- * Features 100% custom luxury dark theme dropdowns & Full-Card Animated Thank You Screen on submission
- * matching Screenshot 3 reference UI.
+ * Features strict production validation (alphabetic names, valid email, valid intl phone),
+ * live number filtering, and auto-closing Thank You success screen after 3 seconds.
  */
 export default function LeadEnquiryForm({
   sourcePage = "Contact Us Page",
@@ -78,6 +78,16 @@ export default function LeadEnquiryForm({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Auto-close / reset Thank You screen automatically after 3 seconds
+  useEffect(() => {
+    if (submitStatus === "SUCCESS") {
+      const timer = setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitStatus]);
+
   // Current Selected Country Objects
   const selectedPhoneCountryObj = GLOBAL_COUNTRIES.find((c) => c.code === phoneCountry) || GLOBAL_COUNTRIES[0];
 
@@ -128,9 +138,18 @@ export default function LeadEnquiryForm({
     }, 600);
   };
 
-  // Form Field Change Handler
+  // Form Field Change Handler with Live Filtering for Names (No numbers or symbols allowed)
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    // Strict Alphabetic Filter for First Name & Last Name (Strips numbers & special characters live)
+    if (name === "firstName" || name === "lastName") {
+      const filteredValue = value.replace(/[^a-zA-Z\s'-]/g, "");
+      setFormData((prev) => ({ ...prev, [name]: filteredValue }));
+      if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -141,37 +160,66 @@ export default function LeadEnquiryForm({
     }
   };
 
-  // Validate Form Fields
+  // Validate Form Fields (Strict Production Validation)
   const validateForm = () => {
     const newErrors = {};
+    const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
 
+    // First Name Validation
     if (!formData.firstName.trim()) {
       newErrors.firstName = isRTL ? "الاسم الأول مطلوب" : "First Name is required";
+    } else if (!nameRegex.test(formData.firstName.trim())) {
+      newErrors.firstName = isRTL
+        ? "الاسم الأول يجب أن يحتوي على أحرف فقط"
+        : "First Name must contain at least 2 letters (no numbers or symbols)";
     }
 
+    // Last Name Validation
     if (!formData.lastName.trim()) {
       newErrors.lastName = isRTL ? "اسم العائلة مطلوب" : "Last Name is required";
+    } else if (!nameRegex.test(formData.lastName.trim())) {
+      newErrors.lastName = isRTL
+        ? "اسم العائلة يجب أن يحتوي على أحرف فقط"
+        : "Last Name must contain at least 2 letters (no numbers or symbols)";
     }
 
+    // Email Validation (RFC Format)
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!formData.email.trim()) {
       newErrors.email = isRTL ? "البريد الإلكتروني مطلوب" : "Email Id is required";
-    } else {
-      const quality = checkEmailQuality(formData.email);
-      if (!quality.isValid) {
-        newErrors.email = isRTL ? "يرجى إدخال بريد إلكتروني صحيح" : "Please enter a valid email address";
-      }
+    } else if (!emailRegex.test(formData.email.trim())) {
+      newErrors.email = isRTL
+        ? "يرجى إدخال بريد إلكتروني صحيح"
+        : "Please enter a valid email address (e.g. name@company.com)";
     }
 
-    if (phoneNumberValue && !isValidPhoneNumber(phoneNumberValue)) {
-      newErrors.phone = isRTL ? "رقم الهاتف غير صحيح" : "Please enter a valid international phone number";
+    // International Phone Number Validation
+    const rawDigits = (phoneNumberValue || "").replace(/[^0-9]/g, "");
+    if (!phoneNumberValue || !isValidPhoneNumber(phoneNumberValue) || rawDigits.length < 7) {
+      newErrors.phone = isRTL
+        ? "يرجى إدخال رقم هاتف صحيح مع الرمز الدولي"
+        : "Please enter a valid international phone number with country code";
     }
 
+    // Additional Information Textarea Validation
+    if (!formData.message.trim()) {
+      newErrors.message = isRTL
+        ? "يرجى تقديم معلومات إضافية"
+        : "Additional information is required";
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = isRTL
+        ? "يرجى إدخال 10 أحرف على الأقل"
+        : "Please enter at least 10 characters so we can assist you better";
+    }
+
+    // Terms Checkbox Validation
     if (!formData.agreedToTerms) {
       newErrors.agreedToTerms = isRTL
         ? "يجب الموافقة على الشروط والأحكام"
         : "You must agree to Leela Gulf terms & conditions";
     }
 
+    // reCAPTCHA Verification Check
     if (!captchaVerified) {
       newErrors.captcha = isRTL ? "يرجى إكمال التحقق من الكابتشا" : "Please verify 'I'm not a robot'";
     }
@@ -234,27 +282,27 @@ export default function LeadEnquiryForm({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* ── CARD OUTER CONTAINER (Uniform Gold Border matching reference UI) ── */}
-      <div className="bg-[#0e1014]/95 backdrop-blur-xl border border-[#c4842f]/40 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300">
+      {/* ── CARD OUTER CONTAINER (Clean Bright Gold Border) ── */}
+      <div className="bg-[#0e1014]/95 backdrop-blur-xl border border-[#e8b958]/40 hover:border-[#e8b958]/70 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300">
         
         {/* ═════════════════════════════════════════════════════════════════
-            VIEW A: FULL-CARD ANIMATED THANK YOU SUCCESS SCREEN (Ref Screenshot 3)
+            VIEW A: FULL-CARD ANIMATED THANK YOU SUCCESS SCREEN (AUTO CLOSES IN 3 SECONDS)
             ═════════════════════════════════════════════════════════════════ */}
         {submitStatus === "SUCCESS" ? (
-          <div className="py-10 sm:py-16 px-4 text-center flex flex-col items-center justify-center animate-fadeIn">
+          <div className="py-12 sm:py-16 px-4 text-center flex flex-col items-center justify-center animate-fadeIn">
             
             {/* Top Left Accent Tag Badge */}
-            <div className="self-start inline-flex items-center gap-2 mb-8 bg-[#1a1d27] border border-[#333a4c] rounded-lg px-3.5 py-1.5 shadow-sm">
-              <span className="w-2.5 h-4 bg-[#c4842f] rounded-sm inline-block" />
-              <span className="font-heading font-bold text-xs tracking-wider text-white uppercase">
+            <div className="self-start inline-flex items-center gap-2 mb-6 bg-[#1a1d27] border border-[#333a4c] rounded-lg px-3.5 py-1.5 shadow-sm">
+              <span className="w-2.5 h-4 bg-gradient-gold-animated rounded-sm inline-block" />
+              <span className="font-heading font-bold text-xs tracking-wider text-gradient-gold-animated uppercase">
                 {isRTL ? "تواصل معنا" : "Contact Us"}
               </span>
             </div>
 
             {/* Center Glowing Pulsing Animated Checkmark Ring */}
-            <div className="relative mb-8 my-4">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#14261a] border-2 border-emerald-500/50 flex items-center justify-center relative z-10 shadow-2xl shadow-emerald-500/25">
-                <CheckCircle2 className="w-12 h-12 sm:w-14 sm:h-14 text-emerald-400 stroke-[2.2]" />
+            <div className="relative mb-6 my-2">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#14261a] border-2 border-emerald-500/50 flex items-center justify-center relative z-10 shadow-2xl shadow-emerald-500/25">
+                <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-emerald-400 stroke-[2.2]" />
               </div>
               {/* Animated Outer Pulse Effect */}
               <div className="absolute inset-0 rounded-full border-2 border-emerald-400/40 animate-ping opacity-60" />
@@ -262,26 +310,24 @@ export default function LeadEnquiryForm({
             </div>
 
             {/* Success Heading */}
-            <h3 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight mb-3 max-w-xl">
+            <h3 className="font-heading font-bold text-2xl sm:text-3xl text-white tracking-tight mb-2 max-w-xl">
               {isRTL ? "تم إرسال طلبك بنجاح!" : "Your request has been sent successfully!"}
             </h3>
 
             {/* Subtitle */}
-            <p className="font-subheading text-gray-300 text-sm sm:text-base md:text-lg max-w-md mx-auto leading-relaxed mb-8">
+            <p className="font-subheading text-gray-300 text-sm sm:text-base max-w-md mx-auto leading-relaxed mb-6">
               {isRTL
                 ? "سنتواصل معك في أقرب وقت ممكن. فريق التجارة لدينا يقوم بمراجعة مواصفاتك."
                 : "We will get back to you shortly."}
             </p>
 
-            {/* Send Another Message Button */}
-            <button
-              type="button"
-              onClick={() => setSubmitStatus(null)}
-              className="inline-flex items-center gap-2.5 bg-[#1a1d27] hover:bg-[#252b3a] text-white border border-[#333a4c] hover:border-[#c4842f] font-heading font-bold text-sm sm:text-base px-7 py-3.5 rounded-xl transition-all shadow-lg hover:shadow-[#c4842f]/10 cursor-pointer"
-            >
-              <RefreshCw className="w-4 h-4 text-[#c4842f]" />
-              <span>{isRTL ? "إرسال رسالة أخرى" : "Send Another Message"}</span>
-            </button>
+            {/* Auto-Close Progress Indicator (No manual button) */}
+            <div className="inline-flex items-center gap-2.5 bg-[#14161d] border border-[#2b2f3a] rounded-xl px-5 py-2.5 shadow-md text-xs sm:text-sm font-subheading text-gray-300">
+              <Loader2 className="w-4 h-4 text-[#e8b958] animate-spin" />
+              <span>
+                {isRTL ? "سيتم إغلاق الرسالة تلقائياً خلال 3 ثوانٍ..." : "Closing automatically in 3 seconds..."}
+              </span>
+            </div>
           </div>
         ) : (
           /* ═════════════════════════════════════════════════════════════════
@@ -291,8 +337,8 @@ export default function LeadEnquiryForm({
             {/* CARD HEADER */}
             {showHeading && (
               <div className="flex items-center gap-4 mb-8 sm:mb-10 pb-6 border-b border-[#24272f]">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[var(--color-secondary-main)]/15 border border-[var(--color-secondary-main)]/40 flex items-center justify-center shrink-0 shadow-lg shadow-[var(--color-secondary-main)]/10">
-                  <Send className="w-6 h-6 text-[var(--color-secondary-main)]" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#c4842f]/20 border border-[#e8b958]/70 flex items-center justify-center shrink-0 shadow-lg shadow-[#c4842f]/15">
+                  <Send className="w-6 h-6 text-[#e8b958]" />
                 </div>
 
                 <div>
@@ -315,7 +361,7 @@ export default function LeadEnquiryForm({
                 <div>
                   <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
                     {isRTL ? "الاسم الأول" : "First Name"}{" "}
-                    <span className="text-[#c4842f]">*</span>
+                    <span className="text-[#e8b958]">*</span>
                   </label>
                   <input
                     type="text"
@@ -325,11 +371,11 @@ export default function LeadEnquiryForm({
                     placeholder={isRTL ? "الاسم الأول" : "First Name"}
                     className={`w-full bg-[#16181f] border ${
                       errors.firstName ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#c4842f] focus:ring-1 focus:ring-[#c4842f] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.firstName && (
                     <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" /> {errors.firstName}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.firstName}
                     </p>
                   )}
                 </div>
@@ -338,7 +384,7 @@ export default function LeadEnquiryForm({
                 <div>
                   <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
                     {isRTL ? "اسم العائلة" : "Last Name"}{" "}
-                    <span className="text-[#c4842f]">*</span>
+                    <span className="text-[#e8b958]">*</span>
                   </label>
                   <input
                     type="text"
@@ -348,11 +394,11 @@ export default function LeadEnquiryForm({
                     placeholder={isRTL ? "اسم العائلة" : "Last Name"}
                     className={`w-full bg-[#16181f] border ${
                       errors.lastName ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#c4842f] focus:ring-1 focus:ring-[#c4842f] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.lastName && (
                     <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" /> {errors.lastName}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.lastName}
                     </p>
                   )}
                 </div>
@@ -364,7 +410,7 @@ export default function LeadEnquiryForm({
                 <div>
                   <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
                     {isRTL ? "البريد الإلكتروني" : "Email Id"}{" "}
-                    <span className="text-[#c4842f]">*</span>
+                    <span className="text-[#e8b958]">*</span>
                   </label>
                   <input
                     type="email"
@@ -374,11 +420,11 @@ export default function LeadEnquiryForm({
                     placeholder={isRTL ? "البريد الإلكتروني" : "Email Id"}
                     className={`w-full bg-[#16181f] border ${
                       errors.email ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#c4842f] focus:ring-1 focus:ring-[#c4842f] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.email && (
                     <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" /> {errors.email}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
                     </p>
                   )}
                 </div>
@@ -394,13 +440,13 @@ export default function LeadEnquiryForm({
                     type="button"
                     onClick={() => setIsServiceOpen(!isServiceOpen)}
                     className={`w-full bg-[#16181f] border ${
-                      isServiceOpen ? "border-[#c4842f] ring-1 ring-[#c4842f]" : "border-[#2b2f3a] hover:border-[#404656]"
+                      isServiceOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
                     } rounded-xl px-4 py-3.5 text-sm sm:text-base text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
                   >
                     <span className={formData.service ? "text-white" : "text-gray-400"}>
                       {formData.service || (isRTL ? "اختر الخدمة" : "Select Service")}
                     </span>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isServiceOpen ? "rotate-180 text-[#c4842f]" : ""}`} />
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isServiceOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
                   </button>
 
                   {/* Custom Dark Dropdown Menu */}
@@ -416,12 +462,12 @@ export default function LeadEnquiryForm({
                           }}
                           className={`w-full text-left px-4 py-3 text-xs sm:text-sm rounded-xl flex items-center justify-between transition-colors ${
                             formData.service === serv
-                              ? "bg-[#252835] text-[var(--color-secondary-main)] font-semibold"
+                              ? "bg-[#252835] text-[#e8b958] font-semibold"
                               : "text-gray-300 hover:bg-[#1f222d] hover:text-white"
                           }`}
                         >
                           <span>{serv}</span>
-                          {formData.service === serv && <Check className="w-4 h-4 text-[var(--color-secondary-main)]" />}
+                          {formData.service === serv && <Check className="w-4 h-4 text-[#e8b958]" />}
                         </button>
                       ))}
                     </div>
@@ -446,11 +492,11 @@ export default function LeadEnquiryForm({
                         type="button"
                         onClick={() => setIsPhoneFlagOpen(!isPhoneFlagOpen)}
                         className={`bg-[#16181f] border ${
-                          isPhoneFlagOpen ? "border-[#c4842f] ring-1 ring-[#c4842f]" : "border-[#2b2f3a] hover:border-[#404656]"
+                          isPhoneFlagOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
                         } rounded-xl px-3 py-3.5 flex items-center gap-2 text-white shrink-0 outline-none transition-all cursor-pointer h-full`}
                       >
                         <span className="text-xl leading-none">{selectedPhoneCountryObj.flag}</span>
-                        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isPhoneFlagOpen ? "rotate-180 text-[#c4842f]" : ""}`} />
+                        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isPhoneFlagOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
                       </button>
 
                       {/* Custom Searchable Dark Flag Popup Menu */}
@@ -463,7 +509,7 @@ export default function LeadEnquiryForm({
                               value={phoneFlagSearch}
                               onChange={(e) => setPhoneFlagSearch(e.target.value)}
                               placeholder="Search country or code..."
-                              className="w-full bg-[#1c1f2b] border border-[#2e3345] focus:border-[#c4842f] rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
+                              className="w-full bg-[#1c1f2b] border border-[#2e3345] focus:border-[#e8b958] rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
                               autoFocus
                             />
                           </div>
@@ -480,7 +526,7 @@ export default function LeadEnquiryForm({
                                 }}
                                 className={`w-full text-left px-3 py-2.5 text-xs sm:text-sm rounded-xl flex items-center justify-between transition-colors ${
                                   phoneCountry === cObj.code
-                                    ? "bg-[#252835] text-[var(--color-secondary-main)] font-bold"
+                                    ? "bg-[#252835] text-[#e8b958] font-bold"
                                     : "text-gray-300 hover:bg-[#1f222d] hover:text-white"
                                 }`}
                               >
@@ -516,7 +562,7 @@ export default function LeadEnquiryForm({
 
                   {errors.phone && (
                     <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" /> {errors.phone}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.phone}
                     </p>
                   )}
                 </div>
@@ -532,13 +578,13 @@ export default function LeadEnquiryForm({
                     type="button"
                     onClick={() => setIsCountryOpen(!isCountryOpen)}
                     className={`w-full bg-[#16181f] border ${
-                      isCountryOpen ? "border-[#c4842f] ring-1 ring-[#c4842f]" : "border-[#2b2f3a] hover:border-[#404656]"
+                      isCountryOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
                     } rounded-xl px-4 py-3.5 text-sm sm:text-base text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
                   >
                     <span className="text-white font-medium truncate">
                       {formData.countryName || "United States"}
                     </span>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCountryOpen ? "rotate-180 text-[#c4842f]" : ""}`} />
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCountryOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
                   </button>
 
                   {/* Searchable Custom Dark Popup Menu */}
@@ -553,7 +599,7 @@ export default function LeadEnquiryForm({
                           value={countrySearchQuery}
                           onChange={(e) => setCountrySearchQuery(e.target.value)}
                           placeholder="Search country..."
-                          className="w-full bg-[#1c1f2b] border border-[#2e3345] focus:border-[#c4842f] rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
+                          className="w-full bg-[#1c1f2b] border border-[#2e3345] focus:border-[#e8b958] rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
                           autoFocus
                         />
                       </div>
@@ -568,7 +614,7 @@ export default function LeadEnquiryForm({
                               onClick={() => handleCountryDropdownChange(cObj.name)}
                               className={`w-full text-left px-3 py-2.5 text-xs sm:text-sm rounded-xl flex items-center justify-between transition-colors ${
                                 formData.countryName === cObj.name
-                                  ? "bg-[#252835] text-[var(--color-secondary-main)] font-bold"
+                                  ? "bg-[#252835] text-[#e8b958] font-bold"
                                   : "text-gray-300 hover:bg-[#1f222d] hover:text-white"
                               }`}
                             >
@@ -596,7 +642,8 @@ export default function LeadEnquiryForm({
                 <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
                   {isRTL
                     ? "معلومات إضافية تساعدنا على التواصل بشكل أفضل"
-                    : "Additional information that will help us connect better"}
+                    : "Additional information that will help us connect better"}{" "}
+                  <span className="text-[#e8b958]">*</span>
                 </label>
                 <textarea
                   name="message"
@@ -604,8 +651,15 @@ export default function LeadEnquiryForm({
                   value={formData.message}
                   onChange={handleChange}
                   placeholder={isRTL ? "اكتب هنا..." : "Type here.."}
-                  className="w-full bg-[#16181f] border border-[#2b2f3a] hover:border-[#404656] focus:border-[#c4842f] focus:ring-1 focus:ring-[#c4842f] rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none resize-y transition-all duration-200 min-h-[110px]"
+                  className={`w-full bg-[#16181f] border ${
+                    errors.message ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
+                  } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none resize-y transition-all duration-200 min-h-[110px]`}
                 />
+                {errors.message && (
+                  <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.message}
+                  </p>
+                )}
               </div>
 
               {/* ── ROW 5: Terms Checkbox (Left) & reCAPTCHA Widget (Right) ── */}
@@ -619,14 +673,14 @@ export default function LeadEnquiryForm({
                       name="agreedToTerms"
                       checked={formData.agreedToTerms}
                       onChange={handleChange}
-                      className="w-4 h-4 sm:w-5 sm:h-5 rounded border-[#383d4a] text-[var(--color-secondary-main)] focus:ring-[var(--color-secondary-main)] bg-[#16181f] cursor-pointer accent-[#c4842f]"
+                      className="w-4 h-4 sm:w-5 sm:h-5 rounded border-[#383d4a] text-[#e8b958] focus:ring-[#e8b958] bg-[#16181f] cursor-pointer accent-[#e8b958]"
                     />
                     <span className="font-subheading text-xs sm:text-sm text-gray-300 select-none">
                       {isRTL ? "أوافق على " : "I agree with Leela Gulf "}
                       <button
                         type="button"
                         onClick={() => setShowTermsModal(true)}
-                        className="text-[var(--color-secondary-main)] underline font-medium hover:brightness-125 transition-all"
+                        className="text-[#e8b958] underline font-medium hover:text-[#f7d27e] transition-all"
                       >
                         {isRTL ? "الشروط والأحكام" : "terms and conditions"}
                       </button>
@@ -634,7 +688,7 @@ export default function LeadEnquiryForm({
                   </label>
                   {errors.agreedToTerms && (
                     <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" /> {errors.agreedToTerms}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.agreedToTerms}
                     </p>
                   )}
                 </div>
@@ -651,7 +705,7 @@ export default function LeadEnquiryForm({
                     <div className="flex items-center gap-2.5">
                       <div className="w-5 h-5 rounded-[4px] bg-[#1a1d27] border border-[#3c4254] flex items-center justify-center transition-colors shrink-0">
                         {captchaLoading ? (
-                          <Loader2 className="w-3.5 h-3.5 text-[var(--color-secondary-main)] animate-spin" />
+                          <Loader2 className="w-3.5 h-3.5 text-[#e8b958] animate-spin" />
                         ) : captchaVerified ? (
                           <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />
                         ) : null}
@@ -664,7 +718,7 @@ export default function LeadEnquiryForm({
                     {/* Brand Icon & Subtext */}
                     <div className="flex flex-col items-center justify-center shrink-0 border-l border-[#242834] pl-3">
                       <svg className="w-5 h-5" viewBox="0 0 64 64" fill="none">
-                        <path d="M32 10C21 10 12 19 12 30H4L15 42L26 30H18C18 22.3 24.3 16 32 16C36 16 39.6 17.7 42.1 20.4L46.4 16.1C42.7 12.3 37.6 10 32 10Z" fill="#c4842f"/>
+                        <path d="M32 10C21 10 12 19 12 30H4L15 42L26 30H18C18 22.3 24.3 16 32 16C36 16 39.6 17.7 42.1 20.4L46.4 16.1C42.7 12.3 37.6 10 32 10Z" fill="#e8b958"/>
                         <path d="M52 22L41 34H49C49 41.7 42.7 48 35 48C31 48 27.4 46.3 24.9 43.6L20.6 47.9C24.3 51.7 29.4 54 35 54C46 54 55 45 55 34H63L52 22Z" fill="#6b7280"/>
                       </svg>
                       <span className="text-[9px] font-heading font-bold text-gray-400 tracking-tighter leading-tight mt-0.5">reCAPTCHA</span>
@@ -672,7 +726,7 @@ export default function LeadEnquiryForm({
                   </div>
                   {errors.captcha && (
                     <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" /> {errors.captcha}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.captcha}
                     </p>
                   )}
                 </div>
@@ -711,7 +765,7 @@ export default function LeadEnquiryForm({
       {showTermsModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
           <div className="bg-[#14161d] border border-[#2e3340] rounded-3xl p-6 sm:p-8 max-w-lg w-full text-white shadow-2xl relative">
-            <h4 className="font-heading font-bold text-xl sm:text-2xl mb-4 text-[var(--color-secondary-main)]">
+            <h4 className="font-heading font-bold text-xl sm:text-2xl mb-4 text-[#e8b958]">
               Leela Gulf Terms & Conditions
             </h4>
             <div className="space-y-3 font-subheading text-xs sm:text-sm text-gray-300 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
