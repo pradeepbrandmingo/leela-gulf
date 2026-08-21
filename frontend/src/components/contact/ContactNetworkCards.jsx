@@ -108,16 +108,16 @@ export default function ContactNetworkCards() {
           </div>
 
           {/* Main Heading */}
-          <h2 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight leading-[1.18] mb-3">
+          <h2 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight leading-[1.18] mb-3" style={{ fontWeight: 700 }}>
             {isRTL ? (
               <>
                 ربط الصناعات. <br />
-                <span className="text-gradient-gold-animated">عبر الخليج.</span>
+                <span className="font-heading font-bold text-gradient-gold-animated" style={{ fontWeight: 700 }}>عبر الخليج.</span>
               </>
             ) : (
               <>
                 Connecting Industries. <br />
-                <span className="text-gradient-gold-animated">Across the Gulf.</span>
+                <span className="font-heading font-bold text-gradient-gold-animated" style={{ fontWeight: 700 }}>Across the Gulf.</span>
               </>
             )}
           </h2>
