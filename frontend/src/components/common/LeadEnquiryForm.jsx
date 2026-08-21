@@ -16,6 +16,7 @@ export default function LeadEnquiryForm({
   sourcePage = "Contact Us Page",
   productName = "",
   showHeading = true,
+  isModal = false,
   className = "",
 }) {
   const { t, isRTL } = useLanguage();
