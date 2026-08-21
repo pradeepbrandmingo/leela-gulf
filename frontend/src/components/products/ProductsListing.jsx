@@ -246,7 +246,7 @@ export default function ProductsListing() {
   }, [totalPages, currentPage]);
 
   return (
-    <section ref={sectionRef} className="w-full bg-[var(--color-primary)] pb-16 sm:pb-20">
+    <section ref={sectionRef} className="w-full bg-[var(--color-primary)] pb-10 sm:pb-14">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
 
         {/* ═══════════════════════════════════════════
