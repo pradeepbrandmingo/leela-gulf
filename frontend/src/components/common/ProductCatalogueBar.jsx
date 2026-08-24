@@ -15,11 +15,11 @@ export default function ProductCatalogueBar() {
     "https://wa.me/97165265627?text=Hello%20Leela%20Gulf%20Team%2C%20I%20am%20looking%20for%20assistance%20regarding%20chemical%20products.";
 
   return (
-    <section className="w-full bg-[var(--color-primary)] pt-2 sm:pt-4 pb-12 sm:pb-16 relative overflow-hidden">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
+    <section className="w-full bg-[var(--color-primary)] relative pb-12 sm:pb-16 overflow-hidden">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
 
-        {/* ── WHITE ROUNDED PILL CONTAINER ── */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:px-8 lg:py-4.5 shadow-2xl border border-gray-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-5 lg:gap-8 transition-all duration-300">
+        {/* ── WHITE ROUNDED PILL CONTAINER (#fcfcfb) ── */}
+        <div className="bg-[#fcfcfb] rounded-2xl sm:rounded-3xl lg:rounded-[32px] p-5 sm:p-6 lg:px-10 lg:py-6 shadow-xl border border-gray-200/60 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-5 lg:gap-8 transition-all duration-300">
 
           {/* ═════════════════════════════════════════════════════════════════
               LEFT BOX: DOWNLOAD OUR PRODUCT CATALOGUE
@@ -36,13 +36,13 @@ export default function ProductCatalogueBar() {
 
             {/* Text Hierarchy */}
             <div>
-              <h3 className="font-heading font-bold text-sm sm:text-base lg:text-[17px] text-[#1a1a1a] leading-tight" style={{ fontWeight: 700 }}>
+              <h3 className="font-heading font-bold text-base sm:text-lg lg:text-xl text-[#1a1a1a] leading-tight" style={{ fontWeight: 700 }}>
                 {isRTL ? "تحميل " : "Download Our "}
                 <span className="text-gold-main group-hover:text-gold-dark transition-colors">
                   {isRTL ? "كتالوج المنتجات" : "Product Catalogue"}
                 </span>
               </h3>
-              <p className="font-subheading text-[11px] sm:text-xs text-gray-500 mt-0.5 leading-relaxed">
+              <p className="font-subheading text-xs sm:text-xs md:text-sm text-gray-500 mt-0.5 leading-relaxed font-normal">
                 {isRTL
                   ? "احصل على القائمة الكاملة لمنتجاتنا في مكان واحد."
                   : "Get the complete list of our products in one place."}
@@ -69,13 +69,13 @@ export default function ProductCatalogueBar() {
 
               {/* Text Hierarchy */}
               <div>
-                <h3 className="font-heading font-bold text-sm sm:text-base lg:text-[17px] text-[#1a1a1a] leading-tight" style={{ fontWeight: 700 }}>
+                <h3 className="font-heading font-bold text-base sm:text-lg lg:text-xl text-[#1a1a1a] leading-tight" style={{ fontWeight: 700 }}>
                   {isRTL ? "هل تحتاج مساعدة في " : "Need Help Finding the "}
                   <span className="text-gold-main">
                     {isRTL ? "اختيار المنتج المناسب؟" : "Right Product?"}
                   </span>
                 </h3>
-                <p className="font-subheading text-[11px] sm:text-xs text-gray-500 mt-0.5 leading-relaxed">
+                <p className="font-subheading text-xs sm:text-xs md:text-sm text-gray-500 mt-0.5 leading-relaxed font-normal">
                   {isRTL
                     ? "خبراؤنا هنا لمساعدتك في العثور على أفضل حل."
                     : "Our experts are here to help you find the best solution."}

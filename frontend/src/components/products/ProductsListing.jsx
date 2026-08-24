@@ -521,7 +521,7 @@ function ProductCard({ product, isRTL, categories, onQuoteRequest }) {
 
         {/* Left: Rounded Product Image (Clickable Link) */}
         <Link
-          href={`/products/${product.id}`}
+          href={`/products/${product.slug || product.id}`}
           className="relative w-[44%] sm:w-[42%] aspect-square rounded-2xl bg-[#f5f5f7] overflow-hidden shrink-0 block group/img"
         >
           <Image
@@ -541,7 +541,7 @@ function ProductCard({ product, isRTL, categories, onQuoteRequest }) {
             style={{ fontWeight: 700 }}
           >
             <Link
-              href={`/products/${product.id}`}
+              href={`/products/${product.slug || product.id}`}
               className="hover:text-gold-main transition-colors"
             >
               {product.title}
@@ -575,7 +575,7 @@ function ProductCard({ product, isRTL, categories, onQuoteRequest }) {
         {/* Right Action Box (Aligned under Right Text Column Start) */}
         <div className="flex-1 min-w-0 flex items-center justify-start">
           <Link
-            href={`/products/${product.id}`}
+            href={`/products/${product.slug || product.id}`}
             className="font-heading font-bold text-[11px] sm:text-xs text-gold-main hover:text-gold-dark transition-colors duration-200 whitespace-nowrap underline underline-offset-4 decoration-[#c4842f]/60"
           >
             {isRTL ? "عرض التفاصيل" : "View Details"}
