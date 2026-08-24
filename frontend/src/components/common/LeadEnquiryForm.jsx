@@ -283,8 +283,8 @@ export default function LeadEnquiryForm({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* ── CARD OUTER CONTAINER (Clean Bright Gold Border) ── */}
-      <div className="bg-[#0e1014]/95 backdrop-blur-xl border border-[#e8b958]/40 hover:border-[#e8b958]/70 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300">
+      {/* ── CARD OUTER CONTAINER (Stripped when inside modal to eliminate double borders & cramped padding) ── */}
+      <div className={isModal ? "w-full" : "bg-[#0e1014]/95 backdrop-blur-xl border border-[#e8b958]/40 hover:border-[#e8b958]/70 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300"}>
         
         {/* ═════════════════════════════════════════════════════════════════
             VIEW A: FULL-CARD ANIMATED THANK YOU SUCCESS SCREEN (AUTO CLOSES IN 3 SECONDS)
@@ -354,13 +354,13 @@ export default function LeadEnquiryForm({
             )}
 
             {/* FORM FIELDS */}
-            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-7" noValidate>
+            <form onSubmit={handleSubmit} className={isModal ? "space-y-3.5 sm:space-y-4" : "space-y-6 sm:space-y-7"} noValidate>
               
               {/* ── ROW 1: First Name & Last Name ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className={`grid grid-cols-1 sm:grid-cols-2 ${isModal ? "gap-3.5 sm:gap-4" : "gap-6"}`}>
                 {/* First Name */}
                 <div>
-                  <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                  <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "الاسم الأول" : "First Name"}{" "}
                     <span className="text-[#e8b958]">*</span>
                   </label>
@@ -372,10 +372,10 @@ export default function LeadEnquiryForm({
                     placeholder={isRTL ? "الاسم الأول" : "First Name"}
                     className={`w-full bg-[#16181f] border ${
                       errors.firstName ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.firstName && (
-                    <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.firstName}
                     </p>
                   )}
@@ -383,7 +383,7 @@ export default function LeadEnquiryForm({
 
                 {/* Last Name */}
                 <div>
-                  <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                  <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "اسم العائلة" : "Last Name"}{" "}
                     <span className="text-[#e8b958]">*</span>
                   </label>
@@ -395,10 +395,10 @@ export default function LeadEnquiryForm({
                     placeholder={isRTL ? "اسم العائلة" : "Last Name"}
                     className={`w-full bg-[#16181f] border ${
                       errors.lastName ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.lastName && (
-                    <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.lastName}
                     </p>
                   )}
@@ -406,10 +406,10 @@ export default function LeadEnquiryForm({
               </div>
 
               {/* ── ROW 2: Email Id & Services Looking For ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className={`grid grid-cols-1 sm:grid-cols-2 ${isModal ? "gap-3.5 sm:gap-4" : "gap-6"}`}>
                 {/* Email Id */}
                 <div>
-                  <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                  <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "البريد الإلكتروني" : "Email Id"}{" "}
                     <span className="text-[#e8b958]">*</span>
                   </label>
@@ -421,10 +421,10 @@ export default function LeadEnquiryForm({
                     placeholder={isRTL ? "البريد الإلكتروني" : "Email Id"}
                     className={`w-full bg-[#16181f] border ${
                       errors.email ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.email && (
-                    <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
                     </p>
                   )}
@@ -432,7 +432,7 @@ export default function LeadEnquiryForm({
 
                 {/* Custom Luxury Theme Services Dropdown */}
                 <div className="relative" ref={serviceRef}>
-                  <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                  <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "الخدمات المطلوبة" : "Services looking for"}
                   </label>
                   
@@ -442,7 +442,7 @@ export default function LeadEnquiryForm({
                     onClick={() => setIsServiceOpen(!isServiceOpen)}
                     className={`w-full bg-[#16181f] border ${
                       isServiceOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } rounded-xl px-4 py-3.5 text-sm sm:text-base text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
+                    } rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
                   >
                     <span className={formData.service ? "text-white" : "text-gray-400"}>
                       {formData.service || (isRTL ? "اختر الخدمة" : "Select Service")}
@@ -477,11 +477,11 @@ export default function LeadEnquiryForm({
               </div>
 
               {/* ── ROW 3: Phone No. (Capital N) & Custom Country Dropdown ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className={`grid grid-cols-1 sm:grid-cols-2 ${isModal ? "gap-3.5 sm:gap-4" : "gap-6"}`}>
                 
                 {/* Phone No Input + Custom Dark Flag Picker */}
                 <div>
-                  <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                  <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "رقم الهاتف" : "Phone No."}
                   </label>
 
@@ -494,7 +494,7 @@ export default function LeadEnquiryForm({
                         onClick={() => setIsPhoneFlagOpen(!isPhoneFlagOpen)}
                         className={`bg-[#16181f] border ${
                           isPhoneFlagOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
-                        } rounded-xl px-3 py-3.5 flex items-center gap-2 text-white shrink-0 outline-none transition-all cursor-pointer h-full`}
+                        } rounded-xl ${isModal ? "px-3 py-2.5" : "px-3 py-3.5"} flex items-center gap-2 text-white shrink-0 outline-none transition-all cursor-pointer h-full`}
                       >
                         <span className="text-xl leading-none">{selectedPhoneCountryObj.flag}</span>
                         <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isPhoneFlagOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
@@ -562,7 +562,7 @@ export default function LeadEnquiryForm({
                   </div>
 
                   {errors.phone && (
-                    <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.phone}
                     </p>
                   )}
@@ -570,7 +570,7 @@ export default function LeadEnquiryForm({
 
                 {/* Custom Luxury Searchable 240+ Country Dropdown */}
                 <div className="relative" ref={countryRef}>
-                  <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                  <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "الدولة" : "Country"}
                   </label>
 
@@ -580,7 +580,7 @@ export default function LeadEnquiryForm({
                     onClick={() => setIsCountryOpen(!isCountryOpen)}
                     className={`w-full bg-[#16181f] border ${
                       isCountryOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } rounded-xl px-4 py-3.5 text-sm sm:text-base text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
+                    } rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
                   >
                     <span className="text-white font-medium truncate">
                       {formData.countryName || "United States"}
@@ -640,7 +640,7 @@ export default function LeadEnquiryForm({
 
               {/* ── ROW 4: Additional Information Textarea ── */}
               <div>
-                <label className="block font-heading font-medium text-xs sm:text-sm text-gray-300 mb-2">
+                <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                   {isRTL
                     ? "معلومات إضافية تساعدنا على التواصل بشكل أفضل"
                     : "Additional information that will help us connect better"}{" "}
@@ -648,16 +648,16 @@ export default function LeadEnquiryForm({
                 </label>
                 <textarea
                   name="message"
-                  rows={4}
+                  rows={isModal ? 2 : 4}
                   value={formData.message}
                   onChange={handleChange}
                   placeholder={isRTL ? "اكتب هنا..." : "Type here.."}
                   className={`w-full bg-[#16181f] border ${
                     errors.message ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                  } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-gray-500 outline-none resize-y transition-all duration-200 min-h-[110px]`}
+                  } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm min-h-[70px]" : "px-4 py-3.5 text-sm sm:text-base min-h-[110px]"} text-white placeholder-gray-500 outline-none resize-y transition-all duration-200`}
                 />
                 {errors.message && (
-                  <p className="font-subheading text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                  <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.message}
                   </p>
                 )}
