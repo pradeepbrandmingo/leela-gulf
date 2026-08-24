@@ -11,7 +11,7 @@ import ProductAboutSection from "@/components/products/ProductAboutSection";
 import ProductFeaturesSection from "@/components/products/ProductFeaturesSection";
 import ProductApplicationsSection from "@/components/products/ProductApplicationsSection";
 import ProductFaqAndRelatedSection from "@/components/products/ProductFaqAndRelatedSection";
-import ProductCatalogueBar from "@/components/common/ProductCatalogueBar";
+import ProductDetailCatalogueBar from "@/components/products/ProductDetailCatalogueBar";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -81,8 +81,10 @@ export default function ProductDetailPage() {
         product={productData}
       />
 
-      {/* ── 6. PRODUCT CATALOGUE DOWNLOAD & CONTACT BAR ── */}
-      <ProductCatalogueBar />
+      {/* ── 6. DEDICATED PRODUCT DETAIL TECHNICAL DOC & SUPPORT BAR ── */}
+      <ProductDetailCatalogueBar
+        product={productData}
+      />
 
       {/* ── REQUEST QUOTE POPUP MODAL ── */}
       {isQuoteModalOpen && (

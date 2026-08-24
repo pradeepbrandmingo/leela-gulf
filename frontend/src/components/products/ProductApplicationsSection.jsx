@@ -126,10 +126,11 @@ export default function ProductApplicationsSection({ product: customProduct }) {
             <div className="w-12 sm:w-16 h-1 bg-gradient-gold-animated rounded-full mx-auto" />
           </div>
 
-          {/* 2. Cards List (Uniform Text Left <-> Image Right on all cards) */}
+          {/* 2. Alternating Cards List (Image Left <-> Image Right) */}
           <div className="space-y-5 sm:space-y-6">
             {items.map((item, idx) => {
               const currentImg = failedImages[idx] ? defaultFallbackImg : item.image || defaultFallbackImg;
+              const isImageLeftOnDesktop = idx % 2 === 0;
 
               return (
                 <div
@@ -138,8 +139,26 @@ export default function ProductApplicationsSection({ product: customProduct }) {
                 >
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-7 lg:gap-8">
                     
-                    {/* Left: Text Details Column */}
-                    <div className="w-full md:w-7/12 lg:w-7/12 flex flex-col justify-center order-2 md:order-1">
+                    {/* Image Column (Order 1 on mobile, alternates on desktop) */}
+                    <div className={`w-full md:w-5/12 lg:w-5/12 shrink-0 order-1 ${
+                      isImageLeftOnDesktop ? "md:order-1" : "md:order-2"
+                    }`}>
+                      <div className="relative w-full aspect-16/10 lg:aspect-4/3 max-h-[230px] sm:max-h-[260px] rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 border border-gray-200/60 group-hover:shadow-md transition-shadow duration-300">
+                        <Image
+                          src={currentImg}
+                          alt={item.title}
+                          fill
+                          unoptimized
+                          className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                          onError={() => setFailedImages((prev) => ({ ...prev, [idx]: true }))}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Text Details Column (Order 2 on mobile, alternates on desktop) */}
+                    <div className={`w-full md:w-7/12 lg:w-7/12 flex flex-col justify-center order-2 ${
+                      isImageLeftOnDesktop ? "md:order-2" : "md:order-1"
+                    }`}>
                       
                       {/* Category Tag Pill */}
                       {item.categoryTag && (
@@ -170,20 +189,6 @@ export default function ProductApplicationsSection({ product: customProduct }) {
                         </ul>
                       )}
 
-                    </div>
-
-                    {/* Right: Image Column */}
-                    <div className="w-full md:w-5/12 lg:w-5/12 shrink-0 order-1 md:order-2">
-                      <div className="relative w-full aspect-16/10 lg:aspect-4/3 max-h-[230px] sm:max-h-[260px] rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 border border-gray-200/60 group-hover:shadow-md transition-shadow duration-300">
-                        <Image
-                          src={currentImg}
-                          alt={item.title}
-                          fill
-                          unoptimized
-                          className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                          onError={() => setFailedImages((prev) => ({ ...prev, [idx]: true }))}
-                        />
-                      </div>
                     </div>
 
                   </div>
