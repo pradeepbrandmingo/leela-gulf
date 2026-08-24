@@ -36,11 +36,10 @@ export default function HeroSection() {
       <a
         href="/documents/leela-gulf-catalogue.pdf"
         download="Leela_Gulf_Product_Catalogue.pdf"
-        className={`absolute z-30 top-1/2 -translate-y-1/2 flex items-center justify-center bg-gradient-gold-animated shadow-[0_0_20px_rgba(196,132,47,0.4)] hover:shadow-[0_0_30px_rgba(247,210,126,0.6)] hover:brightness-110 transition-all duration-300 cursor-pointer ${
-          isRTL
+        className={`absolute z-30 top-1/2 -translate-y-1/2 flex items-center justify-center bg-gradient-gold-animated shadow-[0_0_20px_rgba(196,132,47,0.4)] hover:shadow-[0_0_30px_rgba(247,210,126,0.6)] hover:brightness-110 transition-all duration-300 cursor-pointer ${isRTL
             ? "left-0 rounded-r-2xl sm:rounded-r-3xl border-2 border-l-0 border-white px-1.5 sm:px-3.5 py-4 sm:py-8"
             : "right-0 rounded-l-2xl sm:rounded-l-3xl border-2 border-r-0 border-white px-1.5 sm:px-3.5 py-4 sm:py-8"
-        }`}
+          }`}
         aria-label="Download Catalogue PDF"
       >
         <span
@@ -200,7 +199,7 @@ export default function HeroSection() {
               <span>{t("leepolBrand")}</span>
               {/* Perfectly Centered Registered Trademark Vector Badge */}
               <svg
-                className={`w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-[#c4842f] align-super self-start mt-0.5 sm:mt-1 inline-block ${isRTL ? "mr-0.5 sm:mr-1" : "ml-0.5 sm:ml-1"}`}
+                className={`w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-gold-main align-super self-start mt-0.5 sm:mt-1 inline-block ${isRTL ? "mr-0.5 sm:mr-1" : "ml-0.5 sm:ml-1"}`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

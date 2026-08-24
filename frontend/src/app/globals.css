@@ -11,7 +11,7 @@
      ------------------------------------------------------------------------ */
   /* Heading & CTA Font: Modulus Pro (with clean system fallbacks) */
   --font-family-modulus-pro: "Modulus Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
+
   /* Subheading & Body Font: Raleway (from Next.js google font loader) */
   --font-family-raleway: var(--font-raleway), "Raleway", sans-serif;
 
@@ -158,12 +158,12 @@
   --color-neutral-500: #9FA2A5;
   --color-neutral-300: #C3C7C9;
   --color-neutral-100: #F0F1F2;
-  --color-neutral-50:  #FAFAFA;
-  --color-white:       #FFFFFF;
+  --color-neutral-50: #FAFAFA;
+  --color-white: #FFFFFF;
 
   /* SEMANTIC STATE COLORS */
   --color-success: #059669;
-  --color-error:   #DC2626;
+  --color-error: #DC2626;
   --color-warning: #D97706;
 }
 
@@ -185,13 +185,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-primary-dark);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-neutral-800);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-secondary-main);
 }
@@ -204,6 +207,7 @@ body {
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 300% 0%;
   }
@@ -214,6 +218,7 @@ body {
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -224,6 +229,7 @@ body {
   0% {
     transform: translateX(0%);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -233,6 +239,7 @@ body {
   0% {
     transform: translateX(-50%);
   }
+
   100% {
     transform: translateX(0%);
   }
@@ -272,9 +279,11 @@ body {
 .text-gold {
   color: var(--color-secondary-main);
 }
+
 .bg-gold {
   background-color: var(--color-secondary-main);
 }
+
 .text-gold-light {
   color: var(--color-secondary-accent);
 }
@@ -351,7 +360,8 @@ body {
 }
 
 /* 3. GLOBAL SECTION HEADING BASE CSS CLASS (Strict Single Source of Truth) */
-.heading-section, .h2-global {
+.heading-section,
+.h2-global {
   font-family: var(--font-family-heading) !important;
   font-weight: 500;
   font-style: normal !important;
@@ -370,28 +380,63 @@ body {
   color: var(--color-secondary-main);
 }
 
+/* ── GLOBAL GOLD COLOR UTILITIES ── */
+@utility text-gold-main {
+  color: var(--color-secondary-main);
+}
+
+@utility text-gold-light {
+  color: var(--color-secondary-light);
+}
+
+@utility text-gold-dark {
+  color: var(--color-secondary-dark);
+}
+
+@utility text-gold-accent {
+  color: var(--color-secondary-accent);
+}
+
+@utility border-gold-main {
+  border-color: var(--color-secondary-main);
+}
+
+@utility border-gold-light {
+  border-color: var(--color-secondary-light);
+}
+
+@utility border-gold-dark {
+  border-color: var(--color-secondary-dark);
+}
+
 /* Headings */
-h1, .heading-primary, .heading-1 {
+h1,
+.heading-primary,
+.heading-1 {
   font-family: var(--font-family-heading);
   font-weight: 700;
   letter-spacing: var(--heading-letter-spacing);
 }
 
-h2, .subheading-primary, .subheading-1 {
+h2,
+.subheading-primary,
+.subheading-1 {
   font-family: var(--font-family-heading);
   font-weight: 500;
   font-style: normal;
   letter-spacing: var(--heading-letter-spacing);
 }
 
-h3, .heading-tertiary {
+h3,
+.heading-tertiary {
   font-family: var(--font-family-heading);
   font-weight: 700;
   font-style: normal;
   letter-spacing: var(--heading-letter-spacing);
 }
 
-p, .body-copy {
+p,
+.body-copy {
   font-family: var(--font-family-body);
   font-size: var(--body-font-size);
   line-height: var(--body-line-height);
@@ -420,13 +465,16 @@ p, .body-copy {
   padding: 0.7rem 0.9rem;
   transition: all 0.2s ease;
 }
+
 .PhoneInput:hover {
   border-color: #404656;
 }
+
 .PhoneInput:focus-within {
   border-color: #c4842f;
   box-shadow: 0 0 0 1px #c4842f;
 }
+
 .PhoneInputInput {
   background: transparent;
   border: none;
@@ -435,14 +483,17 @@ p, .body-copy {
   font-size: 0.95rem;
   width: 100%;
 }
+
 .PhoneInputInput::placeholder {
   color: #6b7280;
 }
+
 .PhoneInputCountry {
   display: flex;
   align-items: center;
   gap: 0.35rem;
 }
+
 .PhoneInputCountrySelect {
   background-color: #16181f;
   color: #ffffff;
@@ -450,18 +501,21 @@ p, .body-copy {
   outline: none;
   cursor: pointer;
 }
+
 .PhoneInputCountryIcon {
   width: 1.4rem;
   height: 1.05rem;
   border-radius: 2px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.6);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
+
 .PhoneInputCountryIconImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .PhoneInputCountrySelectArrow {
   color: #9ca3af;
   opacity: 0.8;
@@ -475,6 +529,7 @@ select option {
   color: #ffffff !important;
   padding: 10px 14px !important;
 }
+
 select option:hover,
 select option:focus,
 select option:active,
@@ -511,8 +566,8 @@ select:autofill {
   transition: background-color 50000s ease-in-out 0s, color 50000s ease-in-out 0s;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   color: #ffffff;
 }
-
-

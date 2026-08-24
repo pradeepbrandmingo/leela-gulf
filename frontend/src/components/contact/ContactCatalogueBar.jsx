@@ -17,7 +17,7 @@ export default function ContactCatalogueBar() {
     <div className="w-full mt-6 sm:mt-8">
       {/* ── WHITE PILL CARD CONTAINER ── */}
       <div className="bg-white rounded-2xl p-4.5 sm:p-5 md:p-6 shadow-xl border border-gray-100 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 md:gap-6 transition-all duration-300 hover:shadow-2xl">
-        
+
         {/* ═════════════════════════════════════════════════════════════════
             LEFT CTA: DOWNLOAD COMPANY CATALOGUE
             ═════════════════════════════════════════════════════════════════ */}
@@ -28,11 +28,11 @@ export default function ContactCatalogueBar() {
         >
           {/* Download Icon in Gold Tinted Circle */}
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#fdf8ec] border border-[#f3dfa7] flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-[#f3dfa7] transition-all shadow-sm">
-            <Download className="w-4.5 h-4.5 text-[#c4842f]" />
+            <Download className="w-4.5 h-4.5 text-gold-main" />
           </div>
 
           <div>
-            <span className="block font-heading font-bold text-[10px] sm:text-[11px] text-[#c4842f] uppercase tracking-wider mb-0.5">
+            <span className="block font-heading font-bold text-[10px] sm:text-[11px] text-gold-main uppercase tracking-wider mb-0.5">
               {isRTL ? "تحميل" : "DOWNLOAD OUR"}
             </span>
             <h4 className="font-heading font-bold text-base sm:text-lg text-[#b87625] group-hover:text-[#9e631d] transition-colors leading-snug">
@@ -56,7 +56,7 @@ export default function ContactCatalogueBar() {
             ═════════════════════════════════════════════════════════════════ */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 flex-1">
           <div>
-            <span className="block font-heading font-bold text-[10px] sm:text-[11px] text-[#c4842f] uppercase tracking-wider mb-0.5">
+            <span className="block font-heading font-bold text-[10px] sm:text-[11px] text-gold-main uppercase tracking-wider mb-0.5">
               {isRTL ? "هل تحتاج مساعدة في العثور على" : "NEED HELP FINDING THE"}
             </span>
             <h4 className="font-heading font-bold text-base sm:text-lg text-[#b87625] leading-snug">
@@ -74,10 +74,10 @@ export default function ContactCatalogueBar() {
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 font-heading font-bold text-xs sm:text-sm text-[#c4842f] border border-[#c4842f]/80 bg-white hover:bg-[#c4842f] hover:text-white transition-all duration-300 rounded-xl px-4 py-2 sm:px-4.5 sm:py-2.5 shrink-0 shadow-sm hover:shadow-md group mt-1 sm:mt-0"
+            className="inline-flex items-center gap-2 font-heading font-bold text-xs sm:text-sm text-gold-main border border-[#c4842f]/80 bg-white hover:bg-[#c4842f] hover:text-white transition-all duration-300 rounded-xl px-4 py-2 sm:px-4.5 sm:py-2.5 shrink-0 shadow-sm hover:shadow-md group mt-1 sm:mt-0"
           >
             <span>{isRTL ? "تواصل معنا" : "Contact Us"}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#c4842f] group-hover:text-white group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-3.5 h-3.5 text-gold-main group-hover:text-white group-hover:translate-x-1 transition-all" />
           </a>
         </div>
 

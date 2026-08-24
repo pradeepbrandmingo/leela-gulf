@@ -41,7 +41,7 @@ export default function ProductDetailPage() {
         <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-gray-800/80">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 font-heading font-bold text-xs sm:text-sm text-[#e8b958] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 font-heading font-bold text-xs sm:text-sm text-gold-light hover:text-white transition-colors"
           >
             <ArrowLeft className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`} />
             <span>{isRTL ? "العودة إلى جميع المنتجات" : "Back to All Products"}</span>
@@ -71,7 +71,7 @@ export default function ProductDetailPage() {
           <div className="lg:col-span-7 flex flex-col justify-between">
             <div>
               {/* Product Code Badge */}
-              <div className="inline-block px-3 py-1 rounded-md bg-[#e8b958]/15 border border-[#e8b958]/30 font-subheading text-xs font-bold text-[#e8b958] mb-3 uppercase tracking-wider">
+              <div className="inline-block px-3 py-1 rounded-md bg-[#e8b958]/15 border border-[#e8b958]/30 font-subheading text-xs font-bold text-gold-light mb-3 uppercase tracking-wider">
                 {product.code}
               </div>
 
@@ -88,19 +88,19 @@ export default function ProductDetailPage() {
               {/* Key Features List */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-300 font-subheading">
-                  <CheckCircle2 className="w-4 h-4 text-[#e8b958] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-gold-light shrink-0" />
                   <span>High Industrial Purity Grade</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-300 font-subheading">
-                  <ShieldCheck className="w-4 h-4 text-[#e8b958] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-gold-light shrink-0" />
                   <span>Certified CoA & MSDS Available</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-300 font-subheading">
-                  <CheckCircle2 className="w-4 h-4 text-[#e8b958] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-gold-light shrink-0" />
                   <span>Global Logistics & Supply Chain</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-300 font-subheading">
-                  <ShieldCheck className="w-4 h-4 text-[#e8b958] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-gold-light shrink-0" />
                   <span>Customized Packaging Options</span>
                 </div>
               </div>
@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
 
               <Link
                 href="/products"
-                className="px-6 sm:px-8 py-3.5 border border-gray-700 hover:border-[#e8b958] rounded-full font-heading font-bold text-xs sm:text-sm text-gray-300 hover:text-[#e8b958] transition-all"
+                className="px-6 sm:px-8 py-3.5 border border-gray-700 hover:border-gold-light rounded-full font-heading font-bold text-xs sm:text-sm text-gray-300 hover:text-gold-light transition-all"
               >
                 {isRTL ? "تصفح بقية المنتجات" : "Explore All Products"}
               </Link>
@@ -142,7 +142,7 @@ export default function ProductDetailPage() {
             {/* Close Button */}
             <button
               onClick={() => setIsQuoteModalOpen(false)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1e212b] border border-[#2e3344] text-gray-400 hover:text-white hover:border-[#e8b958] flex items-center justify-center transition-all cursor-pointer z-20"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1e212b] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light flex items-center justify-center transition-all cursor-pointer z-20"
               aria-label="Close quote modal"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -159,7 +159,7 @@ export default function ProductDetailPage() {
                 />
               </div>
               <div className="pr-8">
-                <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-[#e8b958] block mb-0.5">
+                <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-gold-light block mb-0.5">
                   {isRTL ? "طلب عرض سعر للمنتج" : "Request Product Quote"}
                 </span>
                 <h3 className="font-heading font-bold text-base sm:text-xl text-white leading-tight">

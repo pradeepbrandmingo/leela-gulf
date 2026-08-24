@@ -15,7 +15,7 @@ export default function ContactHero() {
       {/* Top Gold Badge */}
       <div className="inline-flex items-center gap-2 mb-4">
         <span className="w-6 h-[2px] bg-gradient-gold-animated inline-block rounded-full" />
-        <span className="font-heading font-bold text-xs sm:text-sm tracking-widest text-[#c4842f] uppercase">
+        <span className="font-heading font-bold text-xs sm:text-sm tracking-widest text-gold-main uppercase">
           CONTACT US
         </span>
         <span className="w-6 h-[2px] bg-gradient-gold-animated inline-block rounded-full" />

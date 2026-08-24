@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import SectionHeading from "@/components/common/SectionHeading";
 import {
   Factory,
   Droplets,
@@ -112,7 +113,7 @@ export default function IndustryExpertiseSlider() {
   const checkScroll = useCallback(() => {
     if (!sliderRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-    
+
     if (isRTL) {
       const maxScroll = scrollWidth - clientWidth;
       const absScroll = Math.abs(scrollLeft);
@@ -149,61 +150,63 @@ export default function IndustryExpertiseSlider() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
 
         {/* ── SECTION HEADER ── */}
-        <div className="text-center mb-5 sm:mb-6">
-          <span className="font-heading font-bold text-[10px] sm:text-xs tracking-[0.25em] text-gray-400 uppercase block mb-1">
+        <div className="text-center">
+          <span className="font-heading font-bold text-[10px] sm:text-xs tracking-[0.25em] text-[var(--color-white)] uppercase block mb-1">
             {isRTL ? "تصفح حسب" : "BROWSE BY"}
           </span>
-          <h2 className="font-heading font-bold text-xl sm:text-2xl md:text-3xl lg:text-[2.1rem] text-[#e8b958] tracking-tight uppercase" style={{ fontWeight: 700 }}>
-            {isRTL ? "خبرتنا في القطاعات الصناعية" : "OUR INDUSTRY EXPERTISE"}
-          </h2>
+          <SectionHeading
+            prefix={isRTL ? "خبرتنا في" : "Our Industry"}
+            highlight={isRTL ? "القطاعات الصناعية" : "Expertise"}
+            className="mb-5 sm:mb-6"
+          />
         </div>
 
         {/* ── SLIDER OUTER CARD WRAPPER ── */}
-        <div className="relative group/slider">
+        <div className="relative group/slider px-2 sm:px-0">
 
           {/* Floating Left Arrow Button */}
           <button
             onClick={() => scroll(isRTL ? "next" : "prev")}
             disabled={isRTL ? !canScrollRight : !canScrollLeft}
-            className="absolute left-[-10px] sm:left-[-16px] top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-gold-animated text-black shadow-xl shadow-black/50 flex items-center justify-center hover:scale-110 active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 cursor-pointer"
+            className="absolute left-[-6px] sm:left-[-16px] top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-gold-animated text-black shadow-xl shadow-black/50 flex items-center justify-center hover:scale-110 active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 cursor-pointer"
             aria-label="Previous Industry"
           >
-            <ChevronLeft className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5] ${isRTL ? "rotate-180" : ""}`} />
+            <ChevronLeft className={`w-3.5 h-3.5 sm:w-5 sm:h-5 stroke-[2.5] ${isRTL ? "rotate-180" : ""}`} />
           </button>
 
           {/* Floating Right Arrow Button */}
           <button
             onClick={() => scroll(isRTL ? "prev" : "next")}
             disabled={isRTL ? !canScrollLeft : !canScrollRight}
-            className="absolute right-[-10px] sm:right-[-16px] top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-gold-animated text-black shadow-xl shadow-black/50 flex items-center justify-center hover:scale-110 active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 cursor-pointer"
+            className="absolute right-[-6px] sm:right-[-16px] top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-gold-animated text-black shadow-xl shadow-black/50 flex items-center justify-center hover:scale-110 active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 cursor-pointer"
             aria-label="Next Industry"
           >
-            <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5] ${isRTL ? "rotate-180" : ""}`} />
+            <ChevronRight className={`w-3.5 h-3.5 sm:w-5 sm:h-5 stroke-[2.5] ${isRTL ? "rotate-180" : ""}`} />
           </button>
 
           {/* White Rounded Container Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 p-1.5 sm:p-2.5 overflow-hidden">
-            
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-100 p-1 sm:p-3 overflow-hidden">
+
             {/* Scrollable Track */}
             <div
               ref={sliderRef}
-              className="flex items-stretch overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth snap-x snap-mandatory py-1"
+              className="flex items-stretch overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth snap-x snap-mandatory py-1 sm:py-2"
             >
               {INDUSTRIES_DATA.map((industry, index) => {
                 const IconComponent = industry.icon;
                 return (
                   <div
                     key={industry.id}
-                    className="shrink-0 w-[160px] sm:w-[185px] md:w-[205px] lg:w-[220px] snap-start flex flex-col items-center justify-between p-3 sm:p-4 text-center group cursor-pointer border-r border-gray-100 last:border-r-0 hover:bg-[#fbf8f1] transition-all duration-300 rounded-xl sm:rounded-2xl"
+                    className="shrink-0 w-[125px] xs:w-[145px] sm:w-[160px] md:w-[175px] lg:w-[calc(100%/6)] snap-start flex flex-col items-center justify-center p-2.5 xs:p-3 sm:p-3.5 md:p-4 text-center group cursor-pointer relative after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-[65%] after:w-[1px] after:bg-[#e2e8f0] last:after:hidden hover:bg-[#faf7f2] transition-colors duration-300 rounded-xl sm:rounded-2xl"
                   >
-                    <Link href={`/industries/${industry.slug}`} className="w-full flex flex-col items-center">
-                      {/* Gold Luxury Icon Box */}
-                      <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-[#fdf8ec] border border-[#f3dfa7] flex items-center justify-center mb-2.5 group-hover:scale-105 group-hover:bg-gradient-gold-animated transition-all duration-300 shadow-sm">
-                        <IconComponent className="w-5.5 h-5.5 sm:w-6.5 sm:h-6.5 text-[#c4842f] group-hover:text-black transition-colors duration-300 stroke-[1.8]" />
+                    <Link href={`/industries/${industry.slug}`} className="w-full flex flex-col items-center justify-center">
+                      {/* Clean Gold Line Icon */}
+                      <div className="mb-2 sm:mb-3 flex items-center justify-center">
+                        <IconComponent className="w-7 h-7 xs:w-8 xs:h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-gold-main group-hover:text-gold-dark group-hover:scale-110 transition-all duration-300 stroke-[1.5]" />
                       </div>
 
                       {/* Industry Title */}
-                      <h3 className="font-heading font-bold text-[11px] sm:text-xs lg:text-[13px] text-[#1a1a1a] group-hover:text-[#c4842f] leading-snug transition-colors duration-300 min-h-[30px] sm:min-h-[32px] flex items-center justify-center" style={{ fontWeight: 700 }}>
+                      <h3 className="font-heading font-bold text-[10px] xs:text-[11px] sm:text-[13px] md:text-sm text-[#1a1a1a] group-hover:text-gold-main leading-snug transition-colors duration-300 min-h-[28px] xs:min-h-[32px] sm:min-h-[36px] flex items-center justify-center text-center px-0.5" style={{ fontWeight: 700 }}>
                         {isRTL ? industry.titleAr : industry.title}
                       </h3>
                     </Link>

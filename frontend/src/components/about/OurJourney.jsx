@@ -254,7 +254,7 @@ export default function OurJourney() {
                     } z-20 pointer-events-none`}
                   >
                     <div className="bg-[#1d1d1d] border border-[#c4842f]/40 backdrop-blur-md px-3 py-1 rounded flex items-center gap-1.5 text-[0.7rem] font-bold text-[var(--color-secondary-light)] tracking-wider shadow-2xl mb-1">
-                      <Flag className="w-3.5 h-3.5 text-[#e8b958]" />
+                      <Flag className="w-3.5 h-3.5 text-gold-light" />
                       <span>{item.stepNum}</span>
                     </div>
                     <div className="w-[3px] h-10 bg-gradient-to-b from-[#c4842f] to-transparent rounded-full" />
@@ -272,7 +272,7 @@ export default function OurJourney() {
                     <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 px-5 sm:px-6 py-4 border-b border-white/5 bg-white/[0.02]">
                       <div className="flex items-center gap-2.5">
                         {/* Mobile Step Badge */}
-                        <span className="md:hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-[#c4842f]/15 border border-[#c4842f]/30 text-[0.68rem] font-bold text-[#e8b958] tracking-wider uppercase">
+                        <span className="md:hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-[#c4842f]/15 border border-[#c4842f]/30 text-[0.68rem] font-bold text-gold-light tracking-wider uppercase">
                           {item.stepNum}
                         </span>
                         <span className="font-heading font-extrabold text-xl sm:text-2xl text-[var(--color-secondary-accent)] tracking-tight">

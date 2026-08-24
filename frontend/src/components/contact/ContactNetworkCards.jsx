@@ -22,7 +22,7 @@ export default function ContactNetworkCards() {
           {/* Left Column: Phone Icon & "Prefer to talk?" */}
           <div className="flex items-center gap-4 shrink-0">
             <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-[#c4842f]/20 border border-[#e8b958]/60 flex items-center justify-center shrink-0 shadow-lg shadow-[#c4842f]/10">
-              <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-[#e8b958]" />
+              <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-gold-light" />
             </div>
             <div>
               <h4 className="font-heading font-bold text-base sm:text-lg text-white">
@@ -38,7 +38,7 @@ export default function ContactNetworkCards() {
           <div className="text-left lg:text-center">
             <a
               href="tel:+97165265627"
-              className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white hover:text-[#e8b958] transition-colors tracking-tight block"
+              className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-white hover:text-gold-light transition-colors tracking-tight block"
             >
               +971 6 526 5627
             </a>
@@ -57,9 +57,9 @@ export default function ContactNetworkCards() {
               {/* Email */}
               <a
                 href="mailto:sales@leelagulf.com"
-                className="flex items-center gap-2 text-gray-200 hover:text-[#e8b958] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-gold-light transition-colors group"
               >
-                <Mail className="w-4 h-4 text-[#e8b958] group-hover:scale-110 transition-transform" />
+                <Mail className="w-4 h-4 text-gold-light group-hover:scale-110 transition-transform" />
                 <span className="font-medium">
                   sales@leelagulf.com
                 </span>
@@ -70,9 +70,9 @@ export default function ContactNetworkCards() {
                 href="https://leelagulf.com"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 text-gray-200 hover:text-[#e8b958] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-gold-light transition-colors group"
               >
-                <Globe className="w-4 h-4 text-[#e8b958] group-hover:scale-110 transition-transform" />
+                <Globe className="w-4 h-4 text-gold-light group-hover:scale-110 transition-transform" />
                 <span className="font-medium">
                   leelagulf.com
                 </span>
@@ -137,7 +137,7 @@ export default function ContactNetworkCards() {
             {/* Stat 1: Countries Served */}
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
-                <Globe2 className="w-4.5 h-4.5 text-[#e8b958]" />
+                <Globe2 className="w-4.5 h-4.5 text-gold-light" />
               </div>
               <div>
                 <h5 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">
@@ -152,7 +152,7 @@ export default function ContactNetworkCards() {
             {/* Stat 2: Supply Partners */}
             <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-[#282d3d] pt-3 sm:pt-0 pl-0 sm:pl-5">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
-                <Handshake className="w-4.5 h-4.5 text-[#e8b958]" />
+                <Handshake className="w-4.5 h-4.5 text-gold-light" />
               </div>
               <div>
                 <h5 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">
@@ -167,7 +167,7 @@ export default function ContactNetworkCards() {
             {/* Stat 3: Distribution Hub */}
             <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-[#282d3d] pt-3 sm:pt-0 pl-0 sm:pl-5">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
-                <Warehouse className="w-4.5 h-4.5 text-[#e8b958]" />
+                <Warehouse className="w-4.5 h-4.5 text-gold-light" />
               </div>
               <div>
                 <h5 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">

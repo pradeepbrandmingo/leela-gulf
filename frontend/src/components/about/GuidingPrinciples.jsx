@@ -105,7 +105,7 @@ export default function GuidingPrinciples() {
                   key={`principle-${index}`}
                   className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl sm:rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 transition-all duration-300 hover:bg-white/10 hover:border-[#d49b29]/50 hover:-translate-y-0.5 group"
                 >
-                  <h3 className="font-heading font-bold text-sm sm:text-base text-[#e8b958] mb-1 tracking-tight group-hover:text-white transition-colors duration-300">
+                  <h3 className="font-heading font-bold text-sm sm:text-base text-gold-light mb-1 tracking-tight group-hover:text-white transition-colors duration-300">
                     {item.title}
                   </h3>
                   <p className="font-subheading text-gray-300 text-xs sm:text-sm leading-normal sm:leading-relaxed">

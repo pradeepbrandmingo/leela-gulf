@@ -87,7 +87,7 @@ export default function ProductsHero() {
               }`}
             >
               <span className="w-5 sm:w-7 h-[2px] bg-gradient-gold-animated inline-block rounded-full" />
-              <span className="font-heading font-bold text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] text-[#e8b958] uppercase">
+              <span className="font-heading font-bold text-[10px] sm:text-xs md:text-sm tracking-[0.2em] sm:tracking-[0.25em] text-gold-light uppercase">
                 {isRTL ? "المنتجات" : "PRODUCTS"}
               </span>
               <span className="w-5 sm:w-7 h-[2px] bg-gradient-gold-animated inline-block rounded-full" />

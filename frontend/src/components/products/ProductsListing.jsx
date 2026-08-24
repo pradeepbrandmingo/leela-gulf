@@ -286,7 +286,7 @@ export default function ProductsListing() {
             <div className="relative flex-1 sm:flex-none sm:w-[320px] md:w-[380px]">
               {/* Search Icon */}
               <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-md bg-[#e8b958]/15 border border-[#e8b958]/50 flex items-center justify-center">
-                <svg className="w-4 h-4 text-[#e8b958]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-4 h-4 text-gold-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
                   <path d="M21 21l-4.35-4.35" />
                 </svg>
@@ -296,7 +296,7 @@ export default function ProductsListing() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={isRTL ? "ابحث بإسم المنتج..." : "Search By Product Name..."}
-                className="w-full pl-14 pr-4 py-3 bg-transparent border border-[#e8b958]/70 rounded-xl text-white text-sm font-subheading placeholder-gray-400 focus:outline-none focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] transition-all duration-200"
+                className="w-full pl-14 pr-4 py-3 bg-transparent border border-[#e8b958]/70 rounded-xl text-white text-sm font-subheading placeholder-gray-400 focus:outline-none focus:border-gold-light focus:ring-1 focus:ring-[#e8b958] transition-all duration-200"
               />
             </div>
 
@@ -304,9 +304,9 @@ export default function ProductsListing() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                className="flex items-center gap-2 px-4 sm:px-5 py-3 border border-[#e8b958]/60 rounded-xl text-white font-heading font-bold text-sm tracking-wide hover:border-[#e8b958] hover:text-[#e8b958] transition-all duration-200 whitespace-nowrap cursor-pointer"
+                className="flex items-center gap-2 px-4 sm:px-5 py-3 border border-[#e8b958]/60 rounded-xl text-white font-heading font-bold text-sm tracking-wide hover:border-gold-light hover:text-gold-light transition-all duration-200 whitespace-nowrap cursor-pointer"
               >
-                <svg className="w-4 h-4 text-[#e8b958]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-4 h-4 text-gold-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="4" y1="6" x2="20" y2="6" />
                   <line x1="4" y1="12" x2="14" y2="12" />
                   <line x1="4" y1="18" x2="9" y2="18" />
@@ -318,7 +318,7 @@ export default function ProductsListing() {
               {showCategoryDropdown && (
                 <div className="absolute right-0 top-full mt-2 w-[320px] sm:w-[360px] bg-[#16181f] border border-[#e8b958]/50 rounded-2xl shadow-2xl shadow-black/70 z-50 overflow-hidden animate-[fadeInUp_0.2s_ease-out]">
                   <div className="p-3 border-b border-gray-700/50">
-                    <h4 className="font-heading font-bold text-sm text-[#e8b958] uppercase tracking-wider">
+                    <h4 className="font-heading font-bold text-sm text-gold-light uppercase tracking-wider">
                       {isRTL ? "فئات المنتجات" : "Product Categories"}
                     </h4>
                   </div>
@@ -328,13 +328,13 @@ export default function ProductsListing() {
                         key={cat.id}
                         onClick={() => handleCategorySelect(cat.id)}
                         className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-subheading transition-all duration-200 cursor-pointer ${selectedCategory === cat.id
-                            ? "bg-[#e8b958]/20 text-[#e8b958] font-bold"
+                            ? "bg-[#e8b958]/20 text-gold-light font-bold"
                             : "text-gray-300 hover:bg-white/5 hover:text-white"
                           }`}
                       >
                         <span className="truncate">{isRTL ? cat.nameAr : cat.name}</span>
                         <span className={`text-xs px-2 py-0.5 rounded-md shrink-0 ml-2 ${selectedCategory === cat.id
-                            ? "bg-[#e8b958]/30 text-[#e8b958]"
+                            ? "bg-[#e8b958]/30 text-gold-light"
                             : "bg-white/5 text-gray-400"
                           }`}>
                           {cat.count}
@@ -367,7 +367,7 @@ export default function ProductsListing() {
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-20 sm:py-28 text-center">
             <div className="w-16 h-16 rounded-2xl bg-[#c4842f]/10 border border-[#c4842f]/30 flex items-center justify-center mb-5">
-              <svg className="w-8 h-8 text-[#c4842f]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg className="w-8 h-8 text-gold-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
               </svg>
             </div>
@@ -394,7 +394,7 @@ export default function ProductsListing() {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold border border-gray-700 text-gray-400 hover:border-[#c4842f] hover:text-[#c4842f] disabled:opacity-30 disabled:pointer-events-none transition-all duration-200 cursor-pointer"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold border border-gray-700 text-gray-400 hover:border-gold-main hover:text-gold-main disabled:opacity-30 disabled:pointer-events-none transition-all duration-200 cursor-pointer"
                 aria-label="Previous page"
               >
                 ‹
@@ -411,7 +411,7 @@ export default function ProductsListing() {
                     onClick={() => handlePageChange(page)}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold transition-all duration-200 cursor-pointer ${currentPage === page
                         ? "bg-gradient-gold-animated text-[#1a1a1a] shadow-sm shadow-[#c4842f]/30"
-                        : "border border-gray-700 text-gray-400 hover:border-[#c4842f] hover:text-[#c4842f]"
+                        : "border border-gray-700 text-gray-400 hover:border-gold-main hover:text-gold-main"
                       }`}
                   >
                     {page}
@@ -423,7 +423,7 @@ export default function ProductsListing() {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold border border-gray-700 text-gray-400 hover:border-[#c4842f] hover:text-[#c4842f] disabled:opacity-30 disabled:pointer-events-none transition-all duration-200 cursor-pointer"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold border border-gray-700 text-gray-400 hover:border-gold-main hover:text-gold-main disabled:opacity-30 disabled:pointer-events-none transition-all duration-200 cursor-pointer"
                 aria-label="Next page"
               >
                 ›
@@ -434,15 +434,15 @@ export default function ProductsListing() {
             <p className="font-subheading text-sm text-gray-300">
               {isRTL ? (
                 <>
-                  عرض <span className="font-bold text-[#e8b958]">{startIndex + 1}</span> إلى{" "}
-                  <span className="font-bold text-[#e8b958]">{endIndex}</span> من{" "}
-                  <span className="font-bold text-[#e8b958]">{totalProducts}+</span> منتجات تم العثور عليها
+                  عرض <span className="font-bold text-gold-light">{startIndex + 1}</span> إلى{" "}
+                  <span className="font-bold text-gold-light">{endIndex}</span> من{" "}
+                  <span className="font-bold text-gold-light">{totalProducts}+</span> منتجات تم العثور عليها
                 </>
               ) : (
                 <>
-                  Showing <span className="font-bold text-[#e8b958]">{startIndex + 1}</span> to{" "}
-                  <span className="font-bold text-[#e8b958]">{endIndex}</span> in{" "}
-                  <span className="font-bold text-[#e8b958]">{totalProducts}+</span> Products Found
+                  Showing <span className="font-bold text-gold-light">{startIndex + 1}</span> to{" "}
+                  <span className="font-bold text-gold-light">{endIndex}</span> in{" "}
+                  <span className="font-bold text-gold-light">{totalProducts}+</span> Products Found
                 </>
               )}
             </p>
@@ -467,7 +467,7 @@ export default function ProductsListing() {
             {/* Close Button */}
             <button
               onClick={() => setQuoteProduct(null)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1e212b] border border-[#2e3344] text-gray-400 hover:text-white hover:border-[#e8b958] flex items-center justify-center transition-all cursor-pointer z-20"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1e212b] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light flex items-center justify-center transition-all cursor-pointer z-20"
               aria-label="Close quote modal"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -484,7 +484,7 @@ export default function ProductsListing() {
                 />
               </div>
               <div className="pr-8">
-                <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-[#e8b958] block mb-0.5">
+                <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-gold-light block mb-0.5">
                   {isRTL ? "طلب عرض سعر للمنتج" : "Request Product Quote"}
                 </span>
                 <h3 className="font-heading font-bold text-base sm:text-xl text-white leading-tight">
@@ -541,7 +541,7 @@ function ProductCard({ product, isRTL, categories, onQuoteRequest }) {
           >
             <Link
               href={`/products/${product.id}`}
-              className="hover:text-[#c4842f] transition-colors"
+              className="hover:text-gold-main transition-colors"
             >
               {product.title}
             </Link>
@@ -575,7 +575,7 @@ function ProductCard({ product, isRTL, categories, onQuoteRequest }) {
         <div className="flex-1 min-w-0 flex items-center justify-start">
           <Link
             href={`/products/${product.id}`}
-            className="font-heading font-bold text-[11px] sm:text-xs text-[#c4842f] hover:text-[#9e6417] transition-colors duration-200 whitespace-nowrap underline underline-offset-4 decoration-[#c4842f]/60"
+            className="font-heading font-bold text-[11px] sm:text-xs text-gold-main hover:text-gold-dark transition-colors duration-200 whitespace-nowrap underline underline-offset-4 decoration-[#c4842f]/60"
           >
             {isRTL ? "عرض التفاصيل" : "View Details"}
           </Link>

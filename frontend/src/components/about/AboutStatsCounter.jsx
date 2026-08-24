@@ -55,7 +55,7 @@ function StatItem({ targetNumber, suffix, label }) {
   return (
     <div ref={itemRef} className="flex flex-col items-center justify-center p-3 sm:p-5">
       {/* Clean Light-Weight Gold Number matching Reference UI Spec */}
-      <div className="font-heading font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] leading-none text-[#e8b958] mb-2.5 sm:mb-3 tracking-tight">
+      <div className="font-heading font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] leading-none text-gold-light mb-2.5 sm:mb-3 tracking-tight">
         {formattedCount}
         {suffix}
       </div>
