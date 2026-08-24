@@ -143,7 +143,7 @@ export default function ProductDetailHero({
                 >
                   <FileText className="w-4 h-4 text-black" />
                   <span>
-                    {isRTL ? "طلب عرض سعر بالجملة" : "Request Bulk Quote"}
+                    {isRTL ? "طلب عرض سعر" : "Request Quote"}
                   </span>
                   <ArrowRight
                     className={`w-3.5 h-3.5 text-black ${isRTL ? "rotate-180" : ""}`}

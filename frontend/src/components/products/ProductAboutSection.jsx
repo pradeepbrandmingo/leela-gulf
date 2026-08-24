@@ -199,7 +199,7 @@ export default function ProductAboutSection({ product: customProduct, onQuoteReq
                     className="btn-gold-primary px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer"
                   >
                     <FileText className="w-4 h-4 text-black" />
-                    <span>{about.supplierSection.buttonText || (isRTL ? "طلب عينة / عرض سعر" : "Request a Sample / Quote")}</span>
+                    <span>{isRTL ? "طلب عرض سعر" : "Request Quote"}</span>
                     <ArrowRight className={`w-3.5 h-3.5 text-black ${isRTL ? "rotate-180" : ""}`} />
                   </button>
                 </div>
