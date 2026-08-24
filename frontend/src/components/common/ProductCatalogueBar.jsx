@@ -15,7 +15,7 @@ export default function ProductCatalogueBar() {
     "https://wa.me/97165265627?text=Hello%20Leela%20Gulf%20Team%2C%20I%20am%20looking%20for%20assistance%20regarding%20chemical%20products.";
 
   return (
-    <section className="w-full bg-[var(--color-primary)] relative pb-12 sm:pb-16 overflow-hidden">
+    <section className="w-full bg-[var(--color-primary)] relative pb-6 sm:pb-8 overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
 
         {/* ── WHITE ROUNDED PILL CONTAINER (#fcfcfb) ── */}

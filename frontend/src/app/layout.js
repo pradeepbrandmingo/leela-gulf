@@ -1,5 +1,6 @@
 import { LanguageProvider } from "@/context/LanguageContext";
 import Header from "@/components/layout/Header";
+import FooterWrapper from "@/components/layout/FooterWrapper";
 import { Raleway } from "next/font/google";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
           <div className="flex-grow">
             {children}
           </div>
+          <FooterWrapper />
         </LanguageProvider>
       </body>
     </html>
