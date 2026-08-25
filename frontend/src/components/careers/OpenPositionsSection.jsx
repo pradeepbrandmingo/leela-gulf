@@ -177,9 +177,16 @@ export default function OpenPositionsSection() {
   };
 
   const handleApplyNow = (job) => {
-    const subject = encodeURIComponent(`Application for ${job.title}`);
-    const body = encodeURIComponent(`Hello Leela Gulf HR Team,\n\nI am interested in applying for the ${job.title} position (${job.location}). Please find my resume attached.\n\nBest regards,`);
-    window.location.href = `mailto:careers@leelagulf.com?subject=${subject}&body=${body}`;
+    // 1. Close Modal Popup
+    setSelectedJob(null);
+
+    // 2. Smooth Scroll down to Career Application Form
+    setTimeout(() => {
+      const formElement = document.getElementById("apply-form");
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 150);
   };
 
   return (

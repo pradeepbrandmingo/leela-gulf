@@ -244,6 +244,12 @@ export default function CareerApplicationForm() {
     }
   };
 
+  // Name Input Sanitizer (Strictly blocks numbers and symbols)
+  const handleNameChange = (field, rawValue) => {
+    const cleanedValue = rawValue.replace(/[^a-zA-Z\u0600-\u06FF\s'-]/g, "");
+    handleChange(field, cleanedValue);
+  };
+
   // Auto-hide Thank You success screen automatically after 3 seconds
   useEffect(() => {
     if (isSubmittedSuccess) {
@@ -258,10 +264,10 @@ export default function CareerApplicationForm() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
+      if (file.size > 5 * 1024 * 1024) {
         setErrors((prev) => ({
           ...prev,
-          resume: isRTL ? "حجم الملف يتجاوز 2 ميجابايت" : "File size exceeds 2 MB limit",
+          resume: isRTL ? "حجم الملف يتجاوز 5 ميجابايت" : "File size exceeds 5 MB limit",
         }));
         return;
       }
@@ -279,12 +285,18 @@ export default function CareerApplicationForm() {
   // Production-Ready Form Validation
   const validateForm = () => {
     const newErrors = {};
+    const nameRegex = /^[a-zA-Z\u0600-\u06FF\s'-]+$/;
 
     if (!formData.firstName.trim()) {
       newErrors.firstName = isRTL ? "الاسم الأول مطلوب" : "First name is required";
+    } else if (!nameRegex.test(formData.firstName.trim())) {
+      newErrors.firstName = isRTL ? "الاسم الأول يجب أن يحتوي على حروف فقط (بدون أرقام)" : "First name must contain letters only (no numbers)";
     }
+
     if (!formData.lastName.trim()) {
       newErrors.lastName = isRTL ? "اسم العائلة مطلوب" : "Last name is required";
+    } else if (!nameRegex.test(formData.lastName.trim())) {
+      newErrors.lastName = isRTL ? "اسم العائلة يجب أن يحتوي على حروف فقط (بدون أرقام)" : "Last name must contain letters only (no numbers)";
     }
     if (!formData.email.trim()) {
       newErrors.email = isRTL ? "البريد الإلكتروني مطلوب" : "Email address is required";
@@ -367,7 +379,7 @@ export default function CareerApplicationForm() {
   };
 
   return (
-    <section className="w-full bg-[var(--color-primary)] py-8 sm:py-14 overflow-hidden">
+    <section id="apply-form" className="w-full bg-[var(--color-primary)] py-8 sm:py-14 overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-3.5 sm:px-6 md:px-10 lg:px-16 xl:px-20">
 
         {/* ═══════════════════════════════════════════
@@ -474,7 +486,7 @@ export default function CareerApplicationForm() {
                     <input
                       type="text"
                       value={formData.firstName}
-                      onChange={(e) => handleChange("firstName", e.target.value)}
+                      onChange={(e) => handleNameChange("firstName", e.target.value)}
                       placeholder={isRTL ? "أدخل الاسم الأول" : "Enter your first name"}
                       className={`light-form-input w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-gray-50 border text-xs sm:text-sm text-gray-900 font-bold font-subheading placeholder-gray-400 outline-none transition-all ${
                         errors.firstName
@@ -493,7 +505,7 @@ export default function CareerApplicationForm() {
                     <input
                       type="text"
                       value={formData.lastName}
-                      onChange={(e) => handleChange("lastName", e.target.value)}
+                      onChange={(e) => handleNameChange("lastName", e.target.value)}
                       placeholder={isRTL ? "أدخل اسم العائلة" : "Enter your last name"}
                       className={`light-form-input w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-gray-50 border text-xs sm:text-sm text-gray-900 font-bold font-subheading placeholder-gray-400 outline-none transition-all ${
                         errors.lastName
@@ -718,12 +730,12 @@ export default function CareerApplicationForm() {
                 </div>
 
                 <div className="mb-4">
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between mb-1.5">
                     <label className="block font-heading font-bold text-[11px] sm:text-xs text-gray-800">
                       {isRTL ? "رفع السيرة الذاتية *" : "Upload Resume *"}
                     </label>
-                    <span className="text-[10.5px] font-subheading text-gray-400">
-                      (PDF only, max 2 MB)
+                    <span className="text-[10.5px] font-subheading text-gold-main font-bold bg-gold-main/10 px-2.5 py-0.5 rounded-full border border-gold-main/20">
+                      {isRTL ? "(ملف PDF فقط، بحد أقصى 5 ميجابايت)" : "(PDF only, max 5 MB)"}
                     </span>
                   </div>
 
