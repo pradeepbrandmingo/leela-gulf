@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { ArrowRight, MapPin, Clock, X, CheckCircle2, Send, Mail } from "lucide-react";
+import { ArrowRight, MapPin, Clock, X, CheckCircle2, Send } from "lucide-react";
 
 // ── Backend-Ready Master Open Positions Dataset ──
 export const DUMMY_POSITIONS = [
@@ -187,7 +187,7 @@ export default function OpenPositionsSection() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
 
         {/* ═══════════════════════════════════════════
-            SECTION HEADER (Compact Spacing)
+            SECTION HEADER
             ═══════════════════════════════════════════ */}
         <div className="mb-6 sm:mb-8">
           {/* Small Gold Badge */}
@@ -240,7 +240,7 @@ export default function OpenPositionsSection() {
 
                   {/* Title + Arrow Row */}
                   <div className="flex items-center justify-between gap-3 mb-1.5">
-                    <h3 className="font-heading font-bold text-sm sm:text-base lg:text-[17px] text-[#0e1015] group-hover:text-gold-main transition-colors duration-200 leading-snug">
+                    <h3 className="font-heading font-bold text-sm sm:text-base lg:text-[17px] text-black group-hover:text-gold-main transition-colors duration-200 leading-snug">
                       {isRTL ? job.titleAr : job.title}
                     </h3>
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gold-main/10 flex items-center justify-center shrink-0 group-hover:bg-gradient-gold-animated group-hover:scale-105 transition-all duration-300">
@@ -290,14 +290,14 @@ export default function OpenPositionsSection() {
 
           {/* ── RIGHT COLUMN (1 Col): "WHY LEELA GULF?" INFO CARD ── */}
           <div className="lg:col-span-1 bg-white rounded-2xl p-4.5 sm:p-5 lg:p-6 text-black shadow-sm border border-gray-100 sticky top-28">
-            <h3 className="font-heading font-bold text-base sm:text-lg text-[#0e1015] mb-3.5 border-b border-gray-100 pb-2.5">
+            <h3 className="font-heading font-bold text-base sm:text-lg text-black mb-3.5 border-b border-gray-100 pb-2.5">
               {isRTL ? "لماذا ليلا جلف؟" : "Why Leela Gulf?"}
             </h3>
 
             <div className="space-y-3 sm:space-y-3.5">
               {/* Point 1 */}
               <div className="relative pl-3.5 rtl:pr-3.5 rtl:pl-0 border-l-2 rtl:border-r-2 rtl:border-l-0 border-gold-main">
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0e1015] mb-0.5">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-black mb-0.5">
                   {isRTL ? "النمو المهني" : "Career Growth"}
                 </h4>
                 <p className="font-subheading text-[11.5px] sm:text-xs text-gray-500 leading-relaxed">
@@ -309,7 +309,7 @@ export default function OpenPositionsSection() {
 
               {/* Point 2 */}
               <div className="relative pl-3.5 rtl:pr-3.5 rtl:pl-0 border-l-2 rtl:border-r-2 rtl:border-l-0 border-gold-main">
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0e1015] mb-0.5">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-black mb-0.5">
                   {isRTL ? "ثقافة شاملة" : "Inclusive Culture"}
                 </h4>
                 <p className="font-subheading text-[11.5px] sm:text-xs text-gray-500 leading-relaxed">
@@ -321,7 +321,7 @@ export default function OpenPositionsSection() {
 
               {/* Point 3 */}
               <div className="relative pl-3.5 rtl:pr-3.5 rtl:pl-0 border-l-2 rtl:border-r-2 rtl:border-l-0 border-gold-main">
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0e1015] mb-0.5">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-black mb-0.5">
                   {isRTL ? "الصحة والرفاهية" : "Health & Wellness"}
                 </h4>
                 <p className="font-subheading text-[11.5px] sm:text-xs text-gray-500 leading-relaxed">
@@ -333,7 +333,7 @@ export default function OpenPositionsSection() {
 
               {/* Point 4 */}
               <div className="relative pl-3.5 rtl:pr-3.5 rtl:pl-0 border-l-2 rtl:border-r-2 rtl:border-l-0 border-gold-main">
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0e1015] mb-0.5">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-black mb-0.5">
                   {isRTL ? "عمل ذو أثر" : "Impactful Work"}
                 </h4>
                 <p className="font-subheading text-[11.5px] sm:text-xs text-gray-500 leading-relaxed">
@@ -350,7 +350,7 @@ export default function OpenPositionsSection() {
       </div>
 
       {/* ═══════════════════════════════════════════
-          JOB DETAILS POPUP MODAL (Improved Close Icon & Apply Now Button)
+          JOB DETAILS POPUP MODAL
           ═══════════════════════════════════════════ */}
       {selectedJob && (
         <div
@@ -359,20 +359,20 @@ export default function OpenPositionsSection() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl bg-[#0e1015] border border-gold-main/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[90vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
+            className="relative w-full max-w-2xl bg-[var(--color-primary)] border border-gold-main/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[90vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
           >
-            {/* ── IMPROVED CLOSE BUTTON (Gold Ring & Smooth Hover Effect) ── */}
+            {/* Close Button */}
             <button
               type="button"
               onClick={() => setSelectedJob(null)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 rtl:left-4 rtl:right-auto sm:rtl:left-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1b1e28] border border-gold-main/40 text-gray-300 hover:text-white hover:border-gold-main hover:bg-[#252938] flex items-center justify-center transition-all duration-200 cursor-pointer z-20 shadow-lg hover:scale-105 group"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 rtl:left-4 rtl:right-auto sm:rtl:left-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/10 border border-gold-main/40 text-gray-300 hover:text-white hover:border-gold-main hover:bg-white/20 flex items-center justify-center transition-all duration-200 cursor-pointer z-20 shadow-lg hover:scale-105 group"
               aria-label="Close job details modal"
             >
               <X className="w-5 h-5 text-gray-300 group-hover:text-gold-light transition-colors" />
             </button>
 
             {/* Modal Header Box */}
-            <div className="mb-6 bg-[#161822] border border-white/10 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
+            <div className="mb-6 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
               <div className="w-1.5 h-12 bg-gradient-gold-animated rounded-full absolute left-0 top-1/2 -translate-y-1/2" />
               <div className="pl-3 pr-8">
                 <span className="text-[11px] font-heading font-bold uppercase tracking-widest text-gold-light block mb-1">
@@ -438,7 +438,7 @@ export default function OpenPositionsSection() {
               )}
             </div>
 
-            {/* ── APPLY NOW CTA BUTTON BAR (Replaces Form as Requested) ── */}
+            {/* APPLY NOW CTA BUTTON BAR */}
             <div className="pt-5 border-t border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h4 className="font-heading font-bold text-base text-white">

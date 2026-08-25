@@ -3,6 +3,8 @@
 import CareersHero from "@/components/careers/CareersHero";
 import OpenPositionsSection from "@/components/careers/OpenPositionsSection";
 import WhyJoinLeelaGulf from "@/components/careers/WhyJoinLeelaGulf";
+import CareerJourneySection from "@/components/careers/CareerJourneySection";
+import CareerApplicationForm from "@/components/careers/CareerApplicationForm";
 
 export default function CareersPage() {
   const handleScrollToRoles = () => {
@@ -20,8 +22,14 @@ export default function CareersPage() {
       {/* ── 2. OPEN POSITIONS & WHY LEELA GULF SECTION ── */}
       <OpenPositionsSection />
 
-      {/* ── 3. WHY JOIN LEELA GULF / CORE VALUES SECTION (Below Open Positions) ── */}
+      {/* ── 3. WHY JOIN LEELA GULF / CORE VALUES SECTION ── */}
       <WhyJoinLeelaGulf />
+
+      {/* ── 4. HIRING ADVENTURE / CAREER EXPLORATION JOURNEY SECTION ── */}
+      <CareerJourneySection />
+
+      {/* ── 5. CAREER APPLICATION FORM SECTION (At the End of Careers Page) ── */}
+      <CareerApplicationForm />
     </main>
   );
 }

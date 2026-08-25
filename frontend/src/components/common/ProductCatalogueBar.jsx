@@ -17,10 +17,8 @@ export default function ProductCatalogueBar() {
   return (
     <section className="w-full bg-[var(--color-primary)] relative pb-6 sm:pb-8 overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-
         {/* ── WHITE ROUNDED PILL CONTAINER (#fcfcfb) ── */}
         <div className="bg-[#fcfcfb] rounded-2xl sm:rounded-3xl lg:rounded-[32px] p-5 sm:p-6 lg:px-10 lg:py-6 shadow-xl border border-gray-200/60 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-5 lg:gap-8 transition-all duration-300">
-
           {/* ═════════════════════════════════════════════════════════════════
               LEFT BOX: DOWNLOAD OUR PRODUCT CATALOGUE
               ═════════════════════════════════════════════════════════════════ */}
@@ -36,7 +34,10 @@ export default function ProductCatalogueBar() {
 
             {/* Text Hierarchy */}
             <div>
-              <h3 className="font-heading font-bold text-base sm:text-lg lg:text-xl text-[#1a1a1a] leading-tight" style={{ fontWeight: 700 }}>
+              <h3
+                className="font-heading font-bold text-base sm:text-lg lg:text-xl text-[#1a1a1a] leading-tight"
+                style={{ fontWeight: 700 }}
+              >
                 {isRTL ? "تحميل " : "Download Our "}
                 <span className="text-gold-main group-hover:text-gold-dark transition-colors">
                   {isRTL ? "كتالوج المنتجات" : "Product Catalogue"}
@@ -59,7 +60,6 @@ export default function ProductCatalogueBar() {
               RIGHT BOX: NEED HELP FINDING THE RIGHT PRODUCT? (WHATSAPP REDIRECT)
               ═════════════════════════════════════════════════════════════════ */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-5 flex-1">
-
             {/* Headphones Icon + Text */}
             <div className="flex items-center gap-3.5 sm:gap-4.5">
               {/* Solid Gold Circular Icon Badge */}
@@ -69,7 +69,10 @@ export default function ProductCatalogueBar() {
 
               {/* Text Hierarchy */}
               <div>
-                <h3 className="font-heading font-bold text-base sm:text-lg lg:text-xl text-[#1a1a1a] leading-tight" style={{ fontWeight: 700 }}>
+                <h3
+                  className="font-heading font-bold text-base sm:text-lg lg:text-xl text-[#1a1a1a] leading-tight"
+                  style={{ fontWeight: 700 }}
+                >
                   {isRTL ? "هل تحتاج مساعدة في " : "Need Help Finding the "}
                   <span className="text-gold-main">
                     {isRTL ? "اختيار المنتج المناسب؟" : "Right Product?"}
@@ -91,13 +94,12 @@ export default function ProductCatalogueBar() {
               className="btn-gold-primary px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-heading font-bold text-xs sm:text-sm text-black flex items-center gap-2 whitespace-nowrap shrink-0 shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer self-start sm:self-center"
             >
               <span>{isRTL ? "تواصل معنا" : "Contact Us"}</span>
-              <ArrowRight className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-black stroke-[2.5] ${isRTL ? "rotate-180" : ""}`} />
+              <ArrowRight
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-black stroke-[2.5] ${isRTL ? "rotate-180" : ""}`}
+              />
             </a>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

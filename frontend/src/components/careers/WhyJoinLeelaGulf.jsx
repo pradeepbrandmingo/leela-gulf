@@ -76,14 +76,13 @@ export default function WhyJoinLeelaGulf() {
 
         {/* ═══════════════════════════════════════════
             HEADER SECTION (2-Line Heading Left + Quote Right)
-            Matches Reference Screenshot 100%
             ═══════════════════════════════════════════ */}
         <div
           className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center mb-10 sm:mb-14 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          {/* LEFT 6 COLS: Badge + 2-Line Title + Subtitle */}
+          {/* LEFT 6 COLS: Badge + 2-Line Title */}
           <div className="lg:col-span-6">
             {/* Small Gold Badge */}
             <div className="flex items-center gap-2 mb-2">
@@ -93,7 +92,7 @@ export default function WhyJoinLeelaGulf() {
               </span>
             </div>
 
-            {/* Main Title (Exact 2-Line Format matching Reference SS #2) */}
+            {/* Main Title (2-Line Layout) */}
             <h2 className="font-heading font-bold text-3xl sm:text-4xl lg:text-5xl text-white mb-3 tracking-tight leading-[1.15]">
               {isRTL ? (
                 <>
@@ -128,7 +127,6 @@ export default function WhyJoinLeelaGulf() {
 
         {/* ═══════════════════════════════════════════
             6 CORE VALUES GRID (3 Cols x 2 Rows)
-            Matches Reference Screenshot 100%
             ═══════════════════════════════════════════ */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {CORE_VALUES.map((val, idx) => {
@@ -136,7 +134,7 @@ export default function WhyJoinLeelaGulf() {
             return (
               <div
                 key={val.num}
-                className={`group relative bg-[#11131a] rounded-2xl p-6 sm:p-7 border border-white/10 hover:border-gold-main/50 transition-all duration-500 shadow-xl hover:-translate-y-1.5 overflow-hidden cursor-pointer ${
+                className={`group relative bg-white/5 rounded-2xl p-6 sm:p-7 border border-white/10 hover:border-gold-main/50 transition-all duration-500 shadow-xl hover:-translate-y-1.5 overflow-hidden cursor-pointer ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 }`}
                 style={{ transitionDelay: `${150 + idx * 80}ms` }}
@@ -156,7 +154,7 @@ export default function WhyJoinLeelaGulf() {
                   {isRTL ? val.titleAr : val.title}
                 </h3>
 
-                {/* Gold Underline Dash (BY DEFAULT VISIBLE under Title as requested) */}
+                {/* Gold Underline Dash (BY DEFAULT VISIBLE under Title) */}
                 <div className="w-8 h-[2.5px] bg-gradient-gold-animated rounded-full mt-2.5 transition-all duration-300" />
               </div>
             );

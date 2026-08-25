@@ -5,13 +5,13 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * CareersHero - Direction-Aware Hero Component (Synchronized with KnowledgeCenterHero):
- * - LTR (English): Text on LEFT, Theme Dark Overlay on LEFT, Photo on RIGHT.
- * - RTL (Arabic): Text on RIGHT, Theme Dark Overlay on RIGHT, Photo on LEFT.
- * - 100% Mobile & Desktop Responsive.
- * - 100% Global Theme Gold Tokens.
+ * KnowledgeCenterHero - Direction-Aware Hero Banner for Knowledge Center / Blog Page:
+ * - Matches CareersHero exact dimensions, aspect ratio, and responsive scaling.
+ * - LTR (English): Text & Dark Backdrop on LEFT (left-0), photo visible on RIGHT.
+ * - RTL (Arabic): Text & Dark Backdrop on RIGHT (right-0), photo visible on LEFT.
+ * - 100% Global Theme Colors & Running Gold Tokens.
  */
-export default function CareersHero({ onScrollToRoles }) {
+export default function KnowledgeCenterHero() {
   const { isRTL } = useLanguage();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -43,7 +43,7 @@ export default function CareersHero({ onScrollToRoles }) {
 
         {/* ═══════════════════════════════════════════
             MAIN HERO CARD CONTAINER
-            Matches KnowledgeCenterHero 100%
+            Matches CareersHero Dimensions & Aspect Ratio 100%
             ═══════════════════════════════════════════ */}
         <div
           className={`relative rounded-xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden bg-[var(--color-primary)] shadow-2xl transition-all duration-1000 ease-out ${
@@ -53,10 +53,10 @@ export default function CareersHero({ onScrollToRoles }) {
           {/* Aspect Ratio Container */}
           <div className="relative w-full aspect-[1.7/1] sm:aspect-[2.4/1] md:aspect-[2.6/1] lg:aspect-[2.9/1] min-h-[280px] sm:min-h-[420px] md:min-h-[460px]">
 
-            {/* Background Team Photo */}
+            {/* Background Image (Direction-Aware Object Position) */}
             <Image
               src="/images/careers/careers.avif"
-              alt="Leela Gulf Team Working"
+              alt="Chemical Industry Insights & Innovations"
               fill
               className={`object-cover opacity-85 sm:opacity-100 ${
                 isRTL ? "object-left sm:object-left" : "object-right sm:object-right"
@@ -66,14 +66,13 @@ export default function CareersHero({ onScrollToRoles }) {
             />
 
             {/* ═══════════════════════════════════════════
-                SMOOTH THEME GRADIENT OVERLAY (RTL / LTR)
-                Matches KnowledgeCenterHero Overlay 100%
+                DIRECTION-AWARE GRADIENT OVERLAY (RTL / LTR)
                 ═══════════════════════════════════════════ */}
             {isRTL ? (
-              /* ARABIC (RTL): Dark Overlay starts from RIGHT and fades smoothly to LEFT */
+              /* ARABIC (RTL): Dark Overlay starts from RIGHT and fades to LEFT */
               <div className="absolute top-0 bottom-0 right-0 left-auto w-full sm:w-[80%] md:w-[75%] lg:w-[68%] bg-gradient-to-l from-[var(--color-primary)] via-[var(--color-primary)] via-45% to-transparent z-0" />
             ) : (
-              /* ENGLISH (LTR): Dark Overlay starts from LEFT and fades smoothly to RIGHT */
+              /* ENGLISH (LTR): Dark Overlay starts from LEFT and fades to RIGHT */
               <div className="absolute top-0 bottom-0 left-0 right-auto w-full sm:w-[80%] md:w-[75%] lg:w-[68%] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)] via-45% to-transparent z-0" />
             )}
 
@@ -82,6 +81,7 @@ export default function CareersHero({ onScrollToRoles }) {
 
             {/* ═══════════════════════════════════════════
                 TEXT CONTENT OVERLAY CONTAINER
+                Matches Reference Screenshot 100%
                 ═══════════════════════════════════════════ */}
             <div
               className={`absolute top-0 bottom-0 flex flex-col justify-center z-10 ${
@@ -97,11 +97,11 @@ export default function CareersHero({ onScrollToRoles }) {
                 }`}
               >
                 <span className="font-heading font-bold text-[9px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] text-gold-light uppercase drop-shadow">
-                  {isRTL ? "الرئيسية / الوظائف" : "HOME / CAREERS"}
+                  {isRTL ? "الرئيسية / مركز المعرفة" : "HOME / KNOWLEDGE CENTER"}
                 </span>
               </div>
 
-              {/* Main Bold Heading */}
+              {/* Main Bold Heading (Matches Screenshot 100%) */}
               <h1
                 className={`font-heading font-bold text-base sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.1rem] text-white leading-[1.18] sm:leading-[1.16] tracking-tight max-w-full sm:max-w-2xl md:max-w-3xl mb-2 sm:mb-5 transition-all duration-700 delay-400 ease-out drop-shadow-md ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -109,52 +109,25 @@ export default function CareersHero({ onScrollToRoles }) {
               >
                 {isRTL ? (
                   <>
-                    <span className="block">خوض تحدي إعاده صياغه</span>
+                    <span className="block">استكشف أحدث</span>
                     <span className="block">
-                      <span className="text-gradient-gold-animated">الصناعة الكيميائية</span>
+                      <span className="text-gradient-gold-animated">الرؤى والابتكارات</span>
                     </span>
-                    <span className="block">من خلال الانضمام إلينا</span>
+                    <span className="block">في الصناعة الكيميائية</span>
                   </>
                 ) : (
                   <>
-                    <span className="block">Embrace the Challenge of</span>
+                    <span className="block">Explore the Latest</span>
                     <span className="block">
-                      Reimagining the{" "}
-                      <span className="text-gradient-gold-animated">Chemical Industry</span>
+                      <span className="text-gradient-gold-animated">Insights & Innovations</span>
                     </span>
-                    <span className="block">by Joining Us</span>
+                    <span className="block">in the Chemical Industry</span>
                   </>
                 )}
               </h1>
 
               {/* Gold Accent Dash */}
-              <div className="w-8 sm:w-14 h-[2.5px] sm:h-[3px] bg-gradient-gold-animated rounded-full mb-3 sm:mb-6" />
-
-              {/* Action Buttons Row */}
-              <div
-                className={`flex items-center gap-2 sm:gap-4 transition-all duration-700 delay-600 ease-out ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
-              >
-                {/* Join Us Solid Gold Button */}
-                <button
-                  type="button"
-                  onClick={onScrollToRoles}
-                  className="px-4 py-2 sm:px-7 sm:py-3 rounded-lg sm:rounded-2xl bg-gradient-gold-animated text-black font-heading font-bold text-[11px] sm:text-sm tracking-wide shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer"
-                >
-                  {isRTL ? "انضم إلينا" : "Join Us"}
-                </button>
-
-                {/* View Open Roles Outlined Button */}
-                <button
-                  type="button"
-                  onClick={onScrollToRoles}
-                  className="px-4 py-2 sm:px-7 sm:py-3 rounded-lg sm:rounded-2xl border border-white/80 text-white font-heading font-bold text-[11px] sm:text-sm tracking-wide hover:border-gold-main hover:text-gold-main transition-all duration-300 cursor-pointer backdrop-blur-xs"
-                >
-                  {isRTL ? "عرض الوظائف المتاحة" : "View open roles"}
-                </button>
-              </div>
-
+              <div className="w-8 sm:w-14 h-[2.5px] sm:h-[3px] bg-gradient-gold-animated rounded-full" />
             </div>
 
           </div>
