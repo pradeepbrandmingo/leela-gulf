@@ -90,7 +90,7 @@ export const ar = {
     titleLine1: "رحلتنا:",
     titleHighlight: "مجموعة ليلا",
     titleLine2: "عقد من التجارة الكيميائية وإدارة النفايات والتوسع العالمي",
-    hoverHint: "مرر للرؤية ✦",
+    hoverHint: "مرر للرؤية",
 
     // Milestones
     s1Tag: "التأسيس",

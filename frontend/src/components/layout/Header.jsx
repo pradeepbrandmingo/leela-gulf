@@ -66,7 +66,7 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 py-2.5 md:py-3 transition-all duration-300 ${
           isScrolled
-            ? "bg-[#1a1a1a]/95 backdrop-blur-md border-b border-[#393C3F]/30 shadow-xl"
+            ? "bg-[var(--color-primary)]/95 backdrop-blur-md border-b border-[#393C3F]/30 shadow-xl"
             : "bg-transparent border-b border-transparent"
         }`}
       >
@@ -118,7 +118,7 @@ export default function Header() {
           {/* Slide-over Card Container */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[320px] sm:max-w-[360px] h-auto max-h-[90vh] bg-[#08090a] border border-[#393C3F]/70 rounded-tl-[36px] rounded-bl-3xl p-6 md:p-8 shadow-2xl flex flex-col justify-between animate-section-reveal relative overflow-y-auto"
+            className="w-full max-w-[320px] sm:max-w-[360px] h-auto max-h-[90vh] bg-[var(--color-primary)] border border-[#393C3F]/70 rounded-tl-[36px] rounded-bl-3xl p-6 md:p-8 shadow-2xl flex flex-col justify-between animate-section-reveal relative overflow-y-auto"
           >
             {/* Close Icon Top Right */}
             <button

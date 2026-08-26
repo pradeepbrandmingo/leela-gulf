@@ -83,7 +83,7 @@ export default function KeyProductBenefits() {
                 return (
                   <div
                     key={item.num}
-                    className={`bg-[#12141c] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 relative overflow-hidden flex flex-col justify-between shadow-xl transition-all duration-500 hover:border-[#c4842f]/60 hover:bg-[#171a26] hover:-translate-y-2 group cursor-pointer ${
+                    className={`bg-[var(--color-card-dark)] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 relative overflow-hidden flex flex-col justify-between shadow-xl transition-all duration-500 hover:border-[#c4842f]/60 hover:bg-[#141824] hover:-translate-y-2 group cursor-pointer ${
                       isMiddleColumn ? "lg:translate-y-5" : ""
                     }`}
                   >
@@ -96,11 +96,6 @@ export default function KeyProductBenefits() {
 
                     {/* Content */}
                     <div className="relative z-10 flex flex-col h-full justify-between">
-                      {/* Top Number Tag */}
-                      <span className="font-heading font-bold text-xs text-gold-main tracking-wider uppercase mb-4 block" style={{ fontWeight: 700 }}>
-                        {item.num}
-                      </span>
-
                       <div>
                         {/* Benefit Title */}
                         <h3 className="font-heading font-bold text-base sm:text-lg md:text-xl text-white mb-2.5 leading-snug group-hover:text-gold-accent transition-colors duration-200" style={{ fontWeight: 700 }}>

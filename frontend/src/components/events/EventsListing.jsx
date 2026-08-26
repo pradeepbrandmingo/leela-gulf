@@ -285,7 +285,7 @@ export default function EventsListing({ eventsData, activeTab }) {
 
         {/* Fallback Empty State */}
         {filteredEvents.length === 0 && (
-          <div className="text-center py-16 bg-[#161822] rounded-3xl border border-white/10 p-8 max-w-xl mx-auto">
+          <div className="text-center py-16 bg-[var(--color-primary)] rounded-3xl border border-white/10 p-8 max-w-xl mx-auto">
             <Sparkles className="w-10 h-10 text-gold-main mx-auto mb-3 opacity-60" />
             <h3 className="font-heading font-bold text-xl text-white mb-2">
               {isRTL ? "لا توجد فعاليات حالياً" : "No Events Found"}
@@ -310,13 +310,13 @@ export default function EventsListing({ eventsData, activeTab }) {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-5xl bg-[#161822] text-white border border-white/15 rounded-3xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col p-5 sm:p-7 md:p-8 transition-all duration-300"
+            className="relative w-full max-w-5xl bg-[var(--color-primary)] text-white border border-white/15 rounded-3xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col p-5 sm:p-7 md:p-8 transition-all duration-300"
           >
-            {/* Close Button Top Right (Solid Gold Mobile & Desktop Fail-Safe) */}
+            {/* Close Button Top Right (Bright Visible Gold Shimmer Badge) */}
             <button
               type="button"
               onClick={() => setSelectedEvent(null)}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 rtl:left-3 rtl:right-auto sm:rtl:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gold-main text-black shadow-xl hover:scale-110 active:scale-95 flex items-center justify-center transition-transform duration-200 cursor-pointer z-40"
+              className="absolute top-3 right-3 sm:top-5 sm:right-5 rtl:left-3 rtl:right-auto sm:rtl:left-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-gold-animated text-black border border-gold-main/60 shadow-2xl hover:scale-110 active:scale-95 flex items-center justify-center transition-all duration-200 cursor-pointer z-50"
               aria-label="Close Modal"
             >
               <X className="w-5 h-5 text-black stroke-[3]" />
@@ -390,7 +390,7 @@ export default function EventsListing({ eventsData, activeTab }) {
                   </h2>
 
                   {/* Event Description Paragraph (Scrollable protection for long backend paragraphs) */}
-                  <div className="bg-[#1e212d] rounded-2xl p-4 sm:p-5 border border-white/10 max-h-[240px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20">
+                  <div className="bg-[var(--color-primary-light)] rounded-2xl p-4 sm:p-5 border border-white/10 max-h-[240px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20">
                     <p className="font-subheading text-xs sm:text-sm text-gray-300 leading-relaxed font-normal break-words">
                       {selectedEvent.description}
                     </p>

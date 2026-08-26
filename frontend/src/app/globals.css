@@ -10,7 +10,9 @@
      1. FONT FAMILIES (Single Source of Truth)
      ------------------------------------------------------------------------ */
   /* Heading & CTA Font: Modulus Pro (with clean system fallbacks) */
-  --font-family-modulus-pro: "Modulus Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-modulus-pro:
+    "Modulus Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
 
   /* Subheading & Body Font: Raleway (from Next.js google font loader) */
   --font-family-raleway: var(--font-raleway), "Raleway", sans-serif;
@@ -134,10 +136,11 @@
    ========================================================================== */
 
 :root {
-  /* PRIMARY COLOR (Rich Dark / Enterprise Charcoal) */
-  --color-primary: #1a1a1a;
-  --color-primary-light: #262626;
-  --color-primary-dark: #0f0f0f;
+  /* PRIMARY COLOR (Single Source of Truth - Pure Jet Black) */
+  --color-primary: #000000;
+  --color-primary-light: #0f1117;
+  --color-primary-dark: #000000;
+  --color-card-dark: #0f1117;
 
   /* SECONDARY COLOR PALETTE (Gold / Warm Ochre Family) */
   --color-secondary-main: #c4842f;
@@ -147,24 +150,56 @@
   --color-secondary-bg: #fbf6ee;
 
   /* GOLD GRADIENT PRESETS (Rich Luxury Gold Matching Download Catalogue Button) */
-  --gold-gradient-static: linear-gradient(135deg, #c4842f 0%, #e8b958 50%, #9e6417 100%);
-  --gold-gradient-animated: linear-gradient(90deg, #c4842f 0%, #e8b958 35%, #f7d27e 50%, #e8b958 65%, #c4842f 100%);
+  /* --gold-gradient-static: linear-gradient(
+    135deg,
+    #c4842f 0%,
+    #e8b958 50%,
+    #9e6417 100%
+  );
+  --gold-gradient-animated: linear-gradient(
+    90deg,
+    #c4842f 0%,
+    #e8b958 35%,
+    #f7d27e 50%,
+    #e8b958 65%,
+    #c4842f 100%
+  ); */
+
+  /* Leela Gulf Gold */
+  --gold-gradient-static: linear-gradient(
+    135deg,
+    #f0d84a 0%,
+    #d6b92a 35%,
+    #c19f16 65%,
+    #8e7608 100%
+  );
+
+  --gold-gradient-animated: linear-gradient(
+    90deg,
+    #8e7608 0%,
+    #c19f16 25%,
+    #d6b92a 40%,
+    #f0d84a 50%,
+    #d6b92a 60%,
+    #c19f16 75%,
+    #8e7608 100%
+  );
 
   /* NEUTRAL COLOR PALETTE (Exact Spec Hex Codes) */
-  --color-neutral-900: #1D1F21;
-  --color-neutral-800: #393C3F;
-  --color-neutral-700: #575B5E;
-  --color-neutral-600: #787C7F;
-  --color-neutral-500: #9FA2A5;
-  --color-neutral-300: #C3C7C9;
-  --color-neutral-100: #F0F1F2;
-  --color-neutral-50: #FAFAFA;
-  --color-white: #FFFFFF;
+  --color-neutral-900: #1d1f21;
+  --color-neutral-800: #393c3f;
+  --color-neutral-700: #575b5e;
+  --color-neutral-600: #787c7f;
+  --color-neutral-500: #9fa2a5;
+  --color-neutral-300: #c3c7c9;
+  --color-neutral-100: #f0f1f2;
+  --color-neutral-50: #fafafa;
+  --color-white: #ffffff;
 
   /* SEMANTIC STATE COLORS */
   --color-success: #059669;
-  --color-error: #DC2626;
-  --color-warning: #D97706;
+  --color-error: #dc2626;
+  --color-warning: #d97706;
 }
 
 /* ==========================================================================
@@ -295,7 +330,10 @@ body {
   animation: goldGradientMove 5s ease infinite;
   color: #000000;
   font-weight: 700;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.3s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
 }
 
 .bg-gradient-gold-animated:hover {
@@ -330,7 +368,11 @@ body {
   font-weight: 700 !important;
   overflow: hidden !important;
   z-index: 1 !important;
-  transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease !important;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease !important;
 }
 
 .btn-gold-outline-hover::before,
@@ -548,7 +590,9 @@ select option:checked {
   -webkit-text-fill-color: #ffffff !important;
   color: #ffffff !important;
   caret-color: #ffffff !important;
-  transition: background-color 50000s ease-in-out 0s, color 50000s ease-in-out 0s;
+  transition:
+    background-color 50000s ease-in-out 0s,
+    color 50000s ease-in-out 0s;
 }
 
 /* Light Form Autofill Override */
@@ -562,7 +606,9 @@ select option:checked {
   -webkit-text-fill-color: #111827 !important;
   color: #111827 !important;
   caret-color: #111827 !important;
-  transition: background-color 50000s ease-in-out 0s, color 50000s ease-in-out 0s;
+  transition:
+    background-color 50000s ease-in-out 0s,
+    color 50000s ease-in-out 0s;
 }
 
 /* ==========================================================================
@@ -591,10 +637,18 @@ select option:checked {
   line-height: 1.3;
 }
 
-.article-wysiwyg-content h1 { font-size: 2rem; }
-.article-wysiwyg-content h2 { font-size: 1.65rem; }
-.article-wysiwyg-content h3 { font-size: 1.35rem; }
-.article-wysiwyg-content h4 { font-size: 1.15rem; }
+.article-wysiwyg-content h1 {
+  font-size: 2rem;
+}
+.article-wysiwyg-content h2 {
+  font-size: 1.65rem;
+}
+.article-wysiwyg-content h3 {
+  font-size: 1.35rem;
+}
+.article-wysiwyg-content h4 {
+  font-size: 1.15rem;
+}
 
 .article-wysiwyg-content p {
   margin-bottom: 1.25rem;

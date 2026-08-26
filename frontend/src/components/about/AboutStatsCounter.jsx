@@ -92,7 +92,7 @@ export default function AboutStatsCounter() {
     },
     {
       targetNumber: 11,
-      suffix: "",
+      suffix: "+",
       label: t("aboutStats.stat3Label") || "Core Industrial Sectors",
     },
     {

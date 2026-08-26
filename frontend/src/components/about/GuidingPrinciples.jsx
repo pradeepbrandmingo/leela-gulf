@@ -99,16 +99,16 @@ export default function GuidingPrinciples() {
             </h2>
 
             {/* 5 Compact Principles Cards */}
-            <div className="space-y-2.5 sm:space-y-3">
+            <div className="space-y-3 sm:space-y-3.5">
               {principles.map((item, index) => (
                 <div
                   key={`principle-${index}`}
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl sm:rounded-2xl py-3 px-4 sm:py-3.5 sm:px-5 transition-all duration-300 hover:bg-white/10 hover:border-[#d49b29]/50 hover:-translate-y-0.5 group"
+                  className="bg-[var(--color-card-dark)] border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-5 transition-all duration-300 hover:border-gold-main/50 hover:-translate-y-0.5 shadow-xl group"
                 >
-                  <h3 className="font-heading font-bold text-sm sm:text-base text-gold-light mb-1 tracking-tight group-hover:text-white transition-colors duration-300">
+                  <h3 className="font-heading font-bold text-base sm:text-lg md:text-xl text-gold-light mb-1.5 tracking-tight group-hover:text-white transition-colors duration-300" style={{ fontWeight: 700 }}>
                     {item.title}
                   </h3>
-                  <p className="font-subheading text-gray-300 text-xs sm:text-sm leading-normal sm:leading-relaxed">
+                  <p className="font-subheading text-gray-300/90 text-xs sm:text-[13px] md:text-sm leading-relaxed font-normal">
                     {item.desc}
                   </p>
                 </div>

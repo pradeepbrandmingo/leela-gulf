@@ -51,20 +51,20 @@ export default function ClientLogosSlider() {
         <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 md:w-48 bg-gradient-to-l from-[var(--color-primary)] via-[var(--color-primary)]/80 to-transparent z-10 pointer-events-none" />
 
         {/* Marquee Track Container (Slow, Luxury 120s Glide) */}
-        <div className="animate-marquee flex items-center gap-12 sm:gap-16 md:gap-24">
+        <div className="animate-marquee flex items-center gap-5 sm:gap-7 md:gap-8 py-2">
           {duplicatedLogos.map((logo, index) => (
             <div
               key={`client-logo-${logo.id}-${index}`}
-              className="flex items-center justify-center shrink-0 cursor-pointer group px-3 sm:px-4"
+              className="bg-[var(--color-card-dark)] border border-white/10 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-center min-w-[170px] sm:min-w-[210px] md:min-w-[240px] h-20 sm:h-24 md:h-28 shrink-0 transition-all duration-500 hover:bg-white hover:border-[var(--color-secondary-main)] hover:shadow-[0_12px_30px_rgba(196,132,47,0.3)] hover:-translate-y-1.5 group cursor-pointer"
             >
-              {/* Direct Transparent Client PNG Image (Original Clean UI, No Box Cards) */}
+              {/* Client Logo PNG (White inverted in dark card -> Real original colors on white card hover) */}
               <Image
                 src={logo.src}
                 alt={logo.alt}
                 width={280}
                 height={120}
                 unoptimized
-                className="h-16 sm:h-22 md:h-26 lg:h-32 max-w-[180px] sm:max-w-[240px] md:max-w-[280px] w-auto object-contain brightness-0 invert opacity-80 group-hover:brightness-100 group-hover:invert-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
+                className="max-h-[50px] sm:max-h-[65px] md:max-h-[75px] max-w-[140px] sm:max-w-[170px] md:max-w-[190px] w-auto object-contain filter brightness-0 invert opacity-90 group-hover:brightness-100 group-hover:invert-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
               />
             </div>
           ))}

@@ -72,22 +72,10 @@ export default function AboutHero() {
 
               {/* Floating Gold "Excellence In Action" Badge (Bottom Right Overlap) */}
               <div
-                className={`absolute z-20 -bottom-4 sm:-bottom-6 bg-[#0d0e11]/95 backdrop-blur-xl border border-[var(--color-secondary-main)]/50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 md:p-5 shadow-xl shadow-black/50 flex items-center gap-3 sm:gap-4 max-w-[270px] sm:max-w-[310px] ${
+                className={`absolute z-20 -bottom-4 sm:-bottom-6 bg-[var(--color-card-dark)] border border-[var(--color-secondary-main)]/50 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 md:p-5 shadow-2xl shadow-black max-w-[270px] sm:max-w-[310px] ${
                   isRTL ? "left-2 sm:left-4" : "right-2 sm:right-4"
                 }`}
               >
-                {/* Gold Sparkle Icon */}
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[var(--color-secondary-main)]/15 border border-[var(--color-secondary-main)]/40 flex items-center justify-center shrink-0">
-                  <svg
-                    className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary-main)]"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" />
-                  </svg>
-                </div>
-
                 {/* Badge Text Content */}
                 <div>
                   <h4 className="font-heading font-bold text-xs sm:text-sm text-[var(--color-secondary-main)] leading-tight mb-0.5 sm:mb-1">

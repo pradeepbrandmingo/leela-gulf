@@ -69,7 +69,7 @@ export default function WhyChooseUsSection() {
             {/* ═════════════════════════════════════════════════════════════════
                 LEFT SIDE: DARK FEATURED CARD (01) - COMPACT WIDTH & HEIGHT
                 ═════════════════════════════════════════════════════════════════ */}
-            <div className="lg:col-span-5 bg-[#0c0d11] rounded-xl sm:rounded-2xl lg:rounded-3xl pt-10 xs:pt-12 sm:pt-4 p-3 sm:p-4.5 lg:p-5 relative overflow-hidden flex flex-col justify-end min-h-[220px] sm:min-h-[280px] md:min-h-[310px] lg:min-h-[330px] shadow-xl border border-gray-800/80 group">
+            <div className="lg:col-span-5 bg-[var(--color-primary)] rounded-xl sm:rounded-2xl lg:rounded-3xl pt-10 xs:pt-12 sm:pt-4 p-3 sm:p-4.5 lg:p-5 relative overflow-hidden flex flex-col justify-end min-h-[220px] sm:min-h-[280px] md:min-h-[310px] lg:min-h-[330px] shadow-xl border border-gray-800/80 group">
               
               {/* Giant Watermarked Background Number "01" (Restored Georgia Serif Warm Dark Gold Tint) */}
               <span 
@@ -83,7 +83,7 @@ export default function WhyChooseUsSection() {
               <div className="absolute -top-20 -left-20 w-48 h-48 bg-[#c4842f]/10 rounded-full blur-3xl pointer-events-none" />
 
               {/* Inner Floating Dark Glass Card */}
-              <div className="relative z-10 bg-[#12141c] border border-[#c4842f]/35 rounded-xl lg:rounded-2xl p-3.5 sm:p-4.5 md:p-5 shadow-2xl transition-all duration-300 group-hover:border-[#e8b958]/70">
+              <div className="relative z-10 bg-[var(--color-card-dark)] border border-[#c4842f]/35 rounded-xl lg:rounded-2xl p-3.5 sm:p-4.5 md:p-5 shadow-2xl transition-all duration-300 group-hover:border-[#e8b958]/70">
                 {/* Horizontal Gold Line Accent */}
                 <div className="w-7 sm:w-8 h-[3px] bg-gradient-gold-animated rounded-full mb-2 sm:mb-2.5" />
                 

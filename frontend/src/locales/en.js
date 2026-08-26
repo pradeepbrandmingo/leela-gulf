@@ -90,7 +90,7 @@ export const en = {
     titleLine1: "Our Journey:",
     titleHighlight: "The Leela Group",
     titleLine2: "A Decade of Chemical Trade, Waste Management & Global Expansion",
-    hoverHint: "Hover to View Visual ✦",
+    hoverHint: "Hover to View Visual",
 
     // Milestones
     s1Tag: "FOUNDATION",

@@ -16,7 +16,7 @@ export default function ContactNetworkCards() {
       {/* ═════════════════════════════════════════════════════════════════
           CARD 1: DIRECT CONTACT BAR ("Prefer to talk?")
           ═════════════════════════════════════════════════════════════════ */}
-      <div className="bg-[#0e1014]/90 backdrop-blur-xl border border-[#e8b958]/40 rounded-2xl p-5 sm:p-6 md:p-7 shadow-xl relative overflow-hidden transition-all duration-300 hover:border-[#e8b958]/70">
+      <div className="bg-[var(--color-primary)]/90 backdrop-blur-xl border border-[#e8b958]/40 rounded-2xl p-5 sm:p-6 md:p-7 shadow-xl relative overflow-hidden transition-all duration-300 hover:border-[#e8b958]/70">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 lg:gap-8">
           
           {/* Left Column: Phone Icon & "Prefer to talk?" */}
@@ -86,7 +86,7 @@ export default function ContactNetworkCards() {
       {/* ═════════════════════════════════════════════════════════════════
           CARD 2: GLOBAL NETWORK BANNER WITH COMPACT HEIGHT & CLEAR GOLD MAP
           ═════════════════════════════════════════════════════════════════ */}
-      <div className="bg-[#0b0d11] border border-[#e8b958]/40 rounded-3xl p-6 sm:p-8 md:p-9 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-[#e8b958]/70 min-h-[300px] flex flex-col justify-between">
+      <div className="bg-[var(--color-primary)] border border-[#e8b958]/40 rounded-3xl p-6 sm:p-8 md:p-9 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-[#e8b958]/70 min-h-[300px] flex flex-col justify-between">
         
         {/* Background Map Image with Bright Clear Gold Contours */}
         <div 
