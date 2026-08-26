@@ -55,7 +55,7 @@ export default function ClientLogosSlider() {
           {duplicatedLogos.map((logo, index) => (
             <div
               key={`client-logo-${logo.id}-${index}`}
-              className="bg-[var(--color-card-dark)] border border-white/10 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-center min-w-[170px] sm:min-w-[210px] md:min-w-[240px] h-20 sm:h-24 md:h-28 shrink-0 transition-all duration-500 hover:bg-white hover:border-[var(--color-secondary-main)] hover:shadow-[0_12px_30px_rgba(196,132,47,0.3)] hover:-translate-y-1.5 group cursor-pointer"
+              className="bg-[var(--color-card-dark)] border border-white/10 rounded-2xl sm:rounded-3xl px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-center min-w-[170px] sm:min-w-[210px] md:min-w-[240px] h-20 sm:h-24 md:h-28 shrink-0 transition-all duration-500 hover:bg-white hover:border-[var(--color-secondary-main)] hover:shadow-[0_12px_30px_rgba(214,185,42,0.3)] hover:-translate-y-1.5 group cursor-pointer"
             >
               {/* Client Logo PNG (White inverted in dark card -> Real original colors on white card hover) */}
               <Image

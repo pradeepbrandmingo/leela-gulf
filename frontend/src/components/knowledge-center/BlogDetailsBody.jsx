@@ -370,7 +370,7 @@ export default function BlogDetailsBody({ blog }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Share on LinkedIn"
-                  className="w-8 h-8 rounded-full bg-gray-100 text-[#c4842f] hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-gray-100 text-gold-main hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
                 >
                   <LinkedinIcon className="w-3.5 h-3.5 fill-current stroke-none" />
                 </a>
@@ -381,7 +381,7 @@ export default function BlogDetailsBody({ blog }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Share on X"
-                  className="w-8 h-8 rounded-full bg-gray-100 text-[#c4842f] hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-gray-100 text-gold-main hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
                 >
                   <XIcon className="w-3.5 h-3.5" />
                 </a>
@@ -392,7 +392,7 @@ export default function BlogDetailsBody({ blog }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Share on Facebook"
-                  className="w-8 h-8 rounded-full bg-gray-100 text-[#c4842f] hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-gray-100 text-gold-main hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
                 >
                   <FacebookIcon className="w-3.5 h-3.5 fill-current stroke-none" />
                 </a>
@@ -402,7 +402,7 @@ export default function BlogDetailsBody({ blog }) {
                   type="button"
                   onClick={handleCopyLink}
                   title="Copy Link"
-                  className="w-8 h-8 rounded-full bg-gray-100 text-[#c4842f] hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-gray-100 text-gold-main hover:bg-gold-main hover:text-black flex items-center justify-center transition-colors"
                 >
                   {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Link2 className="w-3.5 h-3.5" />}
                 </button>
@@ -503,11 +503,11 @@ export default function BlogDetailsBody({ blog }) {
                       href="/knowledge-center"
                       className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-subheading transition-colors ${
                         isActive
-                          ? "bg-gold-main/15 text-[#c4842f] font-bold"
+                          ? "bg-gold-main/15 text-gold-main font-bold"
                           : "text-gray-600 hover:bg-gray-50 hover:text-black"
                       }`}
                     >
-                      <IconComp className={`w-3.5 h-3.5 ${isActive ? "text-[#c4842f]" : "text-gray-400"}`} />
+                      <IconComp className={`w-3.5 h-3.5 ${isActive ? "text-gold-main" : "text-gray-400"}`} />
                       <span>{isRTL ? item.labelAr : item.label}</span>
                     </Link>
                   );
@@ -524,7 +524,7 @@ export default function BlogDetailsBody({ blog }) {
 
               {/* Author Header: Left Avatar + Right Details */}
               <div className="flex items-center gap-3 mb-3 text-left rtl:text-right">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#c4842f] shrink-0 shadow-sm">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gold-main shrink-0 shadow-sm">
                   <Image
                     src="/images/careers/careers.avif"
                     alt="Author Ananya Sharma"
@@ -539,7 +539,7 @@ export default function BlogDetailsBody({ blog }) {
                   <span className="font-subheading text-[11px] text-gray-500 block">
                     {isRTL ? "أخصائية الامتثال" : "Compliance Specialist"}
                   </span>
-                  <span className="font-heading font-bold text-[10.5px] text-[#c4842f] tracking-wider block uppercase">
+                  <span className="font-heading font-bold text-[10.5px] text-gold-main tracking-wider block uppercase">
                     LEELA GULF
                   </span>
                 </div>
@@ -558,13 +558,13 @@ export default function BlogDetailsBody({ blog }) {
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#c4842f] hover:text-black transition-colors"
+                  className="text-gold-main hover:text-black transition-colors"
                 >
                   <LinkedinIcon className="w-4 h-4 fill-current stroke-none" />
                 </a>
                 <a
                   href="mailto:contact@leelagulf.com"
-                  className="text-[#c4842f] hover:text-black transition-colors"
+                  className="text-gold-main hover:text-black transition-colors"
                 >
                   <Mail className="w-4 h-4" />
                 </a>
@@ -597,7 +597,7 @@ export default function BlogDetailsBody({ blog }) {
 
                     {/* Title & Date */}
                     <div>
-                      <h5 className="font-heading font-bold text-xs text-gray-900 line-clamp-2 leading-snug group-hover:text-[#c4842f] transition-colors">
+                      <h5 className="font-heading font-bold text-xs text-gray-900 line-clamp-2 leading-snug group-hover:text-gold-main transition-colors">
                         {isRTL ? post.titleAr : post.title}
                       </h5>
                       <span className="font-subheading text-[10.5px] text-gray-400 block mt-1">

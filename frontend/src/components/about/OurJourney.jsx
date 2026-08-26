@@ -22,6 +22,55 @@ export default function OurJourney() {
   const [strokeDashoffset, setStrokeDashoffset] = useState(5500);
   const [activeCardId, setActiveCardId] = useState(null);
 
+  const renderHighlightedDesc = (id, desc, isRTL) => {
+    if (!desc) return desc;
+
+    if (id === "2016") {
+      const targetEn = "The Leela Corporation";
+      const targetAr = "شركة ليلا كوربوريشن";
+      const target = isRTL ? targetAr : targetEn;
+
+      if (desc.includes(target)) {
+        const parts = desc.split(target);
+        return (
+          <>
+            {parts[0]}
+            <span className="font-bold text-gold-light">{target}</span>
+            {parts[1]}
+          </>
+        );
+      }
+    }
+
+    if (id === "2018") {
+      const targetEn = "spent sulphuric acid handling";
+      const targetEn2 = "sulphuric acid handling";
+      const targetAr = "معالجة حمض الكبريتيك المستنفد";
+      const targetAr2 = "حمض الكبريتيك المستنفد";
+
+      let target = isRTL
+        ? desc.includes(targetAr)
+          ? targetAr
+          : targetAr2
+        : desc.includes(targetEn)
+        ? targetEn
+        : targetEn2;
+
+      if (desc.includes(target)) {
+        const parts = desc.split(target);
+        return (
+          <>
+            {parts[0]}
+            <span className="font-bold text-gold-light">{target}</span>
+            {parts[1]}
+          </>
+        );
+      }
+    }
+
+    return desc;
+  };
+
   const steps = [
     {
       id: "2016",
@@ -164,7 +213,7 @@ export default function OurJourney() {
   return (
     <section className="relative w-full bg-[var(--color-primary)] py-12 sm:py-16 md:py-20 text-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 relative z-10">
-        
+
         {/* Full Client Heading as One Cohesive Block */}
         <div className="text-center mb-14 sm:mb-20 max-w-4xl mx-auto">
           <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight">
@@ -180,7 +229,7 @@ export default function OurJourney() {
             MAIN ROADMAP PATH WRAPPER
             ═══════════════════════════════════════════ */}
         <div ref={wrapperRef} className="relative max-w-[1100px] mx-auto py-10" dir="ltr">
-          
+
           {/* Underlay SVG Winding Road Canvas (Desktop & Tablet) */}
           <svg
             className="absolute top-0 left-0 w-full h-full pointer-events-none hidden md:block z-0"
@@ -196,9 +245,9 @@ export default function OurJourney() {
 
               {/* Exact Site Global Theme Secondary Gold Color Gradient */}
               <linearGradient id="goldDashGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#f7d27e" />
-                <stop offset="50%" stopColor="#c4842f" />
-                <stop offset="100%" stopColor="#9e6417" />
+                <stop offset="0%" stopColor="var(--color-secondary-light)" />
+                <stop offset="50%" stopColor="var(--color-secondary-main)" />
+                <stop offset="100%" stopColor="var(--color-secondary-dark)" />
               </linearGradient>
             </defs>
 
@@ -229,7 +278,7 @@ export default function OurJourney() {
               strokeWidth="6"
               strokeDasharray={pathLength}
               strokeDashoffset={strokeDashoffset}
-              className="transition-[stroke-dashoffset] duration-150 ease-out filter drop-shadow-[0_0_14px_rgba(196,132,47,0.85)]"
+              className="transition-[stroke-dashoffset] duration-150 ease-out filter drop-shadow-[0_0_14px_rgba(214,185,42,0.85)]"
             />
           </svg>
 
@@ -243,21 +292,19 @@ export default function OurJourney() {
               return (
                 <div
                   key={item.id}
-                  className={`flex items-center relative w-full ${
-                    isLeft ? "md:justify-start md:pl-6" : "md:justify-end md:pr-6"
-                  } justify-center`}
+                  className={`flex items-center relative w-full ${isLeft ? "md:justify-start md:pl-6" : "md:justify-end md:pr-6"
+                    } justify-center`}
                 >
                   {/* Flag Marker Pin (Positioned cleanly ON TOP of pole to eliminate card overlap) */}
                   <div
-                    className={`hidden md:flex flex-col items-center absolute -top-16 ${
-                      isLeft ? "left-[170px]" : "right-[170px]"
-                    } z-20 pointer-events-none`}
+                    className={`hidden md:flex flex-col items-center absolute -top-16 ${isLeft ? "left-[170px]" : "right-[170px]"
+                      } z-20 pointer-events-none`}
                   >
-                    <div className="bg-[#1d1d1d] border border-[#c4842f]/40 backdrop-blur-md px-3 py-1 rounded flex items-center gap-1.5 text-[0.7rem] font-bold text-[var(--color-secondary-light)] tracking-wider shadow-2xl mb-1">
+                    <div className="bg-[#1d1d1d] border border-gold-main/40 backdrop-blur-md px-3 py-1 rounded flex items-center gap-1.5 text-[0.7rem] font-bold text-[var(--color-secondary-light)] tracking-wider shadow-2xl mb-1">
                       <Flag className="w-3.5 h-3.5 text-gold-light" />
                       <span>{item.stepNum}</span>
                     </div>
-                    <div className="w-[3px] h-10 bg-gradient-to-b from-[#c4842f] to-transparent rounded-full" />
+                    <div className="w-[3px] h-10 bg-gradient-to-b from-[var(--color-secondary-main)] to-transparent rounded-full" />
                   </div>
 
                   {/* ═══════════════════════════════════════════
@@ -266,13 +313,13 @@ export default function OurJourney() {
                   <div
                     onClick={() => handleCardClick(item.id)}
                     dir={isRTL ? "rtl" : "ltr"}
-                    className="w-full max-w-[460px] bg-[#1d1d1d] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:-translate-y-2 hover:bg-[#222222] hover:border-[#c4842f]/50 hover:shadow-[0_15px_30px_rgba(196,132,47,0.15)] group cursor-pointer select-none"
+                    className="w-full max-w-[460px] bg-[#1d1d1d] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:-translate-y-2 hover:bg-[#222222] hover:border-gold-main/50 hover:shadow-[0_15px_30px_rgba(214,185,42,0.25)] group cursor-pointer select-none"
                   >
                     {/* Header Bar */}
                     <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 px-5 sm:px-6 py-4 border-b border-white/5 bg-white/[0.02]">
                       <div className="flex items-center gap-2.5">
                         {/* Mobile Step Badge */}
-                        <span className="md:hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-[#c4842f]/15 border border-[#c4842f]/30 text-[0.68rem] font-bold text-gold-light tracking-wider uppercase">
+                        <span className="md:hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-gold-main/15 border border-gold-main/30 text-[0.68rem] font-bold text-gold-light tracking-wider uppercase">
                           {item.stepNum}
                         </span>
                         <span className="font-heading font-extrabold text-xl sm:text-2xl text-[var(--color-secondary-accent)] tracking-tight">
@@ -287,11 +334,10 @@ export default function OurJourney() {
 
                     {/* Hidden Image Reveal Container (Reveals smoothly on hover or mobile tap) */}
                     <div
-                      className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                        isActive
+                      className={`overflow-hidden transition-all duration-500 ease-in-out ${isActive
                           ? "max-h-[220px] opacity-100"
                           : "max-h-0 opacity-0 group-hover:max-h-[220px] group-hover:opacity-100"
-                      }`}
+                        }`}
                     >
                       <Image
                         src={item.image}
@@ -311,7 +357,7 @@ export default function OurJourney() {
                       </h3>
 
                       <p className="font-subheading text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-                        {item.desc}
+                        {renderHighlightedDesc(item.id, item.desc, isRTL)}
                       </p>
 
                       <div className="flex items-center gap-2 pt-3 border-t border-white/10 text-xs font-bold text-[var(--color-secondary-light)] tracking-wider">

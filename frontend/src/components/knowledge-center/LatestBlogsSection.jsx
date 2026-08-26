@@ -123,7 +123,7 @@ export default function LatestBlogsSection() {
 
             {/* Search Bar */}
             <div className="relative w-full sm:w-72 md:w-80 flex items-center">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 rtl:right-3.5 rtl:left-auto top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-gold-light absolute left-3.5 rtl:right-3.5 rtl:left-auto top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchTerm}
@@ -133,13 +133,13 @@ export default function LatestBlogsSection() {
                     ? "ابحث عن المدونات..."
                     : "Search blogs by title, keyword..."
                 }
-                className="light-form-input w-full pl-10 pr-9 rtl:pr-10 rtl:pl-9 py-2.5 rounded-xl bg-white border border-gray-200 text-xs text-gray-900 font-subheading placeholder-gray-400 outline-none focus:border-2 focus:border-gold-main transition-all shadow-md"
+                className="w-full pl-10 pr-9 rtl:pr-10 rtl:pl-9 py-2.5 rounded-xl bg-transparent border border-gold-main/50 text-white text-xs font-subheading placeholder-gray-400 outline-none focus:border-gold-light focus:ring-1 focus:ring-gold-light transition-all shadow-md"
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-3 rtl:left-3 rtl:right-auto text-gray-400 hover:text-black cursor-pointer"
+                  className="absolute right-3 rtl:left-3 rtl:right-auto text-gray-400 hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -157,14 +157,14 @@ export default function LatestBlogsSection() {
                     setIsCategoryOpen(!isCategoryOpen);
                     setIsSortOpen(false);
                   }}
-                  className={`w-full sm:w-auto px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-heading font-bold flex items-center justify-between sm:justify-start gap-2 transition-all shadow-md cursor-pointer outline-none ${
+                  className={`w-full sm:w-auto px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-heading font-bold flex items-center justify-between sm:justify-start gap-2 transition-all shadow-md cursor-pointer outline-none border ${
                     selectedCategory !== "ALL"
-                      ? "bg-gradient-gold-animated text-black"
-                      : "bg-white text-black hover:bg-gray-100"
+                      ? "bg-gradient-gold-animated text-black border-transparent"
+                      : "bg-transparent text-white border-gold-main/50 hover:border-gold-light hover:text-gold-light"
                   }`}
                 >
                   <div className="flex items-center gap-1.5 truncate">
-                    <SlidersHorizontal className="w-3.5 h-3.5 stroke-[2.2] shrink-0" />
+                    <SlidersHorizontal className="w-3.5 h-3.5 stroke-[2.2] shrink-0 text-gold-light" />
                     <span className="truncate">
                       {selectedCategory === "ALL"
                         ? isRTL
@@ -176,13 +176,13 @@ export default function LatestBlogsSection() {
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 shrink-0 transition-transform ${isCategoryOpen ? "rotate-180" : ""}`}
+                    className={`w-3.5 h-3.5 shrink-0 text-gold-light transition-transform ${isCategoryOpen ? "rotate-180" : ""}`}
                   />
                 </button>
 
                 {/* Categories Popup Menu */}
                 {isCategoryOpen && (
-                  <div className="absolute left-0 rtl:left-auto rtl:right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-[fadeIn_0.15s_ease-out]">
+                  <div className="absolute left-0 rtl:left-auto rtl:right-0 top-full mt-2 w-56 bg-[#14161d] border border-gold-main/40 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-[fadeIn_0.15s_ease-out]">
                     {CATEGORY_OPTIONS.map((cat) => (
                       <div
                         key={cat.key}
@@ -192,13 +192,13 @@ export default function LatestBlogsSection() {
                         }}
                         className={`px-4 py-2.5 text-xs font-subheading flex items-center justify-between cursor-pointer transition-colors ${
                           selectedCategory === cat.key
-                            ? "bg-gold-main/15 text-gold-main font-bold"
-                            : "text-gray-800 hover:bg-gray-100"
+                            ? "bg-gold-main/20 text-gold-light font-bold"
+                            : "text-gray-300 hover:bg-[#1a1d28] hover:text-white"
                         }`}
                       >
                         <span>{isRTL ? cat.labelAr : cat.label}</span>
                         {selectedCategory === cat.key && (
-                          <Check className="w-4 h-4 text-gold-main shrink-0" />
+                          <Check className="w-4 h-4 text-gold-light shrink-0" />
                         )}
                       </div>
                     ))}
@@ -214,7 +214,7 @@ export default function LatestBlogsSection() {
                     setIsSortOpen(!isSortOpen);
                     setIsCategoryOpen(false);
                   }}
-                  className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-black font-heading font-bold text-xs sm:text-sm flex items-center justify-between sm:justify-start gap-2 shadow-md cursor-pointer outline-none hover:border-gold-main/60 transition-colors"
+                  className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl bg-transparent border border-gold-main/50 text-white font-heading font-bold text-xs sm:text-sm flex items-center justify-between sm:justify-start gap-2 shadow-md cursor-pointer outline-none hover:border-gold-light hover:text-gold-light transition-colors"
                 >
                   <span className="truncate">
                     {sortBy === "LATEST"
@@ -226,13 +226,13 @@ export default function LatestBlogsSection() {
                         : "Oldest First"}
                   </span>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 text-gold-main shrink-0 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+                    className={`w-3.5 h-3.5 text-gold-light shrink-0 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
                   />
                 </button>
 
                 {/* Sort Popup Menu */}
                 {isSortOpen && (
-                  <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden py-1 animate-[fadeIn_0.15s_ease-out]">
+                  <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-44 bg-[#14161d] border border-gold-main/40 rounded-xl shadow-2xl z-50 overflow-hidden py-1 animate-[fadeIn_0.15s_ease-out]">
                     <div
                       onClick={() => {
                         setSortBy("LATEST");
@@ -240,13 +240,13 @@ export default function LatestBlogsSection() {
                       }}
                       className={`px-4 py-2.5 text-xs font-subheading flex items-center justify-between cursor-pointer transition-colors ${
                         sortBy === "LATEST"
-                          ? "bg-gold-main/15 text-gold-main font-bold"
-                          : "text-gray-800 hover:bg-gray-100"
+                          ? "bg-gold-main/20 text-gold-light font-bold"
+                          : "text-gray-300 hover:bg-[#1a1d28] hover:text-white"
                       }`}
                     >
                       <span>{isRTL ? "الأحدث أولاً" : "Latest First"}</span>
                       {sortBy === "LATEST" && (
-                        <Check className="w-4 h-4 text-gold-main" />
+                        <Check className="w-4 h-4 text-gold-light" />
                       )}
                     </div>
                     <div
@@ -256,13 +256,13 @@ export default function LatestBlogsSection() {
                       }}
                       className={`px-4 py-2.5 text-xs font-subheading flex items-center justify-between cursor-pointer transition-colors ${
                         sortBy === "OLDEST"
-                          ? "bg-gold-main/15 text-gold-main font-bold"
-                          : "text-gray-800 hover:bg-gray-100"
+                          ? "bg-gold-main/20 text-gold-light font-bold"
+                          : "text-gray-300 hover:bg-[#1a1d28] hover:text-white"
                       }`}
                     >
                       <span>{isRTL ? "الأقدم أولاً" : "Oldest First"}</span>
                       {sortBy === "OLDEST" && (
-                        <Check className="w-4 h-4 text-gold-main" />
+                        <Check className="w-4 h-4 text-gold-light" />
                       )}
                     </div>
                   </div>

@@ -21,7 +21,7 @@ export default function ContactNetworkCards() {
           
           {/* Left Column: Phone Icon & "Prefer to talk?" */}
           <div className="flex items-center gap-4 shrink-0">
-            <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-[#c4842f]/20 border border-[#e8b958]/60 flex items-center justify-center shrink-0 shadow-lg shadow-[#c4842f]/10">
+            <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gold-main/20 border border-gold-light/60 flex items-center justify-center shrink-0 shadow-lg shadow-gold-main/10">
               <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-gold-light" />
             </div>
             <div>
@@ -132,11 +132,11 @@ export default function ContactNetworkCards() {
 
         {/* Bottom Metrics Glass Container (Pixel-Perfect Mobile Vertical Stack & Desktop Horizontal Row) */}
         <div className="relative z-10 max-w-2xl">
-          <div className="bg-[#12141c]/90 backdrop-blur-md border border-[#e8b958]/35 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 sm:gap-6 shadow-xl">
+          <div className="bg-[#12141c]/90 backdrop-blur-md border border-gold-main/45 hover:border-gold-light/70 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 sm:gap-6 shadow-xl shadow-black/40">
             
             {/* Stat 1: Countries Served */}
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gold-main/20 border border-gold-light/60 flex items-center justify-center shrink-0 shadow-sm">
                 <Globe2 className="w-4.5 h-4.5 text-gold-light" />
               </div>
               <div>
@@ -150,8 +150,8 @@ export default function ContactNetworkCards() {
             </div>
 
             {/* Stat 2: Supply Partners */}
-            <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-[#282d3d] pt-3 sm:pt-0 pl-0 sm:pl-5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
+            <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-gold-main/20 pt-3 sm:pt-0 pl-0 sm:pl-5">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gold-main/20 border border-gold-light/60 flex items-center justify-center shrink-0 shadow-sm">
                 <Handshake className="w-4.5 h-4.5 text-gold-light" />
               </div>
               <div>
@@ -165,8 +165,8 @@ export default function ContactNetworkCards() {
             </div>
 
             {/* Stat 3: Distribution Hub */}
-            <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-[#282d3d] pt-3 sm:pt-0 pl-0 sm:pl-5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#c4842f]/20 border border-[#e8b958]/50 flex items-center justify-center shrink-0 shadow-sm">
+            <div className="flex items-center gap-3 border-t sm:border-t-0 sm:border-l border-gold-main/20 pt-3 sm:pt-0 pl-0 sm:pl-5">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gold-main/20 border border-gold-light/60 flex items-center justify-center shrink-0 shadow-sm">
                 <Warehouse className="w-4.5 h-4.5 text-gold-light" />
               </div>
               <div>

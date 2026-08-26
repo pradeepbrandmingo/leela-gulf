@@ -111,7 +111,7 @@ export default function ProductFaqAndRelatedSection({ product: customProduct }) 
               
               {/* Section Header with Vertical Gold Accent Line */}
               <div className="flex items-center gap-2.5 mb-5 sm:mb-6">
-                <span className="w-1 h-5 sm:h-6 bg-[#c4842f] rounded-full shrink-0" />
+                <span className="w-1 h-5 sm:h-6 bg-gold-main rounded-full shrink-0" />
                 <h2 className="font-heading font-bold text-lg sm:text-xl lg:text-2xl text-[#1a1a1a] tracking-tight" style={{ fontWeight: 700 }}>
                   {isRTL ? "الأسئلة الشائعة" : "Frequently Asked Questions"}
                 </h2>
@@ -133,14 +133,14 @@ export default function ProductFaqAndRelatedSection({ product: customProduct }) 
                       >
                         <div className="flex items-start gap-3 sm:gap-4 min-w-0">
                           {/* Gold Index Watermark Number */}
-                          <span className="font-heading font-bold text-xs sm:text-sm text-[#c4842f] shrink-0 mt-0.5 tracking-wider">
+                          <span className="font-heading font-bold text-xs sm:text-sm text-gold-main shrink-0 mt-0.5 tracking-wider">
                             {faq.number || String(idx + 1).padStart(2, "0")}
                           </span>
 
                           {/* Question Text */}
                           <h3
                             className={`font-heading font-bold text-sm sm:text-base md:text-[16px] leading-snug tracking-tight transition-colors duration-200 break-words ${
-                              isOpen ? "text-[#c4842f]" : "text-[#1a1a1a] group-hover:text-[#c4842f]"
+                              isOpen ? "text-gold-main" : "text-[#1a1a1a] group-hover:text-gold-main"
                             }`}
                             style={{ fontWeight: 700 }}
                           >
@@ -151,9 +151,9 @@ export default function ProductFaqAndRelatedSection({ product: customProduct }) 
                         {/* Plus (+) / Cross (x) Toggle Icon */}
                         <div className="shrink-0 pt-0.5">
                           {isOpen ? (
-                            <X className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#c4842f] transition-transform duration-200" />
+                            <X className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gold-main transition-transform duration-200" />
                           ) : (
-                            <Plus className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gray-400 group-hover:text-[#c4842f] transition-transform duration-200" />
+                            <Plus className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gray-400 group-hover:text-gold-main transition-transform duration-200" />
                           )}
                         </div>
                       </button>
@@ -181,7 +181,7 @@ export default function ProductFaqAndRelatedSection({ product: customProduct }) 
               
               {/* Section Header with Vertical Gold Accent Line */}
               <div className="flex items-center gap-2.5 mb-5 sm:mb-6">
-                <span className="w-1 h-5 sm:h-6 bg-[#c4842f] rounded-full shrink-0" />
+                <span className="w-1 h-5 sm:h-6 bg-gold-main rounded-full shrink-0" />
                 <h2 className="font-heading font-bold text-lg sm:text-xl lg:text-2xl text-[#1a1a1a] tracking-tight" style={{ fontWeight: 700 }}>
                   {relatedHeading}
                 </h2>

@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-gold-main: #d6b92a;
+  --color-gold-light: #f0d84a;
+  --color-gold-dark: #8e7608;
+  --color-gold-accent: #f0d84a;
+  --color-card-dark: #0f1117;
+}
+
 /* ==========================================================================
    LEELA GULF FZC - PRODUCTION TYPOGRAPHY DESIGN SYSTEM
    Single Source of Truth for Fonts, Sizes, Line Heights, and Letter Spacing.
@@ -142,12 +150,23 @@
   --color-primary-dark: #000000;
   --color-card-dark: #0f1117;
 
-  /* SECONDARY COLOR PALETTE (Gold / Warm Ochre Family) */
+  /* SECONDARY COLOR PALETTE (New Logo-Matched Gold Palette Single Source of Truth) */
+  /* Previous gold colors commented out:
   --color-secondary-main: #c4842f;
   --color-secondary-light: #e8b958;
   --color-secondary-dark: #9e6417;
   --color-secondary-accent: #f7d27e;
+  */
+  --color-secondary-main: #d6b92a;
+  --color-secondary-light: #f0d84a;
+  --color-secondary-dark: #8e7608;
+  --color-secondary-accent: #f0d84a;
   --color-secondary-bg: #fbf6ee;
+
+  --gold-main: var(--color-secondary-main);
+  --gold-light: var(--color-secondary-light);
+  --gold-dark: var(--color-secondary-dark);
+  --gold-accent: var(--color-secondary-accent);
 
   /* GOLD GRADIENT PRESETS (Rich Luxury Gold Matching Download Catalogue Button) */
   /* --gold-gradient-static: linear-gradient(
@@ -165,7 +184,7 @@
     #c4842f 100%
   ); */
 
-  /* Leela Gulf Gold */
+  /* Leela Gulf Logo Gold */
   --gold-gradient-static: linear-gradient(
     135deg,
     #f0d84a 0%,
@@ -338,7 +357,7 @@ body {
 
 .bg-gradient-gold-animated:hover {
   filter: brightness(1.08);
-  box-shadow: 0 8px 24px rgba(196, 132, 47, 0.4);
+  box-shadow: 0 8px 24px rgba(214, 185, 42, 0.4);
 }
 
 /* Global Solid Running Gold Button (Matching Submit Enquiry Form) */
@@ -348,13 +367,13 @@ body {
   animation: goldGradientMove 5s ease infinite !important;
   color: #000000 !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 16px rgba(196, 132, 47, 0.3) !important;
+  box-shadow: 0 4px 16px rgba(214, 185, 42, 0.3) !important;
   transition: all 0.3s ease !important;
 }
 
 .btn-gold-primary:hover {
   filter: brightness(1.1) !important;
-  box-shadow: 0 6px 20px rgba(196, 132, 47, 0.5) !important;
+  box-shadow: 0 6px 20px rgba(214, 185, 42, 0.5) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -393,7 +412,7 @@ body {
 .btn-hover-gold-animated:hover {
   color: #000000 !important;
   border-color: var(--color-secondary-main) !important;
-  box-shadow: 0 4px 18px rgba(196, 132, 47, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(214, 185, 42, 0.4) !important;
 }
 
 .btn-gold-outline-hover:hover::before,
@@ -449,6 +468,22 @@ body {
 
 @utility border-gold-dark {
   border-color: var(--color-secondary-dark);
+}
+
+@utility bg-gold-main {
+  background-color: var(--color-secondary-main);
+}
+
+@utility bg-gold-light {
+  background-color: var(--color-secondary-light);
+}
+
+@utility bg-gold-dark {
+  background-color: var(--color-secondary-dark);
+}
+
+@utility bg-gold-accent {
+  background-color: var(--color-secondary-accent);
 }
 
 /* Headings */
@@ -513,8 +548,8 @@ p,
 }
 
 .PhoneInput:focus-within {
-  border-color: #c4842f;
-  box-shadow: 0 0 0 1px #c4842f;
+  border-color: var(--color-secondary-main);
+  box-shadow: 0 0 0 1px var(--color-secondary-main);
 }
 
 .PhoneInputInput {
@@ -575,7 +610,7 @@ select option:focus,
 select option:active,
 select option:checked {
   background-color: #2b2f3a !important;
-  color: #c4842f !important;
+  color: var(--color-secondary-main) !important;
 }
 
 /* ==========================================================================

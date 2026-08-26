@@ -83,13 +83,13 @@ export default function KeyProductBenefits() {
                 return (
                   <div
                     key={item.num}
-                    className={`bg-[var(--color-card-dark)] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 relative overflow-hidden flex flex-col justify-between shadow-xl transition-all duration-500 hover:border-[#c4842f]/60 hover:bg-[#141824] hover:-translate-y-2 group cursor-pointer ${
+                    className={`bg-[var(--color-card-dark)] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 relative overflow-hidden flex flex-col justify-between shadow-xl transition-all duration-500 hover:border-gold-main/60 hover:bg-[#141824] hover:-translate-y-2 group cursor-pointer ${
                       isMiddleColumn ? "lg:translate-y-5" : ""
                     }`}
                   >
                     {/* Giant Watermarked Background Number (01 - 06) - Dark Subtle Watermark Inside Card */}
                     <span 
-                      className="absolute bottom-[-16px] right-[-8px] rtl:left-[-8px] rtl:right-auto font-heading font-black text-[90px] sm:text-[110px] text-white/[0.05] group-hover:text-[#c4842f]/20 leading-none select-none pointer-events-none transition-colors duration-500 z-0"
+                      className="absolute bottom-[-16px] right-[-8px] rtl:left-[-8px] rtl:right-auto font-heading font-black text-[90px] sm:text-[110px] text-white/[0.05] group-hover:text-gold-main/20 leading-none select-none pointer-events-none transition-colors duration-500 z-0"
                     >
                       {item.num}
                     </span>

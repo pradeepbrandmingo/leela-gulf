@@ -166,7 +166,7 @@ export default function Header() {
 
                       {/* Accordion List of 11 Dynamic Industry Pages */}
                       {isIndustriesSubmenuOpen && (
-                        <div className="pl-3 rtl:pr-3 border-l-2 rtl:border-r-2 rtl:border-l-0 border-gold-main/40 my-1 space-y-1.5">
+                        <div className="pl-3 rtl:pr-3 my-1 space-y-1.5">
                           {INDUSTRIES_LIST.map((ind) => {
                             const indHref = `/industries/${ind.id}`;
                             const isIndActive = pathname === indHref;

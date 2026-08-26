@@ -94,13 +94,13 @@ export default function ProductDetailPage() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-4xl bg-[#0e1015] border border-[#e8b958]/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
+            className="relative w-full max-w-4xl bg-[#0e1015] border border-gold-light/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
           >
 
             {/* Close Button */}
             <button
               onClick={() => setIsQuoteModalOpen(false)}
-              className="absolute top-5 right-5 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-[#e8b958] hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
+              className="absolute top-5 right-5 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
               aria-label="Close quote modal"
             >
               <X className="w-5 h-5 text-gray-300" />
@@ -118,7 +118,7 @@ export default function ProductDetailPage() {
                 />
               </div>
               <div className="pr-8">
-                <span className="text-[11px] sm:text-xs font-heading font-bold uppercase tracking-widest text-[#e8b958] block mb-1">
+                <span className="text-[11px] sm:text-xs font-heading font-bold uppercase tracking-widest text-gold-light block mb-1">
                   {isRTL ? "طلب عرض سعر للمنتج" : "Request Product Quote"}
                 </span>
                 <h3 className="font-heading font-bold text-lg sm:text-2xl text-white leading-tight">

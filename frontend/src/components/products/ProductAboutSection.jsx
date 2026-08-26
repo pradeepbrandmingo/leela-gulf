@@ -132,13 +132,13 @@ export default function ProductAboutSection({ product: customProduct, onQuoteReq
               {about.cards.map((card, idx) => (
                 <div
                   key={idx}
-                  className="group bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gray-200/90 hover:border-[#c4842f] hover:shadow-lg hover:shadow-[#c4842f]/10 transition-all duration-300 flex flex-col justify-between h-full overflow-hidden"
+                  className="group bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gray-200/90 hover:border-gold-main hover:shadow-lg hover:shadow-gold-main/10 transition-all duration-300 flex flex-col justify-between h-full overflow-hidden"
                 >
                   <div>
                     {/* Card Title with Animated Gold Bullet Dot */}
                     <div className="flex items-start sm:items-center gap-2 mb-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#c4842f] shrink-0 mt-1.5 sm:mt-0 group-hover:scale-110 transition-all duration-300" />
-                      <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight break-words group-hover:text-[#9e6316] transition-colors duration-300" style={{ fontWeight: 700 }}>
+                      <span className="w-2.5 h-2.5 rounded-full bg-gold-main shrink-0 mt-1.5 sm:mt-0 group-hover:scale-110 transition-all duration-300" />
+                      <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight break-words group-hover:text-gold-dark transition-colors duration-300" style={{ fontWeight: 700 }}>
                         {card.title}
                       </h3>
                     </div>
@@ -165,13 +165,13 @@ export default function ProductAboutSection({ product: customProduct, onQuoteReq
 
           {/* 4. Bottom Full-Width Highlight Card ("Why Choose Leela Gulf as a Trusted Supplier?") */}
           {about.supplierSection && (
-            <div className="group bg-[#f7f3eb]/80 hover:bg-[#f7f3eb] rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-[#c4842f]/50 hover:border-[#c4842f] shadow-xs hover:shadow-lg hover:shadow-[#c4842f]/10 transition-all duration-300 overflow-hidden">
+            <div className="group bg-[#f7f3eb]/80 hover:bg-[#f7f3eb] rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gold-main/50 hover:border-gold-main shadow-xs hover:shadow-lg hover:shadow-gold-main/10 transition-all duration-300 overflow-hidden">
               
               <div>
                 {/* Title with Same Golden Bullet Dot & Same Heading Size */}
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#c4842f] shrink-0 group-hover:scale-110 transition-all duration-300" />
-                  <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight group-hover:text-[#9e6316] transition-colors duration-300" style={{ fontWeight: 700 }}>
+                  <span className="w-2.5 h-2.5 rounded-full bg-gold-main shrink-0 group-hover:scale-110 transition-all duration-300" />
+                  <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight group-hover:text-gold-dark transition-colors duration-300" style={{ fontWeight: 700 }}>
                     {about.supplierSection.title}
                   </h3>
                 </div>

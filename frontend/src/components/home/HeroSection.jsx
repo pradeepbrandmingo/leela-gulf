@@ -36,7 +36,7 @@ export default function HeroSection() {
       <a
         href="/documents/leela-gulf-catalogue.pdf"
         download="Leela_Gulf_Product_Catalogue.pdf"
-        className={`absolute z-30 top-1/2 -translate-y-1/2 flex items-center justify-center bg-gradient-gold-animated shadow-[0_0_20px_rgba(196,132,47,0.4)] hover:shadow-[0_0_30px_rgba(247,210,126,0.6)] hover:brightness-110 transition-all duration-300 cursor-pointer ${isRTL
+        className={`absolute z-30 top-1/2 -translate-y-1/2 flex items-center justify-center bg-gradient-gold-animated shadow-[0_0_20px_rgba(214,185,42,0.4)] hover:shadow-[0_0_30px_rgba(240,216,74,0.6)] hover:brightness-110 transition-all duration-300 cursor-pointer ${isRTL
             ? "left-0 rounded-r-2xl sm:rounded-r-3xl border-2 border-l-0 border-white px-1.5 sm:px-3.5 py-4 sm:py-8"
             : "right-0 rounded-l-2xl sm:rounded-l-3xl border-2 border-r-0 border-white px-1.5 sm:px-3.5 py-4 sm:py-8"
           }`}
@@ -69,7 +69,7 @@ export default function HeroSection() {
               href="/industries/industrial-chemicals"
               className="group block"
             >
-              <span className="block font-heading font-medium not-italic text-xs sm:text-base md:text-lg text-gradient-gold-animated tracking-tight leading-tight mb-0.5">
+              <span className="block font-heading font-bold uppercase tracking-wider text-sm sm:text-lg md:text-xl text-gradient-gold-animated leading-tight mb-0.5">
                 {t("industrial")}
               </span>
               <span className="block font-heading font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] text-gradient-gold-animated leading-none tracking-tight hover:opacity-90 transition-opacity">
@@ -82,10 +82,10 @@ export default function HeroSection() {
               href="/industries/fertilizers-chemicals"
               className="block mb-0.5 md:mb-1 hover:text-gradient-gold-animated transition-colors"
             >
-              <span className="font-heading font-medium text-[11px] sm:text-xs md:text-sm text-white leading-tight block mb-0.5 sm:mb-1">
+              <span className="font-heading font-bold text-xs sm:text-sm md:text-base lg:text-lg text-white leading-tight block mb-0.5 sm:mb-1">
                 {t("fertilizers")}
               </span>
-              <span className="font-heading font-medium text-[11px] sm:text-xs md:text-sm text-white leading-tight block">
+              <span className="font-heading font-bold text-xs sm:text-sm md:text-base lg:text-lg text-white leading-tight block">
                 {t("fertilizersChemicals")}
               </span>
             </Link>
@@ -165,7 +165,7 @@ export default function HeroSection() {
               <span className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-gradient-gold-animated leading-none tracking-tight inline-block">
                 {t("caseTitle")}
               </span>
-              <span className="font-heading font-medium text-xs sm:text-sm md:text-sm lg:text-[0.92rem] text-white leading-tight block max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
+              <span className="font-heading font-bold text-xs sm:text-sm md:text-base lg:text-lg text-white leading-tight block max-w-[200px] sm:max-w-[260px] md:max-w-[320px]">
                 <span className="block mb-0.5 sm:mb-0.5">
                   {t("caseSubscriptLine1")}
                 </span>

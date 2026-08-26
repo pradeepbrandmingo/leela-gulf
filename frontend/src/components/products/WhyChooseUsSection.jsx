@@ -80,10 +80,10 @@ export default function WhyChooseUsSection() {
               </span>
 
               {/* Decorative Subtle Gold Ambient Glow */}
-              <div className="absolute -top-20 -left-20 w-48 h-48 bg-[#c4842f]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -top-20 -left-20 w-48 h-48 bg-[var(--color-secondary-main)]/10 rounded-full blur-3xl pointer-events-none" />
 
               {/* Inner Floating Dark Glass Card */}
-              <div className="relative z-10 bg-[var(--color-card-dark)] border border-[#c4842f]/35 rounded-xl lg:rounded-2xl p-3.5 sm:p-4.5 md:p-5 shadow-2xl transition-all duration-300 group-hover:border-[#e8b958]/70">
+              <div className="relative z-10 bg-[var(--color-card-dark)] border border-gold-main/35 rounded-xl lg:rounded-2xl p-3.5 sm:p-4.5 md:p-5 shadow-2xl transition-all duration-300 group-hover:border-gold-light/70">
                 {/* Horizontal Gold Line Accent */}
                 <div className="w-7 sm:w-8 h-[3px] bg-gradient-gold-animated rounded-full mb-2 sm:mb-2.5" />
                 

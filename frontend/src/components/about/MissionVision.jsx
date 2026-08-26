@@ -65,7 +65,7 @@ export default function MissionVision() {
             >
               {/* Card Header: Flat Gold Circle Badge + Title */}
               <div className={`flex items-center gap-4 sm:gap-5 mb-5 sm:mb-6 ${isRTL ? "pl-16 sm:pl-20" : "pr-16 sm:pr-20"}`}>
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#d49b29] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-gold-animated flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
                   <Target className="w-7 h-7 sm:w-8 sm:h-8 text-black stroke-[2.2]" />
                 </div>
 
@@ -114,7 +114,7 @@ export default function MissionVision() {
             >
               {/* Card Header: Flat Gold Circle Badge + Title */}
               <div className={`flex items-center gap-4 sm:gap-5 mb-5 sm:mb-6 ${isRTL ? "pl-16 sm:pl-20" : "pr-16 sm:pr-20"}`}>
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#d49b29] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-gold-animated flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform duration-300">
                   <Eye className="w-7 h-7 sm:w-8 sm:h-8 text-black stroke-[2.2]" />
                 </div>
 

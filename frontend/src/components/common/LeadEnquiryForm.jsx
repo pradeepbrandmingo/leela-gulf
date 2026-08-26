@@ -284,7 +284,7 @@ export default function LeadEnquiryForm({
   return (
     <div className={`w-full ${className}`}>
       {/* ── CARD OUTER CONTAINER (Stripped when inside modal to eliminate double borders & cramped padding) ── */}
-      <div className={isModal ? "w-full" : "bg-[#0e1014]/95 backdrop-blur-xl border border-[#e8b958]/40 hover:border-[#e8b958]/70 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300"}>
+      <div className={isModal ? "w-full" : "bg-[#0e1014]/95 backdrop-blur-xl border border-gold-main/40 hover:border-gold-main/70 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300"}>
         
         {/* ═════════════════════════════════════════════════════════════════
             VIEW A: FULL-CARD ANIMATED THANK YOU SUCCESS SCREEN (AUTO CLOSES IN 3 SECONDS)
@@ -293,7 +293,7 @@ export default function LeadEnquiryForm({
           <div className="py-12 sm:py-16 px-4 text-center flex flex-col items-center justify-center animate-fadeIn">
             
             {/* Top Left Accent Tag Badge */}
-            <div className="self-start inline-flex items-center gap-2 mb-6 bg-[#1a1d27] border border-[#333a4c] rounded-lg px-3.5 py-1.5 shadow-sm">
+            <div className="self-start inline-flex items-center gap-2 mb-6 bg-[#1a1d27] border border-gold-main/30 rounded-lg px-3.5 py-1.5 shadow-sm">
               <span className="w-2.5 h-4 bg-gradient-gold-animated rounded-sm inline-block" />
               <span className="font-heading font-bold text-xs tracking-wider text-gradient-gold-animated uppercase">
                 {isRTL ? "تواصل معنا" : "Contact Us"}
@@ -323,8 +323,8 @@ export default function LeadEnquiryForm({
             </p>
 
             {/* Auto-Close Progress Indicator (No manual button) */}
-            <div className="inline-flex items-center gap-2.5 bg-[#14161d] border border-[#2b2f3a] rounded-xl px-5 py-2.5 shadow-md text-xs sm:text-sm font-subheading text-gray-300">
-              <Loader2 className="w-4 h-4 text-[#e8b958] animate-spin" />
+            <div className="inline-flex items-center gap-2.5 bg-[#14161d] border border-gold-main/30 rounded-xl px-5 py-2.5 shadow-md text-xs sm:text-sm font-subheading text-gray-300">
+              <Loader2 className="w-4 h-4 text-gold-light animate-spin" />
               <span>
                 {isRTL ? "سيتم إغلاق الرسالة تلقائياً خلال 3 ثوانٍ..." : "Closing automatically in 3 seconds..."}
               </span>
@@ -338,8 +338,8 @@ export default function LeadEnquiryForm({
             {/* CARD HEADER */}
             {showHeading && (
               <div className="flex items-center gap-4 mb-8 sm:mb-10 pb-6 border-b border-[#24272f]">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#c4842f]/20 border border-[#e8b958]/70 flex items-center justify-center shrink-0 shadow-lg shadow-[#c4842f]/15">
-                  <Send className="w-6 h-6 text-[#e8b958]" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gold-main/20 border border-gold-light/70 flex items-center justify-center shrink-0 shadow-lg shadow-gold-main/15">
+                  <Send className="w-6 h-6 text-gold-light" />
                 </div>
 
                 <div>
@@ -362,7 +362,7 @@ export default function LeadEnquiryForm({
                 <div>
                   <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "الاسم الأول" : "First Name"}{" "}
-                    <span className="text-[#e8b958]">*</span>
+                    <span className="text-gold-light">*</span>
                   </label>
                   <input
                     type="text"
@@ -371,8 +371,8 @@ export default function LeadEnquiryForm({
                     onChange={handleChange}
                     placeholder={isRTL ? "الاسم الأول" : "First Name"}
                     className={`w-full bg-[#16181f] border ${
-                      errors.firstName ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                      errors.firstName ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
+                    } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.firstName && (
                     <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
@@ -385,7 +385,7 @@ export default function LeadEnquiryForm({
                 <div>
                   <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "اسم العائلة" : "Last Name"}{" "}
-                    <span className="text-[#e8b958]">*</span>
+                    <span className="text-gold-light">*</span>
                   </label>
                   <input
                     type="text"
@@ -394,8 +394,8 @@ export default function LeadEnquiryForm({
                     onChange={handleChange}
                     placeholder={isRTL ? "اسم العائلة" : "Last Name"}
                     className={`w-full bg-[#16181f] border ${
-                      errors.lastName ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                      errors.lastName ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
+                    } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.lastName && (
                     <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
@@ -411,7 +411,7 @@ export default function LeadEnquiryForm({
                 <div>
                   <label className={`block font-heading font-medium text-xs sm:text-sm text-gray-300 ${isModal ? "mb-1" : "mb-2"}`}>
                     {isRTL ? "البريد الإلكتروني" : "Email Id"}{" "}
-                    <span className="text-[#e8b958]">*</span>
+                    <span className="text-gold-light">*</span>
                   </label>
                   <input
                     type="email"
@@ -420,8 +420,8 @@ export default function LeadEnquiryForm({
                     onChange={handleChange}
                     placeholder={isRTL ? "البريد الإلكتروني" : "Email Id"}
                     className={`w-full bg-[#16181f] border ${
-                      errors.email ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                    } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
+                      errors.email ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
+                    } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
                   {errors.email && (
                     <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
@@ -441,18 +441,18 @@ export default function LeadEnquiryForm({
                     type="button"
                     onClick={() => setIsServiceOpen(!isServiceOpen)}
                     className={`w-full bg-[#16181f] border ${
-                      isServiceOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
+                      isServiceOpen ? "border-gold-main ring-1 ring-gold-main" : "border-gold-main/30 hover:border-gold-main/60"
                     } rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
                   >
                     <span className={formData.service ? "text-white" : "text-gray-400"}>
                       {formData.service || (isRTL ? "اختر الخدمة" : "Select Service")}
                     </span>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isServiceOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isServiceOpen ? "rotate-180 text-gold-light" : ""}`} />
                   </button>
 
                   {/* Custom Dark Dropdown Menu */}
                   {isServiceOpen && (
-                    <div className="absolute left-0 right-0 top-full mt-2 bg-[#14161d] border border-[#2b2f3a] rounded-2xl shadow-2xl z-50 p-1.5 overflow-hidden animate-fadeIn">
+                    <div className="absolute left-0 right-0 top-full mt-2 bg-[#14161d] border border-gold-main/30 rounded-2xl shadow-2xl z-50 p-1.5 overflow-hidden animate-fadeIn">
                       {ENQUIRY_SERVICES.map((serv, idx) => (
                         <button
                           key={idx}
@@ -463,12 +463,12 @@ export default function LeadEnquiryForm({
                           }}
                           className={`w-full text-left px-4 py-3 text-xs sm:text-sm rounded-xl flex items-center justify-between transition-colors ${
                             formData.service === serv
-                              ? "bg-[#252835] text-[#e8b958] font-semibold"
+                              ? "bg-[#252835] text-gold-light font-semibold"
                               : "text-gray-300 hover:bg-[#1f222d] hover:text-white"
                           }`}
                         >
                           <span>{serv}</span>
-                          {formData.service === serv && <Check className="w-4 h-4 text-[#e8b958]" />}
+                          {formData.service === serv && <Check className="w-4 h-4 text-gold-light" />}
                         </button>
                       ))}
                     </div>
@@ -493,16 +493,16 @@ export default function LeadEnquiryForm({
                         type="button"
                         onClick={() => setIsPhoneFlagOpen(!isPhoneFlagOpen)}
                         className={`bg-[#16181f] border ${
-                          isPhoneFlagOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
+                          isPhoneFlagOpen ? "border-gold-main ring-1 ring-gold-main" : "border-gold-main/30 hover:border-gold-main/60"
                         } rounded-xl ${isModal ? "px-3 py-2.5" : "px-3 py-3.5"} flex items-center gap-2 text-white shrink-0 outline-none transition-all cursor-pointer h-full`}
                       >
                         <span className="text-xl leading-none">{selectedPhoneCountryObj.flag}</span>
-                        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isPhoneFlagOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
+                        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isPhoneFlagOpen ? "rotate-180 text-gold-light" : ""}`} />
                       </button>
 
                       {/* Custom Searchable Dark Flag Popup Menu */}
                       {isPhoneFlagOpen && (
-                        <div className="absolute left-0 top-full mt-2 w-72 bg-[#14161d] border border-[#2b2f3a] rounded-2xl shadow-2xl z-50 p-2 overflow-hidden animate-fadeIn">
+                        <div className="absolute left-0 top-full mt-2 w-72 bg-[#14161d] border border-gold-main/30 rounded-2xl shadow-2xl z-50 p-2 overflow-hidden animate-fadeIn">
                           <div className="relative mb-2">
                             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
@@ -510,7 +510,7 @@ export default function LeadEnquiryForm({
                               value={phoneFlagSearch}
                               onChange={(e) => setPhoneFlagSearch(e.target.value)}
                               placeholder="Search country or code..."
-                              className="w-full bg-[#1c1f2b] border border-[#2e3345] focus:border-[#e8b958] rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
+                              className="w-full bg-[#1c1f2b] border border-gold-main/30 focus:border-gold-main rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
                               autoFocus
                             />
                           </div>
@@ -527,7 +527,7 @@ export default function LeadEnquiryForm({
                                 }}
                                 className={`w-full text-left px-3 py-2.5 text-xs sm:text-sm rounded-xl flex items-center justify-between transition-colors ${
                                   phoneCountry === cObj.code
-                                    ? "bg-[#252835] text-[#e8b958] font-bold"
+                                    ? "bg-[#252835] text-gold-light font-bold"
                                     : "text-gray-300 hover:bg-[#1f222d] hover:text-white"
                                 }`}
                               >
@@ -579,18 +579,18 @@ export default function LeadEnquiryForm({
                     type="button"
                     onClick={() => setIsCountryOpen(!isCountryOpen)}
                     className={`w-full bg-[#16181f] border ${
-                      isCountryOpen ? "border-[#e8b958] ring-1 ring-[#e8b958]" : "border-[#2b2f3a] hover:border-[#404656]"
+                      isCountryOpen ? "border-gold-main ring-1 ring-gold-main" : "border-gold-main/30 hover:border-gold-main/60"
                     } rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-left flex items-center justify-between transition-all duration-200 outline-none cursor-pointer`}
                   >
                     <span className="text-white font-medium truncate">
                       {formData.countryName || "United States"}
                     </span>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCountryOpen ? "rotate-180 text-[#e8b958]" : ""}`} />
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isCountryOpen ? "rotate-180 text-gold-light" : ""}`} />
                   </button>
 
                   {/* Searchable Custom Dark Popup Menu */}
                   {isCountryOpen && (
-                    <div className="absolute left-0 right-0 top-full mt-2 bg-[#14161d] border border-[#2b2f3a] rounded-2xl shadow-2xl z-50 p-2 overflow-hidden animate-fadeIn">
+                    <div className="absolute left-0 right-0 top-full mt-2 bg-[#14161d] border border-gold-main/30 rounded-2xl shadow-2xl z-50 p-2 overflow-hidden animate-fadeIn">
                       
                       {/* Search Input Filter Box */}
                       <div className="relative mb-2">
@@ -600,7 +600,7 @@ export default function LeadEnquiryForm({
                           value={countrySearchQuery}
                           onChange={(e) => setCountrySearchQuery(e.target.value)}
                           placeholder="Search country..."
-                          className="w-full bg-[#1c1f2b] border border-[#2e3345] focus:border-[#e8b958] rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
+                          className="w-full bg-[#1c1f2b] border border-gold-main/30 focus:border-gold-main rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
                           autoFocus
                         />
                       </div>
@@ -615,7 +615,7 @@ export default function LeadEnquiryForm({
                               onClick={() => handleCountryDropdownChange(cObj.name)}
                               className={`w-full text-left px-3 py-2.5 text-xs sm:text-sm rounded-xl flex items-center justify-between transition-colors ${
                                 formData.countryName === cObj.name
-                                  ? "bg-[#252835] text-[#e8b958] font-bold"
+                                  ? "bg-[#252835] text-gold-light font-bold"
                                   : "text-gray-300 hover:bg-[#1f222d] hover:text-white"
                               }`}
                             >
@@ -644,7 +644,7 @@ export default function LeadEnquiryForm({
                   {isRTL
                     ? "معلومات إضافية تساعدنا على التواصل بشكل أفضل"
                     : "Additional information that will help us connect better"}{" "}
-                  <span className="text-[#e8b958]">*</span>
+                  <span className="text-gold-light">*</span>
                 </label>
                 <textarea
                   name="message"
@@ -653,8 +653,8 @@ export default function LeadEnquiryForm({
                   onChange={handleChange}
                   placeholder={isRTL ? "اكتب هنا..." : "Type here.."}
                   className={`w-full bg-[#16181f] border ${
-                    errors.message ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
-                  } focus:border-[#e8b958] focus:ring-1 focus:ring-[#e8b958] rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm min-h-[70px]" : "px-4 py-3.5 text-sm sm:text-base min-h-[110px]"} text-white placeholder-gray-500 outline-none resize-y transition-all duration-200`}
+                    errors.message ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
+                  } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm min-h-[70px]" : "px-4 py-3.5 text-sm sm:text-base min-h-[110px]"} text-white placeholder-gray-500 outline-none resize-y transition-all duration-200`}
                 />
                 {errors.message && (
                   <p className="font-subheading text-xs text-red-400 mt-1 flex items-center gap-1">
@@ -674,14 +674,14 @@ export default function LeadEnquiryForm({
                       name="agreedToTerms"
                       checked={formData.agreedToTerms}
                       onChange={handleChange}
-                      className="w-4 h-4 sm:w-5 sm:h-5 rounded border-[#383d4a] text-[#e8b958] focus:ring-[#e8b958] bg-[#16181f] cursor-pointer accent-[#e8b958]"
+                      className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gold-main/40 text-gold-main focus:ring-gold-main bg-[#16181f] cursor-pointer accent-[var(--color-secondary-main)]"
                     />
                     <span className="font-subheading text-xs sm:text-sm text-gray-300 select-none">
                       {isRTL ? "أوافق على " : "I agree with Leela Gulf "}
                       <button
                         type="button"
                         onClick={() => setShowTermsModal(true)}
-                        className="text-[#e8b958] underline font-medium hover:text-[#f7d27e] transition-all"
+                        className="text-gold-light underline font-medium hover:text-gold-main transition-all"
                       >
                         {isRTL ? "الشروط والأحكام" : "terms and conditions"}
                       </button>
@@ -699,14 +699,14 @@ export default function LeadEnquiryForm({
                   <div 
                     onClick={handleCaptchaClick}
                     className={`bg-[#14161d] border ${
-                      errors.captcha ? "border-red-500/80" : "border-[#2b2f3a] hover:border-[#404656]"
+                      errors.captcha ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
                     } rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-4 cursor-pointer select-none shadow-md transition-all duration-200 min-w-[240px]`}
                   >
                     {/* Checkbox & Label */}
                     <div className="flex items-center gap-2.5">
-                      <div className="w-5 h-5 rounded-[4px] bg-[#1a1d27] border border-[#3c4254] flex items-center justify-center transition-colors shrink-0">
+                      <div className="w-5 h-5 rounded-[4px] bg-[#1a1d27] border border-gold-main/40 flex items-center justify-center transition-colors shrink-0">
                         {captchaLoading ? (
-                          <Loader2 className="w-3.5 h-3.5 text-[#e8b958] animate-spin" />
+                          <Loader2 className="w-3.5 h-3.5 text-gold-light animate-spin" />
                         ) : captchaVerified ? (
                           <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />
                         ) : null}
@@ -719,7 +719,7 @@ export default function LeadEnquiryForm({
                     {/* Brand Icon & Subtext */}
                     <div className="flex flex-col items-center justify-center shrink-0 border-l border-[#242834] pl-3">
                       <svg className="w-5 h-5" viewBox="0 0 64 64" fill="none">
-                        <path d="M32 10C21 10 12 19 12 30H4L15 42L26 30H18C18 22.3 24.3 16 32 16C36 16 39.6 17.7 42.1 20.4L46.4 16.1C42.7 12.3 37.6 10 32 10Z" fill="#e8b958"/>
+                        <path d="M32 10C21 10 12 19 12 30H4L15 42L26 30H18C18 22.3 24.3 16 32 16C36 16 39.6 17.7 42.1 20.4L46.4 16.1C42.7 12.3 37.6 10 32 10Z" fill="var(--color-secondary-main)"/>
                         <path d="M52 22L41 34H49C49 41.7 42.7 48 35 48C31 48 27.4 46.3 24.9 43.6L20.6 47.9C24.3 51.7 29.4 54 35 54C46 54 55 45 55 34H63L52 22Z" fill="#6b7280"/>
                       </svg>
                       <span className="text-[9px] font-heading font-bold text-gray-400 tracking-tighter leading-tight mt-0.5">reCAPTCHA</span>
@@ -739,7 +739,7 @@ export default function LeadEnquiryForm({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative inline-flex items-center justify-center gap-3 bg-gradient-gold-animated text-black font-heading font-bold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-xl shadow-lg shadow-[rgba(196,132,47,0.3)] hover:shadow-[rgba(196,132,47,0.5)] hover:brightness-110 active:scale-95 transition-all duration-300 disabled:opacity-60 cursor-pointer"
+                  className="group relative inline-flex items-center justify-center gap-3 bg-gradient-gold-animated text-black font-heading font-bold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-xl shadow-lg shadow-[rgba(214,185,42,0.3)] hover:shadow-[rgba(214,185,42,0.5)] hover:brightness-110 active:scale-95 transition-all duration-300 disabled:opacity-60 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <>

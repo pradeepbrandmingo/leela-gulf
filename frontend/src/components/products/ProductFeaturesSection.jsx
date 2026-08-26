@@ -146,7 +146,7 @@ export default function ProductFeaturesSection({ product: customProduct }) {
               {topRowItems.map((item, idx) => (
                 <div
                   key={item.id || idx}
-                  className="group bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gray-200/90 hover:border-[#c4842f] hover:shadow-lg hover:shadow-[#c4842f]/10 transition-all duration-300 flex flex-col justify-between h-full"
+                  className="group bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gray-200/90 hover:border-gold-main hover:shadow-lg hover:shadow-gold-main/10 transition-all duration-300 flex flex-col justify-between h-full"
                 >
                   <div>
                     {/* Top Header Row inside Card: Left Icon Badge + Right Number */}
@@ -163,7 +163,7 @@ export default function ProductFeaturesSection({ product: customProduct }) {
                     </div>
 
                     {/* Card Title */}
-                    <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight mb-1.5 break-words group-hover:text-[#9e6316] transition-colors duration-300" style={{ fontWeight: 700 }}>
+                    <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight mb-1.5 break-words group-hover:text-gold-dark transition-colors duration-300" style={{ fontWeight: 700 }}>
                       {item.title}
                     </h3>
 
@@ -184,7 +184,7 @@ export default function ProductFeaturesSection({ product: customProduct }) {
                   return (
                     <div
                       key={item.id || actualIdx}
-                      className="group bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gray-200/90 hover:border-[#c4842f] hover:shadow-lg hover:shadow-[#c4842f]/10 transition-all duration-300 flex flex-col justify-between h-full"
+                      className="group bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-gray-200/90 hover:border-gold-main hover:shadow-lg hover:shadow-gold-main/10 transition-all duration-300 flex flex-col justify-between h-full"
                     >
                       <div>
                         {/* Top Header Row inside Card: Left Icon Badge + Right Number */}

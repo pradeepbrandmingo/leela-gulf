@@ -263,7 +263,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
 
             {/* Search Input Bar */}
             <div className="relative flex-1 sm:flex-none sm:w-[280px] md:w-[340px]">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md bg-[#e8b958]/15 border border-[#e8b958]/50 flex items-center justify-center">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md bg-gold-light/15 border border-gold-light/50 flex items-center justify-center">
                 <svg className="w-3.5 h-3.5 text-gold-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
                   <path d="M21 21l-4.35-4.35" />
@@ -274,7 +274,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={isRTL ? "ابحث بإسم المنتج..." : "Search By Product Name..."}
-                className="w-full pl-12 pr-4 py-2.5 bg-transparent border border-[#e8b958]/70 rounded-xl text-white text-xs sm:text-sm font-subheading placeholder-gray-400 focus:outline-none focus:border-gold-light focus:ring-1 focus:ring-[#e8b958] transition-all duration-200"
+                className="w-full pl-12 pr-4 py-2.5 bg-transparent border border-gold-main/50 rounded-xl text-white text-xs sm:text-sm font-subheading placeholder-gray-400 focus:outline-none focus:border-gold-light focus:ring-1 focus:ring-gold-light transition-all duration-200"
               />
             </div>
 
@@ -283,7 +283,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
               <button
                 type="button"
                 onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#e8b958]/70 bg-transparent text-white font-heading font-bold text-xs sm:text-sm hover:border-gold-light hover:bg-[#e8b958]/10 transition-all duration-200 cursor-pointer shadow-md"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gold-main/50 bg-transparent text-white font-heading font-bold text-xs sm:text-sm hover:border-gold-light hover:bg-gold-light/10 transition-all duration-200 cursor-pointer shadow-md"
               >
                 <svg className="w-4 h-4 text-gold-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="4" y1="6" x2="20" y2="6" />
@@ -295,7 +295,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
 
               {/* FLOATING DARK APPLICATIONS DROPDOWN */}
               {showCategoryDropdown && (
-                <div className="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-[290px] sm:w-[330px] bg-[#11131a] border border-[#e8b958]/50 rounded-2xl p-3.5 shadow-2xl z-40 animate-[fadeIn_0.15s_ease-out]">
+                <div className="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-[290px] sm:w-[330px] bg-[#11131a] border border-gold-light/50 rounded-2xl p-3.5 shadow-2xl z-40 animate-[fadeIn_0.15s_ease-out]">
                   <div className="text-[10px] sm:text-[11px] font-heading font-bold text-gold-light uppercase tracking-widest px-2.5 py-1.5 border-b border-gray-800 mb-2">
                     {isRTL ? "القطاعات الصناعية" : "INDUSTRIES / APPLICATIONS"}
                   </div>
@@ -349,7 +349,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
         ) : (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center bg-white/5 rounded-3xl border border-white/10">
-            <div className="w-14 h-14 rounded-2xl bg-[#c4842f]/10 border border-[#c4842f]/30 flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-gold-main/10 border border-gold-main/30 flex items-center justify-center mb-4">
               <svg className="w-7 h-7 text-gold-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
               </svg>
@@ -359,8 +359,8 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
             </h3>
             <p className="font-subheading text-gray-400 text-xs sm:text-sm max-w-md">
               {isRTL
-                ? "لا توجد منتجات مطابقة لهذا القطاع حالياً."
-                : "No products currently available under this industry category."}
+                ? "حاول اختيار قطاع صناعي آخر لعرض المنتجات المتاحة."
+                : "Try selecting a different industrial category to view available chemical products."}
             </p>
           </div>
         )}
@@ -393,7 +393,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
                     onClick={() => handlePageChange(page)}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold transition-all duration-200 cursor-pointer ${
                       currentPage === page
-                        ? "bg-gradient-gold-animated text-[#1a1a1a] shadow-sm shadow-[#c4842f]/30 font-bold"
+                        ? "bg-gradient-gold-animated text-[#1a1a1a] shadow-sm shadow-gold-main/30 font-bold"
                         : "border border-gray-700 text-gray-400 hover:border-gold-main hover:text-gold-main"
                     }`}
                   >
@@ -443,11 +443,11 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-4xl bg-[#0e1015] border border-[#e8b958]/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
+            className="relative w-full max-w-4xl bg-[#0e1015] border border-gold-light/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
           >
             <button
               onClick={() => setQuoteProduct(null)}
-              className="absolute top-5 right-5 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-[#e8b958] hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
+              className="absolute top-5 right-5 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
               aria-label="Close quote modal"
             >
               <X className="w-5 h-5 text-gray-300" />
@@ -464,7 +464,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
                 />
               </div>
               <div className="pr-8">
-                <span className="text-[11px] sm:text-xs font-heading font-bold uppercase tracking-widest text-[#e8b958] block mb-1">
+                <span className="text-[11px] sm:text-xs font-heading font-bold uppercase tracking-widest text-gold-light block mb-1">
                   {isRTL ? "طلب عرض سعر للمنتج" : "Request Product Quote"}
                 </span>
                 <h3 className="font-heading font-bold text-lg sm:text-2xl text-white leading-tight">
@@ -494,7 +494,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
 // ═══════════════════════════════════════════════════════════════════════
 function ProductCard({ product, isRTL, onQuoteRequest }) {
   return (
-    <div className="group bg-white rounded-3xl p-4 sm:p-4.5 lg:p-5 border border-gray-100 hover:border-[#c4842f]/30 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 flex flex-col justify-between">
+    <div className="group bg-white rounded-3xl p-4 sm:p-4.5 lg:p-5 border border-gray-100 hover:border-gold-main/30 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 flex flex-col justify-between">
 
       {/* Top Section: Image (Left) + Details (Right) */}
       <div className="flex flex-row items-start gap-3.5 sm:gap-4">
@@ -554,7 +554,7 @@ function ProductCard({ product, isRTL, onQuoteRequest }) {
         <div className="flex-1 min-w-0 flex items-center justify-start">
           <Link
             href={`/products/${product.id}`}
-            className="font-heading font-bold text-[11px] sm:text-xs text-gold-main hover:text-gold-dark transition-colors duration-200 whitespace-nowrap underline underline-offset-4 decoration-[#c4842f]/60"
+            className="font-heading font-bold text-[11px] sm:text-xs text-gold-main hover:text-gold-dark transition-colors duration-200 whitespace-nowrap underline underline-offset-4 decoration-gold-main/60"
           >
             {isRTL ? "عرض التفاصيل" : "View Details"}
           </Link>

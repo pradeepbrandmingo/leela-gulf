@@ -72,7 +72,7 @@ export default function GroupOfCompanies() {
           {companies.map((company) => (
             <div
               key={company.id}
-              className="bg-[#1d1d1d] border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 flex items-center justify-center h-[140px] sm:h-[165px] md:h-[185px] shadow-none transition-all duration-500 hover:bg-white hover:border-[var(--color-secondary-main)] hover:shadow-[0_15px_35px_rgba(196,132,47,0.3)] hover:-translate-y-2 group cursor-pointer"
+              className="bg-[#1d1d1d] border border-white/10 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 flex items-center justify-center h-[140px] sm:h-[165px] md:h-[185px] shadow-none transition-all duration-500 hover:bg-white hover:border-[var(--color-secondary-main)] hover:shadow-[0_15px_35px_rgba(214,185,42,0.3)] hover:-translate-y-2 group cursor-pointer"
             >
               <div className="relative w-full h-full flex items-center justify-center p-1">
                 <Image
