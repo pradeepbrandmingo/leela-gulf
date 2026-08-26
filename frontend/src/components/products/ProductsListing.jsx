@@ -312,7 +312,7 @@ export default function ProductsListing() {
                   <line x1="4" y1="12" x2="14" y2="12" />
                   <line x1="4" y1="18" x2="9" y2="18" />
                 </svg>
-                {isRTL ? "التطبيقات" : "Applications"}
+                {isRTL ? "القطاعات" : "Industries"}
               </button>
 
               {showCategoryDropdown && (

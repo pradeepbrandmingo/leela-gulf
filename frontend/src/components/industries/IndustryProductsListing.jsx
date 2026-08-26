@@ -278,7 +278,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
               />
             </div>
 
-            {/* Applications Filter Dropdown Button */}
+            {/* Industries Filter Dropdown Button */}
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
@@ -290,14 +290,14 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
                   <line x1="4" y1="12" x2="16" y2="12" />
                   <line x1="4" y1="18" x2="12" y2="18" />
                 </svg>
-                <span>{isRTL ? "التطبيقات" : "Applications"}</span>
+                <span>{isRTL ? "القطاعات" : "Industries"}</span>
               </button>
 
-              {/* FLOATING DARK APPLICATIONS DROPDOWN */}
+              {/* FLOATING DARK INDUSTRIES DROPDOWN */}
               {showCategoryDropdown && (
                 <div className="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-[290px] sm:w-[330px] bg-[#11131a] border border-gold-light/50 rounded-2xl p-3.5 shadow-2xl z-40 animate-[fadeIn_0.15s_ease-out]">
                   <div className="text-[10px] sm:text-[11px] font-heading font-bold text-gold-light uppercase tracking-widest px-2.5 py-1.5 border-b border-gray-800 mb-2">
-                    {isRTL ? "القطاعات الصناعية" : "INDUSTRIES / APPLICATIONS"}
+                    {isRTL ? "القطاعات الصناعية" : "INDUSTRIES"}
                   </div>
 
                   <div className="max-h-[280px] overflow-y-auto space-y-1 pr-1 border-t border-transparent scrollbar-thin scrollbar-thumb-gold-main/40">
