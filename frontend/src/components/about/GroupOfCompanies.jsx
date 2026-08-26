@@ -15,24 +15,9 @@ export default function GroupOfCompanies() {
 
   const companies = [
     {
-      id: "tobias-amines",
-      name: "Tobias Amines",
-      logo: "/images/aboutpage/tobias amines.png",
-    },
-    {
-      id: "leela-films",
-      name: "Leela Films",
-      logo: "/images/aboutpage/leela Films.png",
-    },
-    {
-      id: "leela-gulf",
-      name: "Leela Gulf FZC",
-      logo: "/images/aboutpage/leela Gulf FZC.png",
-    },
-    {
-      id: "leela-partner",
-      name: "Leela Partner Limited",
-      logo: "/images/aboutpage/leela partner limited.png",
+      id: "leela-corp",
+      name: "The Leela Corporation",
+      logo: "/images/aboutpage/the leela corporation.png",
     },
     {
       id: "leepol",
@@ -40,19 +25,34 @@ export default function GroupOfCompanies() {
       logo: "/images/aboutpage/leepol black logo.png",
     },
     {
+      id: "leela-usa",
+      name: "The Leela USA LLC",
+      logo: "/images/aboutpage/TLC_USA_LLC_Cap.png",
+    },
+    {
+      id: "tobias-amines",
+      name: "Tobias Amines",
+      logo: "/images/aboutpage/tobias amines.png",
+    },
+    {
+      id: "leela-partner",
+      name: "Leela Partner Limited",
+      logo: "/images/aboutpage/leela partner limited.png",
+    },
+    {
       id: "pure-leela",
       name: "Pure Leela Limited",
       logo: "/images/aboutpage/Pure leela limited.png",
     },
     {
-      id: "leela-corp",
-      name: "The Leela Corporation",
-      logo: "/images/aboutpage/the leela corporation.png",
+      id: "leela-guriwala",
+      name: "Leela Guriwala",
+      logo: "/images/aboutpage/leelaguriwala.png",
     },
     {
-      id: "leela-usa",
-      name: "The Leela USA LLC",
-      logo: "/images/aboutpage/TLC_USA_LLC_Cap.png",
+      id: "leela-films",
+      name: "Leela Films",
+      logo: "/images/aboutpage/leela Films.png",
     },
   ];
 
