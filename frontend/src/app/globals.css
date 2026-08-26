@@ -616,7 +616,23 @@ select option:checked {
 /* ==========================================================================
    PREVENT BROWSER AUTOFILL WHITE / LIGHT BLUE / BLACK TEXT OVERRIDE
    ========================================================================== */
-/* Dark Form Autofill Override */
+/* Dark Form Autofill Override (Fixes Chrome/Edge autofill turning inputs white or light blue) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active,
+.PhoneInputInput:-webkit-autofill,
+.PhoneInputInput:-webkit-autofill:hover,
+.PhoneInputInput:-webkit-autofill:focus,
+.PhoneInputInput:-webkit-autofill:active,
 .dark-form-input:-webkit-autofill,
 .dark-form-input:-webkit-autofill:hover,
 .dark-form-input:-webkit-autofill:focus,
@@ -627,7 +643,7 @@ select option:checked {
   caret-color: #ffffff !important;
   transition:
     background-color 50000s ease-in-out 0s,
-    color 50000s ease-in-out 0s;
+    color 50000s ease-in-out 0s !important;
 }
 
 /* Light Form Autofill Override */

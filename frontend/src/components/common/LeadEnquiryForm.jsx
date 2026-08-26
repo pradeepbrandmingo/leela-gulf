@@ -370,7 +370,7 @@ export default function LeadEnquiryForm({
                     value={formData.firstName}
                     onChange={handleChange}
                     placeholder={isRTL ? "الاسم الأول" : "First Name"}
-                    className={`w-full bg-[#16181f] border ${
+                    className={`dark-form-input w-full bg-[#16181f] border ${
                       errors.firstName ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
                     } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
@@ -393,7 +393,7 @@ export default function LeadEnquiryForm({
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder={isRTL ? "اسم العائلة" : "Last Name"}
-                    className={`w-full bg-[#16181f] border ${
+                    className={`dark-form-input w-full bg-[#16181f] border ${
                       errors.lastName ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
                     } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
@@ -419,7 +419,7 @@ export default function LeadEnquiryForm({
                     value={formData.email}
                     onChange={handleChange}
                     placeholder={isRTL ? "البريد الإلكتروني" : "Email Id"}
-                    className={`w-full bg-[#16181f] border ${
+                    className={`dark-form-input w-full bg-[#16181f] border ${
                       errors.email ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
                     } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm" : "px-4 py-3.5 text-sm sm:text-base"} text-white placeholder-gray-500 outline-none transition-all duration-200`}
                   />
@@ -510,7 +510,7 @@ export default function LeadEnquiryForm({
                               value={phoneFlagSearch}
                               onChange={(e) => setPhoneFlagSearch(e.target.value)}
                               placeholder="Search country or code..."
-                              className="w-full bg-[#1c1f2b] border border-gold-main/30 focus:border-gold-main rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
+                              className="dark-form-input w-full bg-[#1c1f2b] border border-gold-main/30 focus:border-gold-main rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
                               autoFocus
                             />
                           </div>
@@ -600,7 +600,7 @@ export default function LeadEnquiryForm({
                           value={countrySearchQuery}
                           onChange={(e) => setCountrySearchQuery(e.target.value)}
                           placeholder="Search country..."
-                          className="w-full bg-[#1c1f2b] border border-gold-main/30 focus:border-gold-main rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
+                          className="dark-form-input w-full bg-[#1c1f2b] border border-gold-main/30 focus:border-gold-main rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-gray-500 outline-none"
                           autoFocus
                         />
                       </div>
@@ -652,7 +652,7 @@ export default function LeadEnquiryForm({
                   value={formData.message}
                   onChange={handleChange}
                   placeholder={isRTL ? "اكتب هنا..." : "Type here.."}
-                  className={`w-full bg-[#16181f] border ${
+                  className={`dark-form-input w-full bg-[#16181f] border ${
                     errors.message ? "border-red-500/80" : "border-gold-main/30 hover:border-gold-main/60"
                   } focus:border-gold-main focus:ring-1 focus:ring-gold-main rounded-xl ${isModal ? "px-3.5 py-2.5 text-xs sm:text-sm min-h-[70px]" : "px-4 py-3.5 text-sm sm:text-base min-h-[110px]"} text-white placeholder-gray-500 outline-none resize-y transition-all duration-200`}
                 />
