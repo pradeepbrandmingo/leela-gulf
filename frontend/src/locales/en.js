@@ -180,13 +180,13 @@ export const en = {
     p1Title: "1. Quality Without Compromise",
     p1Desc: "Every batch is sourced from pre-audited facilities and tested against strict specifications. If it doesn't meet spec, it doesn't ship.",
     p2Title: "2. Precision in Every Shipment",
-    p2Desc: "Pre-cleared documentation, coordinated port operations, and optimized trade routes keep your supply chain predictable — no surprises, no delays.",
+    p2Desc: "Pre-cleared documentation, coordinated port operations, and optimized trade routes keep your supply chain predictable, with no surprises and no delays.",
     p3Title: "3. Manufacturer Relationships, Not Middleman Guesswork",
     p3Desc: "We work directly with audited primary manufacturers, visiting facilities and monitoring output to protect your pipeline at the source.",
     p4Title: "4. Expertise Across Every Vertical",
     p4Desc: "From pharmaceutical-grade intermediates to technical-grade solvents, our technical team matches specifications to your exact requirements across all 11 industries we serve.",
     p5Title: "5. Delivery You Can Build a Schedule Around",
-    p5Desc: "We eliminate transit friction — securing vessel space early, clearing documentation in advance, and tracking every container from origin to plant.",
+    p5Desc: "We eliminate transit friction by securing vessel space early, clearing documentation in advance, and tracking every container from origin to plant.",
   },
 
   // Our Leaders Section

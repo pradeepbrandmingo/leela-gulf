@@ -109,7 +109,7 @@ export default function GuidingPrinciples() {
                     {item.title}
                   </h3>
                   <p className="font-subheading text-gray-300/90 text-xs sm:text-[13px] md:text-sm leading-relaxed font-normal">
-                    {item.desc}
+                    {item.desc ? item.desc.replace(/—/g, "").replace(/ - /g, " ") : ""}
                   </p>
                 </div>
               ))}
