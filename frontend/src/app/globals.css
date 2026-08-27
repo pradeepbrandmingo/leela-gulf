@@ -316,6 +316,23 @@ body {
   animation-play-state: paused;
 }
 
+@keyframes verticalTicker {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-vertical-ticker {
+  animation: verticalTicker 25s linear infinite;
+}
+
+.animate-vertical-ticker:hover {
+  animation-play-state: paused;
+}
+
 /* ==========================================================================
    GLOBAL UTILITY CLASSES (Use Anywhere in Web Application)
    ========================================================================== */

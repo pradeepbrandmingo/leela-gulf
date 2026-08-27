@@ -311,23 +311,32 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* ── COL 3: INDUSTRIES LINKS (4 Cols) ── */}
+          {/* ── COL 3: INDUSTRIES LINKS (4 Cols - Vertical Auto Slider for 11 items) ── */}
           <div className="lg:col-span-4">
-            <h3 className="font-heading font-extrabold text-base sm:text-lg text-gold-main uppercase tracking-wider mb-5">
+            <h3 className="font-heading font-extrabold text-base sm:text-lg text-gold-main uppercase tracking-wider mb-4">
               {isRTL ? "القطاعات الصناعية" : "INDUSTRIES"}
             </h3>
-            <ul className="space-y-2.5 font-subheading text-xs sm:text-sm">
-              {industriesLinks.map((link, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={link.href}
-                    className="inline-flex items-center text-gray-300 hover:text-gold-light hover:translate-x-1.5 rtl:hover:-translate-x-1.5 transition-all duration-300"
-                  >
-                    <span>{link.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+
+            {/* Vertical Auto Slider Container (Default 8 items height: ~260px) */}
+            <div className="relative h-[260px] overflow-hidden group py-1">
+              {/* Top & Bottom Smooth Gradient Fade Masks */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-[var(--color-primary)] to-transparent z-10" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-[var(--color-primary)] to-transparent z-10" />
+
+              {/* Scrolling List (Duplicated for Seamless Infinite Loop) */}
+              <ul className="animate-vertical-ticker group-hover:[animation-play-state:paused] flex flex-col space-y-2.5 font-subheading text-xs sm:text-sm">
+                {[...industriesLinks, ...industriesLinks].map((link, idx) => (
+                  <li key={idx} className="shrink-0">
+                    <Link
+                      href={link.href}
+                      className="inline-flex items-center text-gray-300 hover:text-gold-light hover:translate-x-1.5 rtl:hover:-translate-x-1.5 transition-all duration-300"
+                    >
+                      <span>{link.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
         </div>
