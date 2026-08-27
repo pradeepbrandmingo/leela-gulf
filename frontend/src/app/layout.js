@@ -1,6 +1,7 @@
 import { LanguageProvider } from "@/context/LanguageContext";
 import Header from "@/components/layout/Header";
 import FooterWrapper from "@/components/layout/FooterWrapper";
+import FloatingSidebar from "@/components/common/FloatingSidebar";
 import { Raleway } from "next/font/google";
 import "./globals.css";
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen flex flex-col antialiased bg-[#1a1a1a] text-white">
         <LanguageProvider>
           <Header />
+          <FloatingSidebar />
           <div className="flex-grow">
             {children}
           </div>

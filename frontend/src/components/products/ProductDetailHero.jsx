@@ -8,6 +8,7 @@ import {
   FlaskConical,
   FileText,
   ArrowRight,
+  Download,
 } from "lucide-react";
 
 /**
@@ -134,12 +135,12 @@ export default function ProductDetailHero({
                 </div>
               )}
 
-              {/* Request Bulk Quote CTA Button */}
-              <div className="pt-1">
+              {/* Request Bulk Quote CTA Button & Technical Data Sheet (TDS) Download */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1">
                 <button
                   type="button"
                   onClick={onQuoteRequest}
-                  className="btn-gold-primary px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer"
+                  className="btn-gold-primary px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer"
                 >
                   <FileText className="w-4 h-4 text-black" />
                   <span>
@@ -149,6 +150,17 @@ export default function ProductDetailHero({
                     className={`w-3.5 h-3.5 text-black ${isRTL ? "rotate-180" : ""}`}
                   />
                 </button>
+
+                <a
+                  href="/documents/leela-gulf-catalogue.pdf"
+                  download="Technical-Data-Sheet-TDS.pdf"
+                  className="btn-gold-outline-hover px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide transition-all inline-flex items-center gap-2 cursor-pointer shadow-xs"
+                >
+                  <Download className="w-4 h-4 text-[#8e7608] group-hover:text-black transition-colors" />
+                  <span>
+                    {isRTL ? "صحيفة البيانات الفنية (TDS)" : "Technical Data Sheet (TDS)"}
+                  </span>
+                </a>
               </div>
             </div>
 
