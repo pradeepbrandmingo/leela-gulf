@@ -1,7 +1,5 @@
 import { LanguageProvider } from "@/context/LanguageContext";
-import Header from "@/components/layout/Header";
-import FooterWrapper from "@/components/layout/FooterWrapper";
-import FloatingSidebar from "@/components/common/FloatingSidebar";
+import AppShell from "@/components/layout/AppShell";
 import { Raleway } from "next/font/google";
 import "./globals.css";
 
@@ -23,12 +21,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${raleway.variable}`}>
       <body className="min-h-screen flex flex-col antialiased bg-[#1a1a1a] text-white">
         <LanguageProvider>
-          <Header />
-          <FloatingSidebar />
-          <div className="flex-grow">
-            {children}
-          </div>
-          <FooterWrapper />
+          <AppShell>{children}</AppShell>
         </LanguageProvider>
       </body>
     </html>

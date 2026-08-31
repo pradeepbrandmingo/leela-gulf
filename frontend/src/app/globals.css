@@ -237,16 +237,22 @@ body {
 
 /* Custom Scrollbar for Luxury Enterprise Feel */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-primary-dark);
+  background: #f1f5f9;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-neutral-800);
+  background: #cbd5e1;
   border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {

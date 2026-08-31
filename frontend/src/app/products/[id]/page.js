@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
+import { apiRequest } from "@/config/api";
 import LeadEnquiryForm from "@/components/common/LeadEnquiryForm";
 import ProductDetailHero from "@/components/products/ProductDetailHero";
 import ProductAboutSection from "@/components/products/ProductAboutSection";
@@ -17,39 +18,117 @@ export default function ProductDetailPage() {
   const params = useParams();
   const { isRTL } = useLanguage();
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [dbProduct, setDbProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const productId = params?.id || "1";
 
-  // Dynamic Product Data (Structure matches future Backend API payload)
-  const productData = {
-    id: productId,
-    title: "Cocamidopropyl Betaine (CAPB)",
-    code: "HCL-001",
-    category: isRTL ? "خافضات التوتر السطحي" : "SURFACTANTS",
-    gradeLabel: "Product Grade",
-    gradeValue: "ELSURFAC™ CAB45",
-    description: isRTL
-      ? "خافض للتوتر السطحي أمفوتيري لطيف مشتق من زيت جوز الهند، يستخدم على نطاق واسع في الشامبو، ومنظفات الوجه، والصابون السائل، ومستحضرات العناية الشخصية. متوفر للتوريد الصناعي بالجملة."
-      : "Mild amphoteric surfactant derived from coconut oil, widely used in shampoos, facial cleansers, liquid soaps and personal care formulations. Available for bulk industrial supply.",
-    specs: [
-      { label: isRTL ? "رقم CAS" : "CAS Number", value: "61789-40-0" },
-      { label: isRTL ? "اسم INCI" : "INCI Name", value: "Coco Amido Propyl Betaine" },
-      { label: isRTL ? "رمز HS" : "HS Code", value: "3402.19.00" },
-      { label: isRTL ? "الصيغة الكيميائية" : "Chemical Formula", value: "C19H38N2O3" },
-    ],
-    applications: isRTL
-      ? ["العناية الشخصية", "العناية بالمنزل", "شامبو", "مستحضرات التجميل", "صابون سائل", "التنظيف الصناعي"]
-      : ["Personal Care", "Home Care", "Shampoo", "Cosmetics", "Liquid Soap", "Industrial Cleaning"],
-    images: [
-      "/images/prodcut/dummy-product.jpg",
-      "/images/prodcut/dummy-product.jpg",
-      "/images/prodcut/dummy-product.jpg",
-    ],
-    overlayBadge: isRTL ? "توريد بالجملة عالمياً" : "BULK SUPPLY WORLDWIDE",
-    floatingHighlights: isRTL
-      ? ["مخزون جاهز للتسليم", "دعم فني متخصص", "تصدير عالمي مضمون"]
-      : ["Ready Stock", "Technical Support", "Global Export"],
-  };
+  // Fetch product from backend API if available
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const res = await apiRequest(`/products/${productId}`, { silent: true });
+        if (res?.success && res?.data) {
+          setDbProduct(res.data);
+        }
+      } catch (err) {
+        // Graceful fallback to static demo product if not found in MongoDB
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProduct();
+  }, [productId]);
+
+  // Construct localized data based on language (English or Arabic)
+  const loc = dbProduct
+    ? (isRTL ? (dbProduct.ar?.title ? dbProduct.ar : dbProduct.en) : (dbProduct.en || dbProduct))
+    : null;
+
+  // Dynamic Product Data
+  const productData = dbProduct
+    ? {
+        id: dbProduct.slug || dbProduct._id || productId,
+        title: loc?.title || dbProduct.en?.title || "Product Title",
+        code: dbProduct.code || "PRD-001",
+        category: loc?.categoryTag || dbProduct.categoryTag || (isRTL ? "خافضات التوتر السطحي" : "SURFACTANTS"),
+        gradeLabel: "Product Grade",
+        gradeValue: loc?.gradeValue || dbProduct.gradeValue || "Industrial Grade",
+        description: loc?.shortOverview || dbProduct.en?.shortOverview || "",
+        specs: [
+          { label: isRTL ? "رقم CAS" : "CAS Number", value: dbProduct.casNumber || "61789-40-0" },
+          { label: isRTL ? "اسم INCI" : "INCI Name", value: dbProduct.inciName || "Chemical Inci" },
+          { label: isRTL ? "رمز HS" : "HS Code", value: dbProduct.hsCode || "3402.19.00" },
+          { label: isRTL ? "الصيغة الكيميائية" : "Chemical Formula", value: dbProduct.chemicalFormula || "C19H38N2O3" },
+        ],
+        applications: (loc?.applicationTags?.length ? loc.applicationTags : dbProduct.en?.applicationTags) || [
+          "Personal Care", "Home Care"
+        ],
+        images: dbProduct.images?.length
+          ? dbProduct.images
+          : ["/images/prodcut/dummy-product.jpg"],
+        overlayBadge: isRTL ? "توريد بالجملة عالمياً" : "BULK SUPPLY WORLDWIDE",
+        floatingHighlights: isRTL
+          ? ["مخزون جاهز للتسليم", "دعم فني متخصص", "تصدير عالمي مضمون"]
+          : ["Ready Stock", "Technical Support", "Global Export"],
+        
+        // About Section
+        aboutData: {
+          aboutTitle: loc?.aboutTitle || `About ${loc?.title || "Product"}`,
+          overview: loc?.aboutOverview || "",
+          manufacturingProcess: loc?.manufacturingProcess || "",
+          packagingLogistics: loc?.packagingLogistics || "",
+          safetyHandling: loc?.safetyHandling || "",
+          bulkPricing: loc?.bulkPricing || "",
+          whyChooseTitle: loc?.whyChooseTitle || "Why Choose Leela Gulf as a Trusted Supplier?",
+          whyChooseLeela: loc?.whyChooseLeela || "",
+          card1Title: loc?.card1Title || "Manufacturing Process",
+          card2Title: loc?.card2Title || "Packaging & Logistics",
+          card3Title: loc?.card3Title || "Safety & Handling",
+          card4Title: loc?.card4Title || "Bulk Pricing & Procurement",
+        },
+
+        // Features
+        featuresData: (loc?.features?.length ? loc.features : dbProduct.en?.features) || [],
+
+        // Applications
+        applicationsData: (loc?.applicationCards?.length ? loc.applicationCards : dbProduct.en?.applicationCards) || [],
+
+        // FAQs & Related
+        faqData: (loc?.faqs?.length ? loc.faqs : dbProduct.en?.faqs) || [],
+        relatedHeading: loc?.relatedHeading || (isRTL ? "منتجات ذات صلة" : "Related Surfactants"),
+        relatedProducts: (loc?.relatedProducts?.length ? loc.relatedProducts : dbProduct.en?.relatedProducts) || [],
+        tdsUrl: dbProduct.tdsUrl || "",
+      }
+    : {
+        id: productId,
+        title: "Cocamidopropyl Betaine (CAPB)",
+        code: "HCL-001",
+        category: isRTL ? "خافضات التوتر السطحي" : "SURFACTANTS",
+        gradeLabel: "Product Grade",
+        gradeValue: "ELSURFAC™ CAB45",
+        description: isRTL
+          ? "خافض للتوتر السطحي أمفوتيري لطيف مشتق من زيت جوز الهند، يستخدم على نطاق واسع في الشامبو، ومنظفات الوجه، والصابون السائل، ومستحضرات العناية الشخصية. متوفر للتوريد الصناعي بالجملة."
+          : "Mild amphoteric surfactant derived from coconut oil, widely used in shampoos, facial cleansers, liquid soaps and personal care formulations. Available for bulk industrial supply.",
+        specs: [
+          { label: isRTL ? "رقم CAS" : "CAS Number", value: "61789-40-0" },
+          { label: isRTL ? "اسم INCI" : "INCI Name", value: "Coco Amido Propyl Betaine" },
+          { label: isRTL ? "رمز HS" : "HS Code", value: "3402.19.00" },
+          { label: isRTL ? "الصيغة الكيميائية" : "Chemical Formula", value: "C19H38N2O3" },
+        ],
+        applications: isRTL
+          ? ["العناية الشخصية", "العناية بالمنزل", "شامبو", "مستحضرات التجميل", "صابون سائل", "التنظيف الصناعي"]
+          : ["Personal Care", "Home Care", "Shampoo", "Cosmetics", "Liquid Soap", "Industrial Cleaning"],
+        images: [
+          "/images/prodcut/dummy-product.jpg",
+          "/images/prodcut/dummy-product.jpg",
+          "/images/prodcut/dummy-product.jpg",
+        ],
+        overlayBadge: isRTL ? "توريد بالجملة عالمياً" : "BULK SUPPLY WORLDWIDE",
+        floatingHighlights: isRTL
+          ? ["مخزون جاهز للتسليم", "دعم فني متخصص", "تصدير عالمي مضمون"]
+          : ["Ready Stock", "Technical Support", "Global Export"],
+      };
 
   return (
     <main className="w-full bg-[var(--color-primary)] min-h-screen text-white">
@@ -111,7 +190,7 @@ export default function ProductDetailPage() {
               <div className="w-1.5 h-12 bg-gradient-gold-animated rounded-full shrink-0" />
               <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#1d202d] border border-[#33394a] overflow-hidden shrink-0 shadow-md">
                 <Image
-                  src={productData.images[0]}
+                  src={productData.images[0] || "/images/prodcut/dummy-product.jpg"}
                   alt={productData.title}
                   fill
                   className="object-cover"
