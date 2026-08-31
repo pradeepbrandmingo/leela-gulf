@@ -13,22 +13,25 @@ import {
 
 /**
  * ProductDetailHero - Production-Ready Product Details Hero Banner Component.
- * Clean, modern single product image display without carousel thumbnails or overlay badges.
+ * Supports single product image as well as multi-image gallery switcher when multiple images are uploaded.
  */
 export default function ProductDetailHero({
   product,
   onQuoteRequest,
 }) {
   const { isRTL } = useLanguage();
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [failedIndices, setFailedIndices] = useState({});
 
   // Dynamic product payload from page
   const p = product || {};
 
-  // Image Fallback Handler
-  const [imageError, setImageError] = useState(false);
   const defaultFallbackImg = "/images/prodcut/dummy-product.jpg";
-  const primaryImage = p.images && p.images.length > 0 ? p.images[0] : defaultFallbackImg;
-  const displayImage = imageError ? defaultFallbackImg : primaryImage;
+  const allImages = p.images && p.images.length > 0 ? p.images : [defaultFallbackImg];
+  
+  const activeImage = failedIndices[selectedImageIndex]
+    ? defaultFallbackImg
+    : allImages[selectedImageIndex] || defaultFallbackImg;
 
   return (
     <section className="w-full bg-[var(--color-primary)] relative">
@@ -152,8 +155,10 @@ export default function ProductDetailHero({
                 </button>
 
                 <a
-                  href="/documents/leela-gulf-catalogue.pdf"
-                  download="Technical-Data-Sheet-TDS.pdf"
+                  href={p.tdsUrl || "/documents/leela-gulf-catalogue.pdf"}
+                  target={p.tdsUrl ? "_blank" : undefined}
+                  rel={p.tdsUrl ? "noopener noreferrer" : undefined}
+                  download={!p.tdsUrl ? "Technical-Data-Sheet-TDS.pdf" : undefined}
                   className="btn-gold-outline-hover px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide transition-all inline-flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   <Download className="w-4 h-4 text-[#8e7608] group-hover:text-black transition-colors" />
@@ -165,20 +170,54 @@ export default function ProductDetailHero({
             </div>
 
             {/* ═════════════════════════════════════════════════════════════════
-                RIGHT COLUMN: CLEAN SINGLE PRODUCT IMAGE SHOWCASE
+                RIGHT COLUMN: PRODUCT IMAGE & INTERACTIVE MULTI-IMAGE GALLERY
                 ═════════════════════════════════════════════════════════════════ */}
             <div className="lg:col-span-5 flex flex-col items-center justify-center">
-              <div className="relative w-full aspect-[4/3] sm:aspect-[4/3] lg:aspect-square max-h-[340px] sm:max-h-[380px] lg:max-h-[400px] rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-gray-200/80 group">
+              {/* Main Active Image Display */}
+              <div className="relative w-full aspect-[4/3] sm:aspect-[4/3] lg:aspect-square max-h-[340px] sm:max-h-[380px] lg:max-h-[400px] rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-gray-200/80 group bg-gray-50">
                 <Image
-                  src={displayImage}
+                  src={activeImage}
                   alt={p.title || "Product Showcase"}
                   fill
                   priority
                   unoptimized
-                  onError={() => setImageError(true)}
+                  onError={() => setFailedIndices((prev) => ({ ...prev, [selectedImageIndex]: true }))}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
+
+              {/* Multi-Image Thumbnails (Visible only when product has 2+ images) */}
+              {allImages.length > 1 && (
+                <div className="flex items-center gap-2.5 mt-3 w-full overflow-x-auto pb-1 [scrollbar-width:none]">
+                  {allImages.map((img, idx) => {
+                    const isSelected = selectedImageIndex === idx;
+                    const thumbSrc = failedIndices[idx] ? defaultFallbackImg : img;
+
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedImageIndex(idx)}
+                        className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
+                          isSelected
+                            ? "border-gold-main ring-2 ring-gold-main/30 scale-105 shadow-md"
+                            : "border-gray-200 hover:border-gold-main/50 opacity-70 hover:opacity-100"
+                        }`}
+                        aria-label={`View image ${idx + 1}`}
+                      >
+                        <Image
+                          src={thumbSrc}
+                          alt={`${p.title} thumbnail ${idx + 1}`}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                          onError={() => setFailedIndices((prev) => ({ ...prev, [idx]: true }))}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -186,4 +225,3 @@ export default function ProductDetailHero({
     </section>
   );
 }
-

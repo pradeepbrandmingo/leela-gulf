@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { apiRequest } from "@/config/api";
 import {
   ArrowLeft,
@@ -35,7 +35,8 @@ import {
   Languages,
   Loader2,
   Globe,
-  AlertCircle
+  AlertCircle,
+  ExternalLink
 } from "lucide-react";
 
 // Official 11 Leela Gulf Industries
@@ -133,11 +134,14 @@ function FeatureIconSelect({ value, onChange }) {
   );
 }
 
-export default function AddNewProductPage() {
+export default function EditProductPage() {
   const router = useRouter();
+  const params = useParams();
+  const productId = params?.id;
+
   const [activeLang, setActiveLang] = useState("en"); // "en" | "ar"
+  const [isLoadingProduct, setIsLoadingProduct] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [hasTranslated, setHasTranslated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -147,6 +151,7 @@ export default function AddNewProductPage() {
   const [isUploadingTds, setIsUploadingTds] = useState(false);
   const [uploadingCardIdx, setUploadingCardIdx] = useState(null);
   const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false);
+  const [productSlug, setProductSlug] = useState("");
   const industryDropdownRef = useRef(null);
 
   // Close dropdown on outside click
@@ -159,6 +164,165 @@ export default function AddNewProductPage() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Form Data (English & Universal Specs)
+  const [formData, setFormData] = useState({
+    title: "",
+    code: "",
+    casNumber: "",
+    inciName: "",
+    hsCode: "",
+    chemicalFormula: "",
+    gradeValue: "",
+    categoryTag: "",
+    primaryIndustry: "Industrial Chemicals",
+    shortOverview: "",
+    status: "Published",
+    featured: true,
+    tdsUrl: "",
+    tdsFileName: "",
+    aboutTitle: "",
+    aboutOverview: "",
+    card1Title: "Manufacturing Process",
+    manufacturingProcess: "",
+    card2Title: "Packaging & Logistics",
+    packagingLogistics: "",
+    card3Title: "Safety & Handling",
+    safetyHandling: "",
+    card4Title: "Bulk Pricing & Procurement",
+    bulkPricing: "",
+    whyChooseTitle: "Why Choose Leela Gulf as a Trusted Supplier?",
+    whyChooseLeela: "",
+  });
+
+  // Arabic Form Data
+  const [arFormData, setArFormData] = useState({
+    title: "",
+    categoryTag: "",
+    primaryIndustry: "",
+    gradeValue: "",
+    shortOverview: "",
+    aboutTitle: "",
+    aboutOverview: "",
+    card1Title: "عملية التصنيع",
+    manufacturingProcess: "",
+    card2Title: "التعبئة والتغليف والخدمات اللوجستية",
+    packagingLogistics: "",
+    card3Title: "السلامة والتعامل",
+    safetyHandling: "",
+    card4Title: "التسعير بالجملة والمشتريات",
+    bulkPricing: "",
+    whyChooseTitle: "لماذا تختار ليلا الخليج كمورد موثوق؟",
+    whyChooseLeela: "",
+  });
+
+  const [appTags, setAppTags] = useState([]);
+  const [arAppTags, setArAppTags] = useState([]);
+  const [newTagInput, setNewTagInput] = useState("");
+
+  const [features, setFeatures] = useState([]);
+  const [arFeatures, setArFeatures] = useState([]);
+
+  const [applicationCards, setApplicationCards] = useState([]);
+  const [arApplicationCards, setArApplicationCards] = useState([]);
+
+  const [faqs, setFaqs] = useState([]);
+  const [arFaqs, setArFaqs] = useState([]);
+
+  const [relatedHeading, setRelatedHeading] = useState("Related Surfactants");
+  const [arRelatedHeading, setArRelatedHeading] = useState("منتجات ذات صلة");
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [arRelatedProducts, setArRelatedProducts] = useState([]);
+
+  // Fetch Existing Product from Database
+  useEffect(() => {
+    async function loadExistingProduct() {
+      if (!productId) return;
+      setIsLoadingProduct(true);
+      setErrorMsg("");
+      try {
+        const res = await apiRequest(`/products/${productId}`);
+        if (res?.success && res?.data) {
+          const p = res.data;
+          setProductSlug(p.slug || p._id);
+
+          const en = p.en || {};
+          const ar = p.ar || {};
+
+          setFormData({
+            title: en.title || p.title || "",
+            code: p.code || "",
+            casNumber: p.casNumber || "",
+            inciName: p.inciName || "",
+            hsCode: p.hsCode || "",
+            chemicalFormula: p.chemicalFormula || "",
+            gradeValue: en.gradeValue || p.gradeValue || "",
+            categoryTag: en.categoryTag || p.categoryTag || "",
+            primaryIndustry: p.primaryIndustry || en.primaryIndustry || "Industrial Chemicals",
+            shortOverview: en.shortOverview || "",
+            status: p.status || "Published",
+            featured: Boolean(p.featured),
+            tdsUrl: p.tdsUrl || "",
+            tdsFileName: p.tdsFileName || (p.tdsUrl ? "Uploaded-TDS-Document.pdf" : ""),
+            aboutTitle: en.aboutTitle || "",
+            aboutOverview: en.aboutOverview || "",
+            card1Title: en.card1Title || "Manufacturing Process",
+            manufacturingProcess: en.manufacturingProcess || "",
+            card2Title: en.card2Title || "Packaging & Logistics",
+            packagingLogistics: en.packagingLogistics || "",
+            card3Title: en.card3Title || "Safety & Handling",
+            safetyHandling: en.safetyHandling || "",
+            card4Title: en.card4Title || "Bulk Pricing & Procurement",
+            bulkPricing: en.bulkPricing || "",
+            whyChooseTitle: en.whyChooseTitle || "Why Choose Leela Gulf as a Trusted Supplier?",
+            whyChooseLeela: en.whyChooseLeela || "",
+          });
+
+          setArFormData({
+            title: ar.title || "",
+            categoryTag: ar.categoryTag || "",
+            primaryIndustry: ar.primaryIndustry || "",
+            gradeValue: ar.gradeValue || "",
+            shortOverview: ar.shortOverview || "",
+            aboutTitle: ar.aboutTitle || "",
+            aboutOverview: ar.aboutOverview || "",
+            card1Title: ar.card1Title || "عملية التصنيع",
+            manufacturingProcess: ar.manufacturingProcess || "",
+            card2Title: ar.card2Title || "التعبئة والتغليف والخدمات اللوجستية",
+            packagingLogistics: ar.packagingLogistics || "",
+            card3Title: ar.card3Title || "السلامة والتعامل",
+            safetyHandling: ar.safetyHandling || "",
+            card4Title: ar.card4Title || "التسعير بالجملة والمشتريات",
+            bulkPricing: ar.bulkPricing || "",
+            whyChooseTitle: ar.whyChooseTitle || "لماذا تختار ليلا الخليج كمورد موثوق؟",
+            whyChooseLeela: ar.whyChooseLeela || "",
+          });
+
+          setProductImages(p.images?.length ? p.images : []);
+          setAppTags(en.applicationTags || []);
+          setArAppTags(ar.applicationTags || []);
+          setFeatures(en.features || []);
+          setArFeatures(ar.features || []);
+          setApplicationCards(en.applicationCards || []);
+          setArApplicationCards(ar.applicationCards || []);
+          setFaqs(en.faqs || []);
+          setArFaqs(ar.faqs || []);
+          setRelatedHeading(en.relatedHeading || "Related Surfactants");
+          setArRelatedHeading(ar.relatedHeading || "منتجات ذات صلة");
+          setRelatedProducts(en.relatedProducts || []);
+          setArRelatedProducts(ar.relatedProducts || []);
+        } else {
+          setErrorMsg("Product not found in database.");
+        }
+      } catch (err) {
+        console.error("Load Product Error:", err);
+        setErrorMsg("Failed to load product data.");
+      } finally {
+        setIsLoadingProduct(false);
+      }
+    }
+    loadExistingProduct();
+  }, [productId]);
 
   // Cloudinary Direct Single Image Upload Handler
   const handleUploadProductImages = async (e) => {
@@ -178,7 +342,7 @@ export default function AddNewProductPage() {
       const data = await res.json();
       if (data.success && data.data?.url) {
         setProductImages([data.data.url]);
-        setSuccessMsg("✨ Product image uploaded to Cloudinary!");
+        setSuccessMsg("✨ Product image updated to Cloudinary!");
         setTimeout(() => setSuccessMsg(""), 4000);
       } else {
         throw new Error(data.message || "Upload failed");
@@ -239,192 +403,26 @@ export default function AddNewProductPage() {
       });
       const data = await res.json();
       if (data.success && data.data?.url) {
-        handleAppCardChange(cardIndex, "imageUrl", data.data.url);
+        const updated = [...applicationCards];
+        updated[cardIndex].imageUrl = data.data.url;
+        setApplicationCards(updated);
+        if (arApplicationCards.length > cardIndex) {
+          const arUpdated = [...arApplicationCards];
+          arUpdated[cardIndex].imageUrl = data.data.url;
+          setArApplicationCards(arUpdated);
+        }
+        setSuccessMsg("✨ Card image uploaded to Cloudinary!");
+        setTimeout(() => setSuccessMsg(""), 4000);
       }
     } catch (err) {
-      console.error("Card Image Upload Error:", err);
-      alert("Failed to upload application image to Cloudinary.");
+      console.error("Cloudinary Card Upload Error:", err);
+      setErrorMsg("Failed to upload application card image.");
     } finally {
       setUploadingCardIdx(null);
     }
   };
 
-  // ── 1. SHARED TECHNICAL & GENERAL INFO (English default) ──
-  const [formData, setFormData] = useState({
-    title: "",
-    code: "",
-    categoryTag: "SURFACTANTS",
-    primaryIndustry: "Home Care & Personal Care (LEEPOL®)",
-    gradeLabel: "Product Grade",
-    gradeValue: "",
-    shortOverview: "",
-    status: "Published", // "Published" | "Draft"
-    featured: false,
-    
-    // Quick Specs (Shared)
-    casNumber: "",
-    inciName: "",
-    hsCode: "",
-    chemicalFormula: "",
-
-    // Media & Docs
-    imageUrl: "/images/prodcut/dummy-product.jpg",
-    tdsUrl: "",
-    tdsFileName: "",
-
-    // About Section
-    aboutTitle: "",
-    aboutOverview: "",
-    card1Title: "Manufacturing Process",
-    manufacturingProcess: "",
-    card2Title: "Packaging & Logistics",
-    packagingLogistics: "",
-    card3Title: "Safety & Handling",
-    safetyHandling: "",
-    card4Title: "Bulk Pricing & Procurement",
-    bulkPricing: "",
-    whyChooseTitle: "Why Choose Leela Gulf as a Trusted Supplier?",
-    whyChooseLeela: "",
-  });
-
-  // Arabic Localized State
-  const [arFormData, setArFormData] = useState({
-    title: "",
-    categoryTag: "خافضات التوتر السطحي",
-    primaryIndustry: "العناية المنزلية والشخصية (LEEPOL®)",
-    gradeValue: "",
-    shortOverview: "",
-    aboutTitle: "",
-    aboutOverview: "",
-    card1Title: "عملية التصنيع",
-    manufacturingProcess: "",
-    card2Title: "التعبئة والتغليف والخدمات اللوجستية",
-    packagingLogistics: "",
-    card3Title: "السلامة والتعامل",
-    safetyHandling: "",
-    card4Title: "التسعير بالجملة والمشتريات",
-    bulkPricing: "",
-    whyChooseTitle: "لماذا تختار ليلا الخليج كمورد موثوق؟",
-    whyChooseLeela: "",
-  });
-
-  // Dynamic Industry Application Tags
-  const [appTags, setAppTags] = useState(["Personal Care", "Home Care", "Shampoo", "Cosmetics", "Liquid Soap"]);
-  const [arAppTags, setArAppTags] = useState([]);
-  const [newTagInput, setNewTagInput] = useState("");
-
-  // Dynamic Product Features (01 - 05)
-  const [features, setFeatures] = useState([
-    {
-      id: 1,
-      title: "Effective Surfactant",
-      description: "Excellent foaming and cleansing capabilities, positioned with a highly competitive procurement price point.",
-      icon: "sparkles"
-    },
-    {
-      id: 2,
-      title: "Gentle on Skin",
-      description: "Formulated specifically for sensitive applications, including premium baby care and specialized dermatological products.",
-      icon: "feather"
-    },
-    {
-      id: 3,
-      title: "Natural Origin",
-      description: "Derived entirely from coconut oil fatty acids, ensuring sustainable and eco-friendly raw material sourcing.",
-      icon: "leaf"
-    },
-    {
-      id: 4,
-      title: "Highly Soluble",
-      description: "Engineered for seamless integration, making it remarkably easy to formulate across complex liquid and gel matrices.",
-      icon: "droplet"
-    },
-    {
-      id: 5,
-      title: "Versatile Use",
-      description: "A core structural ingredient across personal care, cosmetics and commercial-grade cleaning solutions.",
-      icon: "flask"
-    }
-  ]);
-  const [arFeatures, setArFeatures] = useState([]);
-
-  // Dynamic Industry Applications Breakdown
-  const [applicationCards, setApplicationCards] = useState([
-    {
-      id: 1,
-      industry: "Personal Care",
-      badge: "COSMETICS",
-      imageUrl: "",
-      bullets: [
-        "Primary additive in high-end Shampoo and restorative Hair Care treatments.",
-        "Essential structural component in specialized Skin and Oral Care formulations.",
-        "Commonly utilized in body washes, facial cleansers, and toothpastes due to its mild cleansing action.",
-        "Acts as a primary mild surfactant and foam booster in delicate baby products."
-      ]
-    },
-    {
-      id: 2,
-      industry: "Household Products",
-      badge: "INDUSTRIAL",
-      imageUrl: "",
-      bullets: [
-        "Core ingredient in premium Household and Cleaning Products.",
-        "Works effectively in gentle cleaners when combined with anionic surfactants, offering scalable production economics.",
-        "Widely utilized as the base for liquid soaps and high-efficiency detergents."
-      ]
-    }
-  ]);
-  const [arApplicationCards, setArApplicationCards] = useState([]);
-
-  // Dynamic FAQs
-  const [faqs, setFaqs] = useState([
-    {
-      id: 1,
-      question: "What is the active matter percentage?",
-      answer: "Our standard industrial-grade Cocamidopropyl Betaine (CAPB) typically contains between 30% and 35% active matter, ensuring optimal performance and cost-effectiveness for bulk personal care formulations."
-    },
-    {
-      id: 2,
-      question: "Can CAPB be blended with anionic surfactants?",
-      answer: "Yes, CAPB is widely blended with SLES and other anionic surfactants to increase viscosity and reduce overall formula irritation."
-    },
-    {
-      id: 3,
-      question: "What is the recommended shelf life?",
-      answer: "24 months from the date of manufacture when stored in original sealed HDPE containers in a cool, dry area away from direct sunlight."
-    }
-  ]);
-  const [arFaqs, setArFaqs] = useState([]);
-
-  // Dynamic Related Products
-  const [relatedHeading, setRelatedHeading] = useState("Related Surfactants");
-  const [arRelatedHeading, setArRelatedHeading] = useState("منتجات ذات صلة");
-  const [relatedProducts, setRelatedProducts] = useState([
-    {
-      id: 1,
-      categoryTag: "ANIONIC SURFACTANT",
-      title: "Sodium Laureth Sulfate (SLES 70%)",
-      description: "A highly effective foaming agent commonly paired with CAPB in shampoo and body wash formulations.",
-      slug: "sodium-laureth-sulfate-sles-70"
-    },
-    {
-      id: 2,
-      categoryTag: "NON-IONIC SURFACTANT",
-      title: "Cocamide DEA (CDEA)",
-      description: "Used alongside betaines as an excellent foam stabilizer and viscosity builder in liquid cosmetics.",
-      slug: "cocamide-dea-cdea"
-    },
-    {
-      id: 3,
-      categoryTag: "HUMECTANT",
-      title: "Refined Glycerin (99.5%)",
-      description: "A complementary moisturizing agent widely utilized in home care and dermatological preparations.",
-      slug: "refined-glycerin-99"
-    }
-  ]);
-  const [arRelatedProducts, setArRelatedProducts] = useState([]);
-
-  // ── 2. AUTO-TRANSLATE HANDLER (English -> Arabic AI/Google Translation) ──
+  // Auto-translate Handler (English -> Arabic)
   const handleAutoTranslate = async () => {
     if (!formData.title.trim()) {
       alert("Please fill at least the Product Title in English before translating.");
@@ -495,19 +493,17 @@ export default function AddNewProductPage() {
         if (ar.relatedHeading) setArRelatedHeading(ar.relatedHeading);
         if (Array.isArray(ar.relatedProducts)) setArRelatedProducts(ar.relatedProducts);
 
-        setHasTranslated(true);
-        setSuccessMsg("✨ All product sections automatically translated to Arabic! You can switch to the Arabic tab to preview or edit.");
-        setTimeout(() => setSuccessMsg(""), 5000);
+        setSuccessMsg("✨ Arabic translation generated successfully!");
+        setTimeout(() => setSuccessMsg(""), 4000);
       }
     } catch (err) {
-      console.error("Auto Translate Error:", err);
-      setErrorMsg("Failed to auto-translate. Please try again or fill fields manually.");
+      console.error("Auto-translate error:", err);
+      setErrorMsg("Translation service unavailable. You can enter Arabic text manually.");
     } finally {
       setIsTranslating(false);
     }
   };
 
-  // ── 3. STATE GETTERS/SETTERS BASED ON ACTIVE LANGUAGE TAB ──
   const curForm = activeLang === "en" ? formData : arFormData;
   const setCurForm = (newVal) => {
     if (activeLang === "en") setFormData(newVal);
@@ -525,24 +521,17 @@ export default function AddNewProductPage() {
   const handleAddTag = () => {
     if (newTagInput.trim()) {
       if (activeLang === "en") {
-        if (!appTags.includes(newTagInput.trim())) {
-          setAppTags([...appTags, newTagInput.trim()]);
-        }
+        if (!appTags.includes(newTagInput.trim())) setAppTags([...appTags, newTagInput.trim()]);
       } else {
-        if (!arAppTags.includes(newTagInput.trim())) {
-          setArAppTags([...arAppTags, newTagInput.trim()]);
-        }
+        if (!arAppTags.includes(newTagInput.trim())) setArAppTags([...arAppTags, newTagInput.trim()]);
       }
       setNewTagInput("");
     }
   };
 
   const handleRemoveTag = (tagToRemove) => {
-    if (activeLang === "en") {
-      setAppTags(appTags.filter((t) => t !== tagToRemove));
-    } else {
-      setArAppTags(arAppTags.filter((t) => t !== tagToRemove));
-    }
+    if (activeLang === "en") setAppTags(appTags.filter((t) => t !== tagToRemove));
+    else setArAppTags(arAppTags.filter((t) => t !== tagToRemove));
   };
 
   // Feature Handlers
@@ -559,23 +548,14 @@ export default function AddNewProductPage() {
   };
 
   const handleAddFeature = () => {
-    const newFeat = {
-      id: Date.now(),
-      title: "",
-      description: "",
-      icon: "sparkles"
-    };
+    const newFeat = { id: Date.now(), title: "", description: "", icon: "sparkles" };
     setFeatures([...features, newFeat]);
-    if (arFeatures.length) {
-      setArFeatures([...arFeatures, { ...newFeat }]);
-    }
+    if (arFeatures.length) setArFeatures([...arFeatures, { ...newFeat }]);
   };
 
   const handleRemoveFeature = (index) => {
     setFeatures(features.filter((_, i) => i !== index));
-    if (arFeatures.length) {
-      setArFeatures(arFeatures.filter((_, i) => i !== index));
-    }
+    if (arFeatures.length) setArFeatures(arFeatures.filter((_, i) => i !== index));
   };
 
   // FAQ Handlers
@@ -594,16 +574,12 @@ export default function AddNewProductPage() {
   const handleAddFaq = () => {
     const newFaq = { id: Date.now(), question: "", answer: "" };
     setFaqs([...faqs, newFaq]);
-    if (arFaqs.length) {
-      setArFaqs([...arFaqs, { ...newFaq }]);
-    }
+    if (arFaqs.length) setArFaqs([...arFaqs, { ...newFaq }]);
   };
 
   const handleRemoveFaq = (index) => {
     setFaqs(faqs.filter((_, i) => i !== index));
-    if (arFaqs.length) {
-      setArFaqs(arFaqs.filter((_, i) => i !== index));
-    }
+    if (arFaqs.length) setArFaqs(arFaqs.filter((_, i) => i !== index));
   };
 
   // Application Card Handlers
@@ -646,17 +622,28 @@ export default function AddNewProductPage() {
   const handleRemoveBullet = (cardIndex, bulletIndex) => {
     if (activeLang === "en") {
       const updated = [...applicationCards];
-      updated[cardIndex].bullets = updated[cardIndex].bullets.filter((_, i) => i !== bulletIndex);
+      updated[cardIndex].bullets.splice(bulletIndex, 1);
       setApplicationCards(updated);
     } else {
       const updated = [...(arApplicationCards.length ? arApplicationCards : applicationCards)];
-      updated[cardIndex].bullets = updated[cardIndex].bullets.filter((_, i) => i !== bulletIndex);
+      updated[cardIndex].bullets.splice(bulletIndex, 1);
       setArApplicationCards(updated);
     }
   };
 
-  // Related Products Handlers
-  const handleRelatedProductChange = (index, field, value) => {
+  const handleAddAppCard = () => {
+    const newCard = { id: Date.now(), industry: "", badge: "", imageUrl: "", bullets: [""] };
+    setApplicationCards([...applicationCards, newCard]);
+    if (arApplicationCards.length) setArApplicationCards([...arApplicationCards, { ...newCard }]);
+  };
+
+  const handleRemoveAppCard = (index) => {
+    setApplicationCards(applicationCards.filter((_, i) => i !== index));
+    if (arApplicationCards.length) setArApplicationCards(arApplicationCards.filter((_, i) => i !== index));
+  };
+
+  // Related Product Handlers
+  const handleRelatedChange = (index, field, value) => {
     if (activeLang === "en") {
       const updated = [...relatedProducts];
       updated[index][field] = value;
@@ -669,27 +656,17 @@ export default function AddNewProductPage() {
   };
 
   const handleAddRelatedProduct = () => {
-    const newRel = {
-      id: Date.now(),
-      categoryTag: "SURFACTANTS",
-      title: "",
-      description: "",
-      slug: ""
-    };
+    const newRel = { id: Date.now(), categoryTag: "", title: "", description: "", slug: "" };
     setRelatedProducts([...relatedProducts, newRel]);
-    if (arRelatedProducts.length) {
-      setArRelatedProducts([...arRelatedProducts, { ...newRel }]);
-    }
+    if (arRelatedProducts.length) setArRelatedProducts([...arRelatedProducts, { ...newRel }]);
   };
 
   const handleRemoveRelatedProduct = (index) => {
     setRelatedProducts(relatedProducts.filter((_, i) => i !== index));
-    if (arRelatedProducts.length) {
-      setArRelatedProducts(arRelatedProducts.filter((_, i) => i !== index));
-    }
+    if (arRelatedProducts.length) setArRelatedProducts(arRelatedProducts.filter((_, i) => i !== index));
   };
 
-  // ── 4. SUBMIT TO REAL DATABASE (Multilingual Payload) ──
+  // Submit Update to Real Database
   const handleSubmit = async (targetStatus) => {
     if (!formData.title.trim()) {
       alert("Please enter the Product Title / Name in English.");
@@ -727,7 +704,6 @@ export default function AddNewProductPage() {
         relatedProducts,
       };
 
-      // Ensure Arabic is populated
       let arPayload = arFormData.title ? {
         title: arFormData.title,
         gradeValue: arFormData.gradeValue || formData.gradeValue,
@@ -754,21 +730,6 @@ export default function AddNewProductPage() {
         relatedProducts: arRelatedProducts.length ? arRelatedProducts : relatedProducts,
       } : null;
 
-      // Auto-translate on the fly if admin didn't manually hit Translate button
-      if (!arPayload || !arPayload.title) {
-        try {
-          const transRes = await apiRequest("/translate", {
-            method: "POST",
-            body: { payload: enPayload, targetLang: "ar" },
-          });
-          if (transRes.success && transRes.data) {
-            arPayload = transRes.data;
-          }
-        } catch (tErr) {
-          console.error("Silent auto-translate fallback:", tErr);
-        }
-      }
-
       const fullPayload = {
         title: formData.title,
         code: formData.code,
@@ -776,160 +737,186 @@ export default function AddNewProductPage() {
         inciName: formData.inciName,
         hsCode: formData.hsCode,
         chemicalFormula: formData.chemicalFormula,
+        primaryIndustry: formData.primaryIndustry,
+        categoryTag: formData.categoryTag,
+        gradeValue: formData.gradeValue,
+        status: targetStatus || formData.status,
+        featured: formData.featured,
         images: productImages,
         tdsUrl: formData.tdsUrl,
         tdsFileName: formData.tdsFileName,
-        status: targetStatus || formData.status,
-        featured: formData.featured,
-        primaryIndustry: formData.primaryIndustry,
-        categoryTag: formData.categoryTag,
         en: enPayload,
-        ar: arPayload || enPayload,
+        ar: arPayload,
       };
 
-      const res = await apiRequest("/products", {
-        method: "POST",
+      const res = await apiRequest(`/products/${productId}`, {
+        method: "PUT",
         body: fullPayload,
       });
 
       if (res.success) {
-        setSuccessMsg(`Product "${formData.title}" saved successfully to database with English & Arabic translations!`);
+        setSuccessMsg("🎉 Product updated successfully!");
         setTimeout(() => {
           router.push("/admin/products");
-        }, 1500);
+        }, 1200);
+      } else {
+        throw new Error(res.message || "Failed to update product.");
       }
     } catch (err) {
-      console.error("Save Product Error:", err);
-      setErrorMsg(err.message || "Failed to save product to database.");
+      console.error("Update Product Error:", err);
+      setErrorMsg(err.message || "Something went wrong while updating product.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (isLoadingProduct) {
+    return (
+      <div className="flex flex-col items-center justify-center py-28 text-center">
+        <Loader2 className="w-8 h-8 text-gold-dark animate-spin mb-3" />
+        <p className="text-sm font-semibold text-gray-500">Loading product for editing...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 pb-20 max-w-5xl mx-auto">
-      {/* ─────────────────────────────────────────────────────────────────────────────
-          1. HEADER ROW: Back Button, Title, Language Tabs, 1-Click Translate & Publish
-          ───────────────────────────────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 border-b border-gray-100 pb-4 sticky top-0 bg-white/95 backdrop-blur-md z-30 py-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto space-y-6 pb-24 text-gray-800">
+      
+      {/* ── Top Header Navigation Bar ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/products"
+            className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
           <div>
-            <div className="flex items-center gap-2 text-[11px] font-medium text-gray-400 mb-1">
-              <Link href="/admin/products" className="hover:text-gold-dark flex items-center gap-1 transition-colors">
-                <ArrowLeft className="w-3 h-3" /> Back to Products
+            <div className="flex items-center gap-2 text-xs text-gray-400 font-medium mb-0.5">
+              <Link href="/admin/products" className="hover:text-gold-dark transition-colors">
+                Products
               </Link>
               <span>&gt;</span>
-              <span className="text-gray-900 font-semibold">Add New Product</span>
+              <span className="text-gray-700 font-semibold">Edit Product</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-gray-900 tracking-tight flex items-center gap-2.5">
-              <span>Add New Product Listing</span>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                formData.status === "Published" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"
-              }`}>
-                {formData.status === "Published" ? "● Ready to Publish" : "● Draft Mode"}
-              </span>
+            <h1 className="text-lg sm:text-xl font-heading font-extrabold text-gray-900 tracking-tight">
+              Edit Product: <span className="text-gold-dark">{formData.title || "Product"}</span>
             </h1>
-          </div>
-
-          {/* Action Buttons: 1-Click Auto Translate, Save Draft & Publish */}
-          <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
-            {/* 1-Click Auto Translate Button */}
-            <button
-              type="button"
-              disabled={isTranslating}
-              onClick={handleAutoTranslate}
-              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold rounded-xl text-xs shadow-xs transition-all flex items-center gap-2 shrink-0 disabled:opacity-50"
-              title="Automatically translates all English fields to Arabic"
-            >
-              {isTranslating ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Translating...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
-                  <span>✨ Auto-Translate to Arabic</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              disabled={isSubmitting}
-              onClick={() => handleSubmit("Draft")}
-              className="px-4 py-2 bg-white border border-gray-200 hover:border-gray-300 rounded-xl text-xs font-bold text-gray-700 shadow-2xs hover:bg-gray-50 transition-all flex items-center gap-1.5 shrink-0"
-            >
-              <Save className="w-3.5 h-3.5 text-gray-500" />
-              <span>Save Draft</span>
-            </button>
-
-            <button
-              type="button"
-              disabled={isSubmitting}
-              onClick={() => handleSubmit("Published")}
-              className="px-5 py-2 bg-[#d6b92a] text-black font-extrabold hover:bg-gold-dark hover:text-white rounded-xl text-xs shadow-xs transition-all flex items-center gap-1.5 shrink-0"
-            >
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-              <span>Publish Product</span>
-            </button>
           </div>
         </div>
 
-        {/* ── Language Switcher Tabs ── */}
-        <div className="flex items-center justify-between bg-gray-50/80 p-1.5 rounded-xl border border-gray-200/80">
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => setActiveLang("en")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
-                activeLang === "en"
-                  ? "bg-white text-gray-900 shadow-2xs border border-gray-200"
-                  : "text-gray-500 hover:text-gray-900"
-              }`}
+        {/* Quick Actions (Preview Live + Save Status) */}
+        <div className="flex items-center gap-2.5">
+          {productSlug && (
+            <a
+              href={`/products/${productSlug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-heading font-bold text-xs inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
             >
-              <span>🇬🇧 English (Original Form)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveLang("ar")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
-                activeLang === "ar"
-                  ? "bg-[#fdfaf0] text-gold-dark shadow-2xs border border-gold-main/40"
-                  : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              <span>🇦🇪 Arabic (العربية)</span>
-              {hasTranslated && (
-                <span className="w-2 h-2 rounded-full bg-emerald-500" title="Auto-translated" />
-              )}
-            </button>
-          </div>
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Preview Live</span>
+            </a>
+          )}
+          
+          <button
+            type="button"
+            onClick={() => handleSubmit("Draft")}
+            disabled={isSubmitting}
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-heading font-bold text-xs transition-all disabled:opacity-50 cursor-pointer"
+          >
+            Save as Draft
+          </button>
 
-          <span className="text-[11px] text-gray-400 font-medium hidden sm:inline">
-            {activeLang === "en"
-              ? "Fill form in English. Click Auto-Translate to generate Arabic."
-              : "Viewing auto-translated Arabic fields. You can fine-tune if needed."}
-          </span>
+          <button
+            type="button"
+            onClick={() => handleSubmit("Published")}
+            disabled={isSubmitting}
+            className="btn-gold-primary px-5 py-2 rounded-xl font-heading font-bold text-xs inline-flex items-center gap-1.5 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-black" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-3.5 h-3.5 text-black" />
+                <span>Update & Publish</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
+      {/* Notifications */}
       {successMsg && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-bold flex items-center gap-2 animate-in fade-in">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-800 text-xs font-bold animate-[fadeIn_0.2s_ease-out]">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl text-xs font-bold flex items-center gap-2 animate-in fade-in">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center gap-3 text-rose-800 text-xs font-bold animate-[fadeIn_0.2s_ease-out]">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
+      {/* ── Language Switcher Bar ── */}
+      <div className="bg-[#11131a] text-white p-3.5 sm:p-4 rounded-2xl shadow-md border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Languages className="w-4 h-4 text-gold-main" />
+          <span className="text-xs font-bold">Content Language Mode:</span>
+          <div className="inline-flex p-1 bg-[#1c202d] rounded-xl border border-gray-700">
+            <button
+              type="button"
+              onClick={() => setActiveLang("en")}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                activeLang === "en"
+                  ? "bg-gold-main text-black shadow-xs"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              English Form
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveLang("ar")}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                activeLang === "ar"
+                  ? "bg-gold-main text-black shadow-xs"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              العربية (Arabic Form)
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleAutoTranslate}
+          disabled={isTranslating}
+          className="px-4 py-1.5 bg-gradient-to-r from-gold-main/20 to-gold-light/20 hover:from-gold-main/30 hover:to-gold-light/30 border border-gold-main/50 text-gold-light rounded-xl text-xs font-bold inline-flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+        >
+          {isTranslating ? (
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-gold-light" />
+              <span>Translating Entire Form...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-3.5 h-3.5 text-gold-main" />
+              <span>Re-Translate English to Arabic</span>
+            </>
+          )}
+        </button>
+      </div>
+
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 1: HERO & GENERAL PRODUCT INFORMATION
+          SECTION 1: HERO & IDENTIFICATION INFORMATION
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
         <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100">
@@ -1180,7 +1167,7 @@ export default function AddNewProductPage() {
         {/* TDS / Technical Doc Upload */}
         <div className="space-y-2.5 pt-2 border-t border-gray-100">
           <label className="text-xs font-bold text-gray-700 block">
-            Technical Data Sheet (TDS) Document <span className="text-gray-400 font-normal">(Optional - Upload PDF or paste URL)</span>
+            Technical Data Sheet (TDS) Document <span className="text-gray-400 font-normal">(Upload PDF or paste URL)</span>
           </label>
 
           {formData.tdsFileName && (
@@ -1231,7 +1218,7 @@ export default function AddNewProductPage() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 2: 4 KEY SPECIFICATION BOXES
+          SECTION 2: TECHNICAL SPECIFICATIONS (UNIVERSAL CHEMICAL DATA)
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
         <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100">
@@ -1240,94 +1227,82 @@ export default function AddNewProductPage() {
           </div>
           <div>
             <h2 className="text-sm font-heading font-extrabold text-gray-900">
-              2. Chemical Codes & Technical Quick Specs (4 Boxes)
+              2. Chemical Specifications (4 Technical Specs)
             </h2>
             <p className="text-[11px] text-gray-400 font-medium">
-              These 4 values render as prominent technical summary cards on the product detail hero.
+              Displayed in the 2x2 technical specification cards on the hero section.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* CAS NUMBER */}
-          <div className="space-y-1.5 bg-gray-50/70 p-3.5 rounded-xl border border-gray-200/80">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-              Box 1: CAS NUMBER
-            </span>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-700 block">CAS Number</label>
             <input
               type="text"
               value={formData.casNumber}
               onChange={(e) => setFormData({ ...formData, casNumber: e.target.value })}
               placeholder="e.g. 61789-40-0"
-              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs font-mono font-bold text-gray-900 focus:outline-none focus:border-gold-main"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-bold text-gray-800 focus:bg-white focus:outline-none focus:border-gold-main"
             />
           </div>
 
-          {/* INCI NAME */}
-          <div className="space-y-1.5 bg-gray-50/70 p-3.5 rounded-xl border border-gray-200/80">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-              Box 2: INCI NAME
-            </span>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-700 block">INCI Name</label>
             <input
               type="text"
               value={formData.inciName}
               onChange={(e) => setFormData({ ...formData, inciName: e.target.value })}
               placeholder="e.g. Coco Amido Propyl Betaine"
-              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-900 focus:outline-none focus:border-gold-main"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:bg-white focus:outline-none focus:border-gold-main"
             />
           </div>
 
-          {/* HS CODE */}
-          <div className="space-y-1.5 bg-gray-50/70 p-3.5 rounded-xl border border-gray-200/80">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-              Box 3: HS CODE
-            </span>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-700 block">HS Code</label>
             <input
               type="text"
               value={formData.hsCode}
               onChange={(e) => setFormData({ ...formData, hsCode: e.target.value })}
               placeholder="e.g. 3402.19.00"
-              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs font-mono font-bold text-gray-900 focus:outline-none focus:border-gold-main"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-bold text-gray-800 focus:bg-white focus:outline-none focus:border-gold-main"
             />
           </div>
 
-          {/* CHEMICAL FORMULA */}
-          <div className="space-y-1.5 bg-gray-50/70 p-3.5 rounded-xl border border-gray-200/80">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-              Box 4: CHEMICAL FORMULA
-            </span>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-700 block">Chemical Formula</label>
             <input
               type="text"
               value={formData.chemicalFormula}
               onChange={(e) => setFormData({ ...formData, chemicalFormula: e.target.value })}
               placeholder="e.g. C19H38N2O3"
-              className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs font-mono font-bold text-gray-900 focus:outline-none focus:border-gold-main"
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-bold text-gray-800 focus:bg-white focus:outline-none focus:border-gold-main"
             />
           </div>
         </div>
 
-        {/* Industry Application Tags */}
-        <div className="space-y-2 pt-2 border-t border-gray-100">
+        {/* Industry Application Tags (Pills) */}
+        <div className="space-y-2 pt-3 border-t border-gray-100">
           <label className="text-xs font-bold text-gray-700 block">
-            Industry Applications Tags <span className="text-gray-400 font-normal">({activeLang.toUpperCase()} - Shows as pill badges on Hero)</span>
+            Industry Application Pills ({activeLang.toUpperCase()})
           </label>
-          <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-200">
-            {curAppTags.map((tag) => (
+          <div className="flex flex-wrap items-center gap-2">
+            {curAppTags.map((tag, idx) => (
               <span
-                key={tag}
-                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-800 shadow-2xs"
+                key={idx}
+                className="px-3 py-1 bg-gray-100 border border-gray-200 rounded-full text-xs font-bold text-gray-800 inline-flex items-center gap-1.5"
               >
                 <span>{tag}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag)}
-                  className="text-gray-400 hover:text-rose-600 transition-colors"
+                  className="hover:text-rose-600 transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             ))}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <input
                 type="text"
                 value={newTagInput}
@@ -1338,15 +1313,15 @@ export default function AddNewProductPage() {
                     handleAddTag();
                   }
                 }}
-                placeholder="+ Add tag (press Enter)..."
-                className="px-3 py-1 bg-transparent border-none text-xs text-gray-800 focus:outline-none"
+                placeholder="Type tag & hit Add..."
+                className="p-1.5 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:border-gold-main"
               />
               <button
                 type="button"
                 onClick={handleAddTag}
-                className="px-2.5 py-1 bg-black text-gold-main rounded-lg text-[11px] font-bold hover:bg-gray-900"
+                className="px-3 py-1.5 bg-gray-900 text-gold-main text-xs font-bold rounded-xl hover:bg-black"
               >
-                Add
+                Add Tag
               </button>
             </div>
           </div>
@@ -1354,164 +1329,157 @@ export default function AddNewProductPage() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 3: ABOUT SECTION & OPERATIONAL SUPPLY DETAILS (4 Operational Cards)
+          SECTION 3: ABOUT PRODUCT & 4 KEY OPERATIONAL CARDS
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
         <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100">
           <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark font-bold">
-            <FileText className="w-4 h-4" />
+            <Building2 className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-sm font-heading font-extrabold text-gray-900">
-              3. About Product & Supply Chain Details (4 Operational Cards)
+            <h2 className="text-sm font-heading font-extrabold text-gray-900 flex items-center gap-2">
+              <span>3. About Product & Operational Breakdown</span>
+              <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded uppercase font-bold">
+                {activeLang.toUpperCase()}
+              </span>
             </h2>
             <p className="text-[11px] text-gray-400 font-medium">
-              Detailed chemical formulation background, FDA/TSCA compliance, logistics and pricing breakdown.
+              Detailed chemical background, manufacturing, packaging, safety, and why choose Leela Gulf.
             </p>
           </div>
         </div>
 
-        <div className="space-y-4">
-          {/* About Section Title */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">
-              About Section Title <span className="text-rose-500">*</span>
-            </label>
+        {/* Section Heading & Overview Paragraph */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="sm:col-span-2 space-y-1.5">
+            <label className="text-xs font-bold text-gray-700 block">About Section Title</label>
             <input
               type="text"
               value={curForm.aboutTitle}
               onChange={(e) => setCurForm({ ...curForm, aboutTitle: e.target.value })}
-              placeholder={activeLang === "en" ? "e.g. About Cocamidopropyl Betaine (CAPB)" : "مثال: عن كوكاميدوبروبيل بيتين (CAPB)"}
-              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-heading font-extrabold text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main transition-all"
+              placeholder={activeLang === "en" ? "e.g. About Cocamidopropyl Betaine (CAPB)" : "عن كوكاميدوبروبيل بيتين"}
+              className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main"
             />
           </div>
 
-          {/* Detailed Overview Paragraphs */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">
-              About Full Description <span className="text-gray-400 font-normal">(Formulation, TSCA, FDA 21 CFR compliance)</span>
-            </label>
+          <div className="sm:col-span-2 space-y-1.5">
+            <label className="text-xs font-bold text-gray-700 block">Detailed Overview Paragraph</label>
             <textarea
-              rows={4}
+              rows={3}
               value={curForm.aboutOverview}
               onChange={(e) => setCurForm({ ...curForm, aboutOverview: e.target.value })}
-              placeholder={activeLang === "en" ? "Cocamidopropyl Betaine is an amphoteric surfactant produced from coconut oil fatty acids..." : "كوكاميدوبروبيل بيتين هو خافض للتوتر السطحي أمفوتيري..."}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 leading-relaxed focus:bg-white focus:outline-none focus:border-gold-main transition-all"
+              placeholder="Comprehensive chemical overview..."
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 leading-relaxed focus:bg-white focus:outline-none focus:border-gold-main"
             />
           </div>
+        </div>
 
-          {/* 4 Operational Cards (2x2 Grid) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            {/* Card 1: Manufacturing Process */}
-            <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2.5">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-gold-main shrink-0" />
-                <input
-                  type="text"
-                  value={curForm.card1Title}
-                  onChange={(e) => setCurForm({ ...curForm, card1Title: e.target.value })}
-                  placeholder="Manufacturing Process"
-                  className="flex-1 text-xs font-extrabold text-gray-900 bg-transparent border-none focus:outline-none focus:underline decoration-gold-main"
-                />
-              </div>
-              <textarea
-                rows={3}
-                value={curForm.manufacturingProcess}
-                onChange={(e) => setCurForm({ ...curForm, manufacturingProcess: e.target.value })}
-                placeholder="Produced through a two-step reaction..."
-                className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
-              />
-            </div>
-
-            {/* Card 2: Packaging & Logistics */}
-            <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2.5">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-gold-main shrink-0" />
-                <input
-                  type="text"
-                  value={curForm.card2Title}
-                  onChange={(e) => setCurForm({ ...curForm, card2Title: e.target.value })}
-                  placeholder="Packaging & Logistics"
-                  className="flex-1 text-xs font-extrabold text-gray-900 bg-transparent border-none focus:outline-none focus:underline decoration-gold-main"
-                />
-              </div>
-              <textarea
-                rows={3}
-                value={curForm.packagingLogistics}
-                onChange={(e) => setCurForm({ ...curForm, packagingLogistics: e.target.value })}
-                placeholder="CAPB ships in HDPE drums for standard orders..."
-                className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
-              />
-            </div>
-
-            {/* Card 3: Safety & Handling */}
-            <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2.5">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-gold-main shrink-0" />
-                <input
-                  type="text"
-                  value={curForm.card3Title}
-                  onChange={(e) => setCurForm({ ...curForm, card3Title: e.target.value })}
-                  placeholder="Safety & Handling"
-                  className="flex-1 text-xs font-extrabold text-gray-900 bg-transparent border-none focus:outline-none focus:underline decoration-gold-main"
-                />
-              </div>
-              <textarea
-                rows={3}
-                value={curForm.safetyHandling}
-                onChange={(e) => setCurForm({ ...curForm, safetyHandling: e.target.value })}
-                placeholder="Generally well-tolerated in finished cosmetic formulations..."
-                className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
-              />
-            </div>
-
-            {/* Card 4: Bulk Pricing & Procurement */}
-            <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2.5">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-gold-main shrink-0" />
-                <input
-                  type="text"
-                  value={curForm.card4Title}
-                  onChange={(e) => setCurForm({ ...curForm, card4Title: e.target.value })}
-                  placeholder="Bulk Pricing & Procurement"
-                  className="flex-1 text-xs font-extrabold text-gray-900 bg-transparent border-none focus:outline-none focus:underline decoration-gold-main"
-                />
-              </div>
-              <textarea
-                rows={3}
-                value={curForm.bulkPricing}
-                onChange={(e) => setCurForm({ ...curForm, bulkPricing: e.target.value })}
-                placeholder="CAPB pricing reflects a stack of factors..."
-                className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
-              />
-            </div>
-          </div>
-
-          {/* Bottom Card: Why Choose Leela Gulf */}
-          <div className="p-4 bg-[#fdfaf0] border border-gold-main/40 rounded-xl space-y-2.5">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" />
+        {/* 4 Technical Cards (2x2 Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          {/* Card 1: Manufacturing Process */}
+          <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gold-main" />
               <input
                 type="text"
-                value={curForm.whyChooseTitle}
-                onChange={(e) => setCurForm({ ...curForm, whyChooseTitle: e.target.value })}
-                placeholder="Why Choose Leela Gulf as a Trusted Supplier?"
-                className="flex-1 text-xs font-extrabold text-gold-dark bg-transparent border-none focus:outline-none focus:underline decoration-gold-main"
+                value={curForm.card1Title}
+                onChange={(e) => setCurForm({ ...curForm, card1Title: e.target.value })}
+                className="font-bold text-xs text-gray-900 bg-transparent border-b border-gray-300 focus:border-gold-main focus:outline-none flex-1 pb-0.5"
               />
             </div>
             <textarea
               rows={3}
-              value={curForm.whyChooseLeela}
-              onChange={(e) => setCurForm({ ...curForm, whyChooseLeela: e.target.value })}
-              placeholder="Leela Gulf makes procurement straightforward for personal care formulators..."
+              value={curForm.manufacturingProcess}
+              onChange={(e) => setCurForm({ ...curForm, manufacturingProcess: e.target.value })}
+              placeholder="Synthesized by reacting dimethylaminopropylamine (DMAPA)..."
+              className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
+            />
+          </div>
+
+          {/* Card 2: Packaging & Logistics */}
+          <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gold-main" />
+              <input
+                type="text"
+                value={curForm.card2Title}
+                onChange={(e) => setCurForm({ ...curForm, card2Title: e.target.value })}
+                className="font-bold text-xs text-gray-900 bg-transparent border-b border-gray-300 focus:border-gold-main focus:outline-none flex-1 pb-0.5"
+              />
+            </div>
+            <textarea
+              rows={3}
+              value={curForm.packagingLogistics}
+              onChange={(e) => setCurForm({ ...curForm, packagingLogistics: e.target.value })}
+              placeholder="Standard packaging: 200 kg HDPE drums, 1,000 kg IBC totes..."
+              className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
+            />
+          </div>
+
+          {/* Card 3: Safety & Handling */}
+          <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gold-main" />
+              <input
+                type="text"
+                value={curForm.card3Title}
+                onChange={(e) => setCurForm({ ...curForm, card3Title: e.target.value })}
+                className="font-bold text-xs text-gray-900 bg-transparent border-b border-gray-300 focus:border-gold-main focus:outline-none flex-1 pb-0.5"
+              />
+            </div>
+            <textarea
+              rows={3}
+              value={curForm.safetyHandling}
+              onChange={(e) => setCurForm({ ...curForm, safetyHandling: e.target.value })}
+              placeholder="Store between 15°C and 30°C in original sealed packaging..."
+              className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
+            />
+          </div>
+
+          {/* Card 4: Bulk Pricing & Procurement */}
+          <div className="p-4 bg-gray-50/70 border border-gray-200 rounded-xl space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gold-main" />
+              <input
+                type="text"
+                value={curForm.card4Title}
+                onChange={(e) => setCurForm({ ...curForm, card4Title: e.target.value })}
+                className="font-bold text-xs text-gray-900 bg-transparent border-b border-gray-300 focus:border-gold-main focus:outline-none flex-1 pb-0.5"
+              />
+            </div>
+            <textarea
+              rows={3}
+              value={curForm.bulkPricing}
+              onChange={(e) => setCurForm({ ...curForm, bulkPricing: e.target.value })}
+              placeholder="Procurement teams evaluate price per kg of active matter..."
               className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
             />
           </div>
         </div>
+
+        {/* Why Choose Leela Gulf Highlight Box */}
+        <div className="p-4 bg-[#fdfaf0] border border-gold-main/40 rounded-2xl space-y-2 mt-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-gold-main" />
+            <input
+              type="text"
+              value={curForm.whyChooseTitle}
+              onChange={(e) => setCurForm({ ...curForm, whyChooseTitle: e.target.value })}
+              className="font-heading font-extrabold text-xs text-gray-900 bg-transparent border-b border-gold-main/30 focus:border-gold-main focus:outline-none flex-1 pb-0.5"
+            />
+          </div>
+          <textarea
+            rows={3}
+            value={curForm.whyChooseLeela}
+            onChange={(e) => setCurForm({ ...curForm, whyChooseLeela: e.target.value })}
+            placeholder="Leela Gulf makes procurement straightforward for formulators..."
+            className="w-full p-3 bg-white border border-gold-main/30 rounded-xl text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
+          />
+        </div>
       </div>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 4: PRODUCT FEATURES SHOWCASE (01 - 05 Cards)
+          SECTION 4: 01-05 PRODUCT FEATURES SHOWCASE
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
         <div className="flex items-center justify-between pb-3 border-b border-gray-100">
@@ -1520,11 +1488,14 @@ export default function AddNewProductPage() {
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-heading font-extrabold text-gray-900">
-                4. Product Features Showcase (01 - 05 Cards)
+              <h2 className="text-sm font-heading font-extrabold text-gray-900 flex items-center gap-2">
+                <span>4. Product Features (01–05 Cards)</span>
+                <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded uppercase font-bold">
+                  {activeLang.toUpperCase()}
+                </span>
               </h2>
               <p className="text-[11px] text-gray-400 font-medium">
-                Numbered feature highlights with custom icons displayed in Section 3 of frontend.
+                Matches 3 top + 2 bottom cards on the product features section.
               </p>
             </div>
           </div>
@@ -1532,7 +1503,7 @@ export default function AddNewProductPage() {
           <button
             type="button"
             onClick={handleAddFeature}
-            className="flex items-center gap-1 px-3 py-1.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 shadow-2xs transition-all"
+            className="px-3 py-1.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 inline-flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Feature</span>
@@ -1561,7 +1532,7 @@ export default function AddNewProductPage() {
 
             return (
               <div
-                key={feat.id}
+                key={feat.id || idx}
                 className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-2xs hover:border-gold-main/40 transition-all group"
               >
                 <div className="flex items-center justify-between p-3.5 bg-gray-50/60 border-b border-gray-100">
@@ -1607,7 +1578,7 @@ export default function AddNewProductPage() {
                     value={feat.description}
                     onChange={(e) => handleFeatureChange(idx, "description", e.target.value)}
                     placeholder="Feature description text..."
-                    className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700 leading-relaxed focus:outline-none focus:border-gold-main focus:bg-white transition-all"
+                    className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main focus:bg-white transition-all"
                   />
                 </div>
               </div>
@@ -1617,40 +1588,31 @@ export default function AddNewProductPage() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 5: INDUSTRY APPLICATIONS (Alternating Left-Right Cards)
+          SECTION 5: INDUSTRY APPLICATIONS (IMAGE + BULLETS)
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
         <div className="flex items-center justify-between pb-3 border-b border-gray-100">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark font-bold">
-              <Building2 className="w-4 h-4" />
+              <Package className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-heading font-extrabold text-gray-900">
-                5. Industry Applications (Alternating Left-Right Cards)
+              <h2 className="text-sm font-heading font-extrabold text-gray-900 flex items-center gap-2">
+                <span>5. Industry Applications Breakdown</span>
+                <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded uppercase font-bold">
+                  {activeLang.toUpperCase()}
+                </span>
               </h2>
               <p className="text-[11px] text-gray-400 font-medium">
-                Each card shows on the frontend as an alternating image + text layout with bullet points.
+                Detailed cards with image on left and bullet points on right.
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={() => {
-              const newCard = {
-                id: Date.now(),
-                industry: "",
-                badge: "",
-                bullets: [""],
-                imageUrl: ""
-              };
-              setApplicationCards([...applicationCards, newCard]);
-              if (arApplicationCards.length) {
-                setArApplicationCards([...arApplicationCards, { ...newCard }]);
-              }
-            }}
-            className="flex items-center gap-1 px-3 py-1.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 shadow-2xs transition-all"
+            onClick={handleAddAppCard}
+            className="px-3 py-1.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 inline-flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Application</span>
@@ -1658,151 +1620,125 @@ export default function AddNewProductPage() {
         </div>
 
         <div className="space-y-4">
-          {curAppCards.map((card, cardIdx) => {
-            const isEven = cardIdx % 2 === 0;
+          {curAppCards.map((card, idx) => {
+            const isEven = idx % 2 === 0;
             return (
               <div
-                key={card.id}
+                key={card.id || idx}
                 className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-2xs hover:border-gold-main/40 transition-all"
               >
                 <div className="flex items-center justify-between p-3.5 bg-gray-50/60 border-b border-gray-100">
                   <div className="flex items-center gap-2.5">
                     <span className="text-xs font-mono font-extrabold text-gold-dark bg-[#fdfaf0] px-2 py-0.5 rounded border border-gold-main/30">
-                      {String(cardIdx + 1).padStart(2, "0")}
+                      {String(idx + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-0.5 bg-gray-100 rounded">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider px-2 py-0.5 bg-gray-100 rounded border border-gray-200/60">
                       {isEven ? "Image Left → Text Right" : "Text Left ← Image Right"}
                     </span>
                   </div>
 
-                  {applicationCards.length > 1 && (
+                  {curAppCards.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => {
-                        setApplicationCards(applicationCards.filter((_, i) => i !== cardIdx));
-                        if (arApplicationCards.length) {
-                          setArApplicationCards(arApplicationCards.filter((_, i) => i !== cardIdx));
-                        }
-                      }}
+                      onClick={() => handleRemoveAppCard(idx)}
                       className="p-1 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                      title="Remove application card"
+                      title="Remove application"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
-                <div className="p-4 space-y-3.5">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-4 sm:p-5 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                        Industry Name
-                      </label>
+                      <label className="text-[11px] font-bold text-gray-700 block">Industry Name</label>
                       <input
                         type="text"
                         value={card.industry}
-                        onChange={(e) => handleAppCardChange(cardIdx, "industry", e.target.value)}
-                        placeholder="e.g. Personal Care"
-                        className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-extrabold text-gray-900 focus:outline-none focus:border-gold-main focus:bg-white transition-all"
+                        onChange={(e) => handleAppCardChange(idx, "industry", e.target.value)}
+                        placeholder="Application Title (e.g. Personal Care)"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                        Badge Tag
-                      </label>
+                      <label className="text-[11px] font-bold text-gray-700 block">Badge Tag</label>
                       <input
                         type="text"
                         value={card.badge}
-                        onChange={(e) => handleAppCardChange(cardIdx, "badge", e.target.value.toUpperCase())}
-                        placeholder="e.g. COSMETICS"
-                        className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-gray-800 uppercase focus:outline-none focus:border-gold-main focus:bg-white transition-all"
+                        onChange={(e) => handleAppCardChange(idx, "badge", e.target.value.toUpperCase())}
+                        placeholder="Badge Tag (e.g. COSMETICS)"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 uppercase focus:bg-white focus:outline-none focus:border-gold-main"
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                        Card Image
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <label className="px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-200 rounded-lg text-[11px] font-bold text-gray-700 cursor-pointer transition-all flex items-center gap-1 shrink-0">
-                          {uploadingCardIdx === cardIdx ? (
-                            <Loader2 className="w-3 h-3 animate-spin text-gold-dark" />
-                          ) : (
-                            <Upload className="w-3 h-3 text-gray-500" />
-                          )}
-                          <span>{uploadingCardIdx === cardIdx ? "Uploading..." : "Upload"}</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            disabled={uploadingCardIdx === cardIdx}
-                            className="hidden"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) handleUploadCardImage(cardIdx, file);
-                            }}
-                          />
-                        </label>
+                  </div>
+
+                  {/* Image Input for this Card */}
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-gray-700 block">Card Image</label>
+                    <div className="flex items-center gap-3">
+                      {card.imageUrl ? (
+                        <div className="relative w-14 h-14 rounded-xl border border-gray-200 overflow-hidden shrink-0">
+                          <img src={card.imageUrl} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ) : null}
+                      <div className="flex-1">
                         <input
                           type="text"
                           value={card.imageUrl || ""}
-                          onChange={(e) => handleAppCardChange(cardIdx, "imageUrl", e.target.value)}
-                          placeholder="or paste image URL..."
-                          className="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-medium text-gray-800 focus:outline-none focus:border-gold-main focus:bg-white transition-all"
+                          onChange={(e) => handleAppCardChange(idx, "imageUrl", e.target.value)}
+                          placeholder="Or paste image URL (e.g. https://example.com/image.jpg)"
+                          className="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 focus:bg-white focus:outline-none focus:border-gold-main"
                         />
-                        {card.imageUrl && (
-                          <div className="relative w-9 h-9 rounded-lg border border-gray-200 overflow-hidden shrink-0 group/img">
-                            <img src={card.imageUrl} alt="" className="w-full h-full object-cover" />
-                            <button
-                              type="button"
-                              onClick={() => handleAppCardChange(cardIdx, "imageUrl", "")}
-                              className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity"
-                            >
-                              <X className="w-3 h-3 text-white" />
-                            </button>
-                          </div>
-                        )}
                       </div>
+                      <label className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-xs font-bold text-gray-700 cursor-pointer inline-flex items-center gap-1 shrink-0">
+                        {uploadingCardIdx === idx ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                        <span>Upload</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleUploadCardImage(idx, e.target.files?.[0])}
+                        />
+                      </label>
                     </div>
                   </div>
 
                   {/* Bullet Points */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 pt-2 border-t border-gray-200/60">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                        Bullet Points (shown with checkmarks on frontend)
+                      <label className="text-[11px] font-bold text-gray-700 block">
+                        Bullet Points (Shown with checkmarks on frontend)
                       </label>
                       <button
                         type="button"
-                        onClick={() => handleAddBullet(cardIdx)}
-                        className="text-[11px] font-bold text-gold-dark hover:text-gold-main flex items-center gap-0.5 transition-colors"
+                        onClick={() => handleAddBullet(idx)}
+                        className="text-xs font-bold text-gold-dark hover:underline inline-flex items-center gap-1 cursor-pointer"
                       >
-                        <Plus className="w-3 h-3" /> Add Bullet
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Bullet</span>
                       </button>
                     </div>
-                    <div className="space-y-2">
-                      {card.bullets.map((bullet, bIdx) => (
-                        <div key={bIdx} className="flex items-start gap-2">
-                          <span className="text-gold-main mt-2 shrink-0">
-                            <Check className="w-3.5 h-3.5" />
-                          </span>
-                          <input
-                            type="text"
-                            value={bullet}
-                            onChange={(e) => handleAppBulletChange(cardIdx, bIdx, e.target.value)}
-                            placeholder={`Bullet point ${bIdx + 1}...`}
-                            className="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 focus:outline-none focus:border-gold-main focus:bg-white transition-all"
-                          />
-                          {card.bullets.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveBullet(cardIdx, bIdx)}
-                              className="p-1 text-gray-400 hover:text-rose-600 transition-colors mt-1"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+
+                    {(card.bullets || []).map((bullet, bIdx) => (
+                      <div key={bIdx} className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+                        <input
+                          type="text"
+                          value={bullet}
+                          onChange={(e) => handleAppBulletChange(idx, bIdx, e.target.value)}
+                          placeholder="Bullet point description..."
+                          className="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 focus:bg-white focus:outline-none focus:border-gold-main"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBullet(idx, bIdx)}
+                          className="text-gray-400 hover:text-rose-600 transition-colors p-1"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -1812,264 +1748,89 @@ export default function AddNewProductPage() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 6: FAQS & RELATED PRODUCTS (2-COLUMN SPLIT MATCHING FRONTEND)
+          SECTION 6: FREQUENTLY ASKED QUESTIONS (FAQS)
           ───────────────────────────────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        {/* Left Column: Frequently Asked Questions */}
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
-          <div className="flex items-center justify-between gap-3 pb-3 border-b border-gray-100">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark font-bold shrink-0">
-                <HelpCircle className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <h2 className="text-sm font-heading font-extrabold text-gray-900 truncate flex items-center gap-1.5">
-                  <span className="w-1.5 h-3.5 bg-gold-main rounded-full inline-block shrink-0" />
-                  Frequently Asked Questions
-                </h2>
-                <p className="text-[11px] text-gray-400 font-medium truncate">
-                  Accordion on frontend product detail page
-                </p>
-              </div>
+      <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
+        <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark font-bold">
+              <HelpCircle className="w-4 h-4" />
             </div>
-
-            <button
-              type="button"
-              onClick={handleAddFaq}
-              className="px-3 py-1.5 bg-black text-gold-main font-extrabold text-xs rounded-xl hover:bg-gray-900 shadow-2xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add FAQ</span>
-            </button>
-          </div>
-
-          <div className="space-y-3.5">
-            {curFaqs.map((faq, idx) => (
-              <div
-                key={faq.id}
-                className="p-4 bg-gray-50/70 border border-gray-200/90 rounded-xl space-y-3 relative group hover:border-gold-main/40 hover:bg-[#fdfaf0]/20 transition-all"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono font-extrabold text-gold-dark bg-[#fdfaf0] px-2.5 py-0.5 rounded-md border border-gold-main/30">
-                    FAQ #{String(idx + 1).padStart(2, "0")}
-                  </span>
-                  {faqs.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFaq(idx)}
-                      className="p-1 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
-                      title="Remove FAQ"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                    Question Text <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={faq.question}
-                    onChange={(e) => handleFaqChange(idx, "question", e.target.value)}
-                    placeholder="e.g. What is the active matter percentage?"
-                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-900 focus:outline-none focus:border-gold-main transition-all"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                    Answer Content <span className="text-rose-500">*</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={faq.answer}
-                    onChange={(e) => handleFaqChange(idx, "answer", e.target.value)}
-                    placeholder="Type detailed answer for buyers..."
-                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-700 leading-relaxed focus:outline-none focus:border-gold-main transition-all"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Column: Related Products / Surfactants */}
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
-          <div className="flex items-center justify-between gap-3 pb-3 border-b border-gray-100">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark font-bold shrink-0">
-                <Layers className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-3.5 bg-gold-main rounded-full inline-block shrink-0" />
-                  <input
-                    type="text"
-                    value={curRelatedHeading}
-                    onChange={(e) => {
-                      if (activeLang === "en") setRelatedHeading(e.target.value);
-                      else setArRelatedHeading(e.target.value);
-                    }}
-                    placeholder="Related Surfactants"
-                    className="text-sm font-heading font-extrabold text-gray-900 bg-transparent border-b border-dashed border-gray-300 focus:border-gold-main focus:outline-none px-0 py-0.5 truncate"
-                    title="Click to edit section heading"
-                  />
-                </div>
-                <p className="text-[11px] text-gray-400 font-medium truncate">
-                  Right-column product cards stack on frontend
-                </p>
-              </div>
+            <div>
+              <h2 className="text-sm font-heading font-extrabold text-gray-900 flex items-center gap-2">
+                <span>6. Frequently Asked Questions (Accordion)</span>
+                <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded uppercase font-bold">
+                  {activeLang.toUpperCase()}
+                </span>
+              </h2>
             </div>
-
-            <button
-              type="button"
-              onClick={handleAddRelatedProduct}
-              className="px-3 py-1.5 bg-black text-gold-main font-extrabold text-xs rounded-xl hover:bg-gray-900 shadow-2xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add Product</span>
-            </button>
           </div>
 
-          <div className="space-y-3.5">
-            {curRelatedProducts.map((rel, idx) => (
-              <div
-                key={rel.id}
-                className="p-4 bg-gray-50/70 border border-gray-200/90 rounded-xl space-y-3 relative group hover:border-gold-main/40 hover:bg-[#fdfaf0]/20 transition-all"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono font-extrabold text-gold-dark bg-[#fdfaf0] px-2.5 py-0.5 rounded-md border border-gold-main/30">
-                    Product #{String(idx + 1).padStart(2, "0")}
-                  </span>
-                  {relatedProducts.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveRelatedProduct(idx)}
-                      className="p-1 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
-                      title="Remove Related Product"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                      Category Tag <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={rel.categoryTag}
-                      onChange={(e) => handleRelatedProductChange(idx, "categoryTag", e.target.value.toUpperCase())}
-                      placeholder="e.g. ANIONIC SURFACTANT"
-                      className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs font-extrabold text-gray-800 uppercase focus:outline-none focus:border-gold-main transition-all"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                      Redirect Slug / URL <span className="text-gray-400 font-normal">(e.g. sles-70)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={rel.slug || ""}
-                      onChange={(e) => handleRelatedProductChange(idx, "slug", e.target.value)}
-                      placeholder="e.g. sles-70 or /products/sles-70"
-                      className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs font-mono text-gray-800 focus:outline-none focus:border-gold-main transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                    Product Name / Title <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={rel.title}
-                    onChange={(e) => handleRelatedProductChange(idx, "title", e.target.value)}
-                    placeholder="e.g. Sodium Laureth Sulfate (SLES 70%)"
-                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-900 focus:outline-none focus:border-gold-main transition-all"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
-                    Short Description / Pairing Notes <span className="text-rose-500">*</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={rel.description}
-                    onChange={(e) => handleRelatedProductChange(idx, "description", e.target.value)}
-                    placeholder="e.g. A highly effective foaming agent commonly paired with CAPB in shampoo..."
-                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-700 leading-relaxed focus:outline-none focus:border-gold-main transition-all"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ─────────────────────────────────────────────────────────────────────────────
-          FINAL ACTION BAR
-          ───────────────────────────────────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="space-y-0.5">
-            <span className="text-xs font-bold text-gray-900 block">
-              Listing Status
-            </span>
-            <span className="text-[11px] text-gray-400">
-              {formData.status === "Published" ? "Visible to global clients on website" : "Hidden in admin draft queue"}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5 p-1 bg-gray-100 rounded-xl border border-gray-200">
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, status: "Published" })}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                formData.status === "Published"
-                  ? "bg-emerald-600 text-white shadow-xs"
-                  : "text-gray-600 hover:text-black"
-              }`}
-            >
-              Published
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, status: "Draft" })}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                formData.status === "Draft"
-                  ? "bg-amber-500 text-white shadow-xs"
-                  : "text-gray-600 hover:text-black"
-              }`}
-            >
-              Draft
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-          <Link
-            href="/admin/products"
-            className="px-4 py-2.5 border border-gray-200 text-gray-600 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </Link>
           <button
             type="button"
-            disabled={isSubmitting}
-            onClick={() => handleSubmit(formData.status)}
-            className="px-6 py-2.5 bg-[#d6b92a] text-black font-extrabold hover:bg-gold-dark hover:text-white rounded-xl text-xs shadow-xs transition-all flex items-center gap-2"
+            onClick={handleAddFaq}
+            className="px-3 py-1.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 inline-flex items-center gap-1.5 cursor-pointer"
           >
-            {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-            <span>{formData.status === "Published" ? "Publish Product Now" : "Save as Draft"}</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add FAQ</span>
           </button>
         </div>
+
+        <div className="space-y-3">
+          {curFaqs.map((faq, idx) => (
+            <div key={idx} className="p-4 bg-gray-50/80 border border-gray-200 rounded-xl space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-heading font-bold text-xs text-gold-dark">
+                  FAQ #{idx + 1}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveFaq(idx)}
+                  className="text-gray-400 hover:text-rose-600 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <input
+                type="text"
+                value={faq.question}
+                onChange={(e) => handleFaqChange(idx, "question", e.target.value)}
+                placeholder="Question text..."
+                className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-900 focus:outline-none focus:border-gold-main"
+              />
+
+              <textarea
+                rows={2}
+                value={faq.answer}
+                onChange={(e) => handleFaqChange(idx, "answer", e.target.value)}
+                placeholder="Answer text..."
+                className="w-full p-2 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main"
+              />
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* ── Bottom Save Sticky Floating Bar ── */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-[#11131a]/95 backdrop-blur-md px-6 py-3 rounded-2xl border border-gold-main/40 shadow-2xl flex items-center gap-4">
+        <Link
+          href="/admin/products"
+          className="text-xs font-bold text-gray-400 hover:text-white transition-colors"
+        >
+          Cancel
+        </Link>
+        <button
+          type="button"
+          onClick={() => handleSubmit("Published")}
+          disabled={isSubmitting}
+          className="btn-gold-primary px-6 py-2 rounded-xl font-heading font-bold text-xs inline-flex items-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
+        >
+          {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin text-black" /> : <Save className="w-3.5 h-3.5 text-black" />}
+          <span>Save Changes</span>
+        </button>
+      </div>
+
     </div>
   );
 }

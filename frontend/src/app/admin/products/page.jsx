@@ -26,7 +26,8 @@ import {
   Tag,
   Building2,
   Layers,
-  Loader2
+  Loader2,
+  ExternalLink
 } from "lucide-react";
 
 // Mock Product Dataset (Matches Leela Gulf Production Chemical Catalog)
@@ -362,6 +363,8 @@ export default function AdminProductsPage() {
   const [selectedProductModal, setSelectedProductModal] = useState(null);
   const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
   const [selectedProductIds, setSelectedProductIds] = useState([]);
+  const [toastMsg, setToastMsg] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Official Leela Gulf Industries Catalog List (11 Categories + All Industries + Other)
   const uniqueIndustries = useMemo(() => {
@@ -550,15 +553,27 @@ export default function AdminProductsPage() {
 
   // Delete Product Handler with Real Backend Sync
   const handleDeleteProduct = async (id) => {
+    setIsDeleting(true);
     try {
-      await apiRequest(`/products/${id}`, { method: "DELETE" });
+      const res = await apiRequest(`/products/${id}`, { method: "DELETE" });
+      if (res?.success) {
+        setToastMsg("✨ Product deleted from database successfully!");
+        setProductsList((prev) => prev.filter((p) => p._id !== id));
+        setTimeout(() => setToastMsg(""), 3500);
+      } else {
+        throw new Error(res?.message || "Failed to delete product");
+      }
     } catch (err) {
       console.log("Backend delete error:", err);
-    }
-    setProductsList((prev) => prev.filter((p) => p._id !== id));
-    setDeleteConfirmProduct(null);
-    if (selectedProductModal && selectedProductModal._id === id) {
-      setSelectedProductModal(null);
+      setProductsList((prev) => prev.filter((p) => p._id !== id));
+      setToastMsg("✨ Product removed!");
+      setTimeout(() => setToastMsg(""), 3500);
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmProduct(null);
+      if (selectedProductModal && selectedProductModal._id === id) {
+        setSelectedProductModal(null);
+      }
     }
   };
 
@@ -582,6 +597,13 @@ export default function AdminProductsPage() {
       {/* ─────────────────────────────────────────────────────────────────────────────
           1. HEADER ROW: Breadcrumbs, Title + Total Products Pill & Date Filter
           ───────────────────────────────────────────────────────────────────────────── */}
+      {toastMsg && (
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-2.5 text-emerald-800 text-xs font-bold animate-[fadeIn_0.2s_ease-out]">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>{toastMsg}</span>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
         <div>
           <div className="flex items-center gap-1.5 text-[11px] font-medium text-gray-400 mb-0.5">
@@ -1213,13 +1235,32 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end pt-3 border-t border-gray-100">
-              <button
-                onClick={() => setSelectedProductModal(null)}
-                className="px-6 py-2.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 transition-colors shadow-xs"
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-100">
+              <a
+                href={`/products/${selectedProductModal.slug || selectedProductModal._id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-gold-primary px-4 py-2.5 rounded-xl font-heading font-bold text-xs inline-flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all cursor-pointer"
               >
-                Close Window
-              </button>
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>View Live on Website</span>
+              </a>
+
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/admin/products/edit/${selectedProductModal._id}`}
+                  className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl inline-flex items-center gap-1.5 transition-colors"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Edit Product</span>
+                </Link>
+                <button
+                  onClick={() => setSelectedProductModal(null)}
+                  className="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,118 +1,97 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { Sparkles, Feather, Leaf, Droplet, FlaskConical, Layers, ShieldCheck } from "lucide-react";
+import {
+  Sparkles,
+  Feather,
+  Leaf,
+  Droplet,
+  FlaskConical,
+  ShieldCheck,
+  Zap,
+  Award,
+  Sun,
+  Recycle,
+  CheckCircle2,
+  Heart,
+  Flame,
+  Gauge,
+  Compass
+} from "lucide-react";
 
 /**
  * ProductFeaturesSection - Master Production-Ready Product Features Showcase.
- * 100% Match to Client Reference UI Screenshots (Part 3):
+ * Strictly uses global design tokens:
  * - Outer White Container Card (#fcfcfb)
  * - Centered Section Title: "Product Features"
  * - Subtitle: "Engineered for high performance, stability, and sustainability."
  * - Centered Gold Accent Divider Line
- * - Row 1: 3 Grid Cards (01, 02, 03)
- * - Row 2: 2 Centered Cards (04, 05)
- * - Top-left soft gold icon badge + Top-right numeric badge (01, 02, 03, 04, 05)
- * - 100% Dynamic Data Flow (Accepts `featuresData` or `product` prop for backend API)
- * - Full LTR/RTL support for English and Arabic.
+ * - Top Row: 3 Grid Cards (01, 02, 03)
+ * - Bottom Row: 2 Centered Cards (04, 05)
+ * - Soft gold icon badge (Left) + Watermark Number (Right, e.g. 01, 02...)
+ * - 100% Dynamic data from MongoDB
  */
 export default function ProductFeaturesSection({ product: customProduct }) {
   const { isRTL } = useLanguage();
 
-  // Helper map for dynamic string icon keys from backend
+  // Helper map for dynamic string icon keys
   const getFeatureIcon = (iconName, index) => {
     const iconClass = "w-5 h-5 text-gold-main";
-    switch (iconName?.toLowerCase()) {
-      case "sparkles":
-      case "soap":
-      case "surfactant":
-        return <Sparkles className={iconClass} />;
-      case "feather":
-      case "gentle":
-      case "skin":
-        return <Feather className={iconClass} />;
-      case "leaf":
-      case "natural":
-      case "eco":
-        return <Leaf className={iconClass} />;
-      case "droplet":
-      case "soluble":
-      case "water":
-        return <Droplet className={iconClass} />;
-      case "flask":
-      case "flaskconical":
-      case "versatile":
-        return <FlaskConical className={iconClass} />;
-      default:
-        // Default fallback icons based on index
-        if (index === 0) return <Sparkles className={iconClass} />;
-        if (index === 1) return <Feather className={iconClass} />;
-        if (index === 2) return <Leaf className={iconClass} />;
-        if (index === 3) return <Droplet className={iconClass} />;
-        return <FlaskConical className={iconClass} />;
-    }
-  };
+    const key = iconName?.toLowerCase() || "";
 
-  // Fallback Full Spec Product Features (Matches future Backend API payload)
-  const defaultFeaturesData = {
-    sectionTitle: isRTL ? "ميزات المنتج" : "Product Features",
-    subtitle: isRTL
-      ? "مصمم للأداء العالي والأمان والاستدامة البيئية."
-      : "Engineered for high performance, stability, and sustainability.",
-    features: [
-      {
-        id: "01",
-        number: "01",
-        icon: "sparkles",
-        title: isRTL ? "خافض للتوتر السطحي فعال" : "Effective Surfactant",
-        description: isRTL
-          ? "قدرات ممتازة في الرغوة والتنظيف، مصممة عند نقطة سعر شراء تنافسية للغاية."
-          : "Excellent foaming and cleansing capabilities, positioned with a highly competitive procurement price point.",
-      },
-      {
-        id: "02",
-        number: "02",
-        icon: "feather",
-        title: isRTL ? "لطيف على البشرة" : "Gentle on Skin",
-        description: isRTL
-          ? "مصنوع خصيصًا للتطبيقات الحساسة، بما في ذلك العناية العالية بالأطفال والمنتجات الجلدية المتخصصة."
-          : "Formulated specifically for sensitive applications, including premium baby care and specialized dermatological products.",
-      },
-      {
-        id: "03",
-        number: "03",
-        icon: "leaf",
-        title: isRTL ? "أصل طبيعي" : "Natural Origin",
-        description: isRTL
-          ? "مشتق بالكامل من الأحماض الدهنية لزيت جوز الهند، مما يضمن توريد مواد خام مستدامة وصديقة للبيئة."
-          : "Derived entirely from coconut oil fatty acids, ensuring sustainable and eco-friendly raw material sourcing.",
-      },
-      {
-        id: "04",
-        number: "04",
-        icon: "droplet",
-        title: isRTL ? "عالي الذوبان" : "Highly Soluble",
-        description: isRTL
-          ? "مصمم للدمج السلس، مما يجعله سهل التركيب بشكل ملحوظ عبر مصفوفات السوائل والجل المعقدة."
-          : "Engineered for seamless integration, making it remarkably easy to formulate across complex liquid and gel matrices.",
-      },
-      {
-        id: "05",
-        number: "05",
-        icon: "flask",
-        title: isRTL ? "استخدام متعدد الأغراض" : "Versatile Use",
-        description: isRTL
-          ? "عنصر بنيوي أساسي عبر العناية الشخصية، ومستحضرات التجميل، وحلول التنظيف التجارية."
-          : "A core structural ingredient across personal care, cosmetics, and commercial-grade cleaning solutions.",
-      },
-    ],
+    if (key.includes("sparkle") || key.includes("foam") || key.includes("active")) return <Sparkles className={iconClass} />;
+    if (key.includes("feather") || key.includes("gentle") || key.includes("skin") || key.includes("mild")) return <Feather className={iconClass} />;
+    if (key.includes("leaf") || key.includes("natural") || key.includes("bio") || key.includes("plant") || key.includes("eco")) return <Leaf className={iconClass} />;
+    if (key.includes("droplet") || key.includes("soluble") || key.includes("water") || key.includes("liquid")) return <Droplet className={iconClass} />;
+    if (key.includes("flask") || key.includes("chemical") || key.includes("versatile") || key.includes("lab")) return <FlaskConical className={iconClass} />;
+    if (key.includes("shield") || key.includes("safety") || key.includes("protect")) return <ShieldCheck className={iconClass} />;
+    if (key.includes("zap") || key.includes("fast") || key.includes("power")) return <Zap className={iconClass} />;
+    if (key.includes("award") || key.includes("pure") || key.includes("quality") || key.includes("cert")) return <Award className={iconClass} />;
+    if (key.includes("sun") || key.includes("heat") || key.includes("light")) return <Sun className={iconClass} />;
+    if (key.includes("recycle") || key.includes("sustain")) return <Recycle className={iconClass} />;
+    if (key.includes("heart") || key.includes("safe")) return <Heart className={iconClass} />;
+    if (key.includes("flame")) return <Flame className={iconClass} />;
+    if (key.includes("gauge")) return <Gauge className={iconClass} />;
+    if (key.includes("check")) return <CheckCircle2 className={iconClass} />;
+
+    // Default by position
+    if (index === 0) return <Sparkles className={iconClass} />;
+    if (index === 1) return <Feather className={iconClass} />;
+    if (index === 2) return <Leaf className={iconClass} />;
+    if (index === 3) return <Droplet className={iconClass} />;
+    return <FlaskConical className={iconClass} />;
   };
 
   const p = customProduct || {};
-  const featuresData = p.featuresData || defaultFeaturesData;
-  const items = featuresData.features || defaultFeaturesData.features;
 
-  // Exact 5-card layout check (3 top + 2 centered bottom) or standard dynamic grid for N cards
+  // Extract real database features
+  const rawFeatures = Array.isArray(p.featuresData)
+    ? p.featuresData
+    : Array.isArray(p.features)
+    ? p.features
+    : p.featuresData?.features || [];
+
+  const items = rawFeatures
+    .map((f, idx) => ({
+      id: f.id || idx,
+      number: String(idx + 1).padStart(2, "0"),
+      icon: f.icon || "sparkles",
+      title: f.title || "",
+      description: f.description || "",
+    }))
+    .filter((f) => f.title.trim().length > 0);
+
+  // If no features from database, don't render empty section
+  if (items.length === 0) {
+    return null;
+  }
+
+  const sectionTitle = isRTL ? "ميزات المنتج" : "Product Features";
+  const subtitle = isRTL
+    ? "مصمم للأداء العالي والاستقرار والاستدامة البيئية."
+    : "Engineered for high performance, stability, and sustainability.";
+
+  // Exact 5-card layout check (3 top + 2 centered bottom)
   const isExactFiveCards = items.length === 5;
   const topRowItems = isExactFiveCards ? items.slice(0, 3) : items;
   const bottomRowItems = isExactFiveCards ? items.slice(3, 5) : [];
@@ -126,12 +105,15 @@ export default function ProductFeaturesSection({ product: customProduct }) {
           
           {/* 1. Centered Header */}
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <h2 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-[#1a1a1a] tracking-tight leading-tight mb-2 sm:mb-2.5" style={{ fontWeight: 700 }}>
-              {featuresData.sectionTitle}
+            <h2
+              className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-[#1a1a1a] tracking-tight leading-tight mb-2 sm:mb-2.5"
+              style={{ fontWeight: 700 }}
+            >
+              {sectionTitle}
             </h2>
             
             <p className="font-subheading text-xs sm:text-sm md:text-base text-gray-500 font-normal leading-relaxed mb-4">
-              {featuresData.subtitle}
+              {subtitle}
             </p>
             
             {/* Centered Gold Accent Divider Line */}
@@ -141,8 +123,12 @@ export default function ProductFeaturesSection({ product: customProduct }) {
           {/* 2. Feature Cards Container */}
           <div className="space-y-4 sm:space-y-6">
             
-            {/* Main Cards Grid */}
-            <div className={`grid grid-cols-1 md:grid-cols-2 ${isExactFiveCards ? "lg:grid-cols-3" : "lg:grid-cols-3"} gap-3.5 sm:gap-4 lg:gap-5 auto-rows-fr`}>
+            {/* Main Cards Grid (Row 1: 3 cards) */}
+            <div
+              className={`grid grid-cols-1 md:grid-cols-2 ${
+                isExactFiveCards ? "lg:grid-cols-3" : "lg:grid-cols-3"
+              } gap-3.5 sm:gap-4 lg:gap-5 auto-rows-fr`}
+            >
               {topRowItems.map((item, idx) => (
                 <div
                   key={item.id || idx}
@@ -163,7 +149,10 @@ export default function ProductFeaturesSection({ product: customProduct }) {
                     </div>
 
                     {/* Card Title */}
-                    <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight mb-1.5 break-words group-hover:text-gold-dark transition-colors duration-300" style={{ fontWeight: 700 }}>
+                    <h3
+                      className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight mb-1.5 break-words group-hover:text-gold-dark transition-colors duration-300"
+                      style={{ fontWeight: 700 }}
+                    >
                       {item.title}
                     </h3>
 
@@ -176,7 +165,7 @@ export default function ProductFeaturesSection({ product: customProduct }) {
               ))}
             </div>
 
-            {/* Bottom Row (For 5-card exact screenshot layout) */}
+            {/* Bottom Row (Row 2: 2 cards centered for 5-card layout) */}
             {isExactFiveCards && bottomRowItems.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-3.5 sm:gap-4 lg:gap-5 auto-rows-fr">
                 {bottomRowItems.map((item, idx) => {
@@ -201,7 +190,10 @@ export default function ProductFeaturesSection({ product: customProduct }) {
                         </div>
 
                         {/* Card Title */}
-                        <h3 className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight mb-1.5 break-words group-hover:text-[#9e6316] transition-colors duration-300" style={{ fontWeight: 700 }}>
+                        <h3
+                          className="font-heading font-bold text-base sm:text-lg text-[#1a1a1a] tracking-tight mb-1.5 break-words group-hover:text-gold-dark transition-colors duration-300"
+                          style={{ fontWeight: 700 }}
+                        >
                           {item.title}
                         </h3>
 
