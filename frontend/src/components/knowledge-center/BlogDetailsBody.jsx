@@ -70,7 +70,7 @@ const CATEGORY_WIDGET_ITEMS = [
   { key: "LEELA GULF UPDATES", label: "Events", labelAr: "الأحداث والتحديثات", icon: CalendarDays },
 ];
 
-export default function BlogDetailsBody({ blog }) {
+export default function BlogDetailsBody({ blog, allBlogs = [] }) {
   const { isRTL } = useLanguage();
   const [copiedLink, setCopiedLink] = useState(false);
   const [helpfulFeedback, setHelpfulFeedback] = useState(null); // 'YES' | 'NO'
@@ -84,12 +84,14 @@ export default function BlogDetailsBody({ blog }) {
 
   // Current Blog Details or Fallback
   const currentBlog = blog || BLOGS_DATA[0];
-  const title = isRTL ? currentBlog.titleAr : currentBlog.title;
-  const excerpt = isRTL ? currentBlog.excerptAr : currentBlog.excerpt;
-  const category = isRTL ? currentBlog.categoryAr : currentBlog.category;
+  const title = isRTL ? (currentBlog.titleAr || currentBlog.title) : currentBlog.title;
+  const excerpt = isRTL ? (currentBlog.excerptAr || currentBlog.excerpt) : currentBlog.excerpt;
+  const category = isRTL ? (currentBlog.categoryAr || currentBlog.category) : currentBlog.category;
 
-  // Recent Posts (excluding current article)
-  const recentPosts = BLOGS_DATA.filter((b) => b.id !== currentBlog.id).slice(0, 3);
+  // Real Recent Posts from MongoDB (Safe filtering)
+  const sourceBlogs = (Array.isArray(allBlogs) && allBlogs.length > 0) ? allBlogs : (BLOGS_DATA || []);
+  const currentSlug = currentBlog?.slug || currentBlog?.id || "";
+  const recentPosts = sourceBlogs.filter((b) => b && (b.slug || b.id) && (b.slug || b.id) !== currentSlug).slice(0, 3);
 
   const handleCopyLink = () => {
     if (navigator.clipboard) {
@@ -100,9 +102,9 @@ export default function BlogDetailsBody({ blog }) {
   };
 
   // Find Next & Prev Articles for Footer Navigation
-  const currentIndex = BLOGS_DATA.findIndex((b) => b.id === currentBlog.id);
-  const prevArticle = currentIndex > 0 ? BLOGS_DATA[currentIndex - 1] : null;
-  const nextArticle = currentIndex < BLOGS_DATA.length - 1 ? BLOGS_DATA[currentIndex + 1] : BLOGS_DATA[0];
+  const currentIndex = sourceBlogs.findIndex((b) => b && ((b.slug || b.id) === currentSlug));
+  const prevArticle = currentIndex > 0 ? sourceBlogs[currentIndex - 1] : null;
+  const nextArticle = (currentIndex >= 0 && currentIndex < sourceBlogs.length - 1) ? sourceBlogs[currentIndex + 1] : null;
 
   return (
     <section className="w-full bg-[var(--color-primary)] py-8 sm:py-14 text-white overflow-hidden">
@@ -220,142 +222,129 @@ export default function BlogDetailsBody({ blog }) {
                       ? "1. التغييرات التنظيمية الرئيسية لعام 2026"
                       : "1. Key Regulatory Changes in 2026"}
                   </h3>
-              <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
-                {isRTL
-                  ? "تم تقديم سياسات وتعديلات جديدة لتعزيز الشفافية والمساءلة والكفاءة التشغيلية. يجب على الشركات التكيف مع هذه التغييرات لتجنب الغرامات والحفاظ على الامتثال."
-                  : "New policies and amendments have been introduced to enhance transparency, accountability, and operational efficiency. Businesses must adapt to these changes to avoid penalties and maintain compliance."}
-              </p>
+                  <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
+                    {isRTL
+                      ? "تم إدخال سياسات ولوائح جديدة لتعزيز الشفافية والمساءلة والسلامة التشغيلية عبر مختلف القطاعات الصناعية. يجب على الشركات التكيف مع هذه التغييرات لتجنب الغرامات والحفاظ على الامتثال."
+                      : "New policies and amendments have been introduced to enhance transparency, accountability, and operational efficiency. Businesses must adapt to these changes to avoid penalties and maintain compliance."}
+                  </p>
 
-              {/* Focus Areas Callout matching Reference Screenshot #2 */}
-              <div className="pl-6 sm:pl-8 border-l-4 border-[#c4842f] my-6 py-1 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-gold-animated text-black flex items-center justify-center shrink-0 shadow-md mt-0.5">
-                  <FileText className="w-5 h-5 stroke-[2.2] text-black" />
+                  <div className="bg-gold-main/5 border-l-4 rtl:border-l-0 rtl:border-r-4 border-gold-main rounded-xl p-4 sm:p-5 space-y-2.5 my-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-gold-main/20 flex items-center justify-center text-gold-dark">
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <span className="font-heading font-bold text-xs sm:text-sm text-gray-900">
+                        {isRTL ? "مجالات التركيز الرئيسية:" : "Focus Areas:"}
+                      </span>
+                    </div>
+                    <ul className="space-y-1.5 font-subheading text-xs sm:text-sm text-gray-600 pl-2 rtl:pr-2">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-gold-main shrink-0" />
+                        <span>
+                          {isRTL
+                            ? "متطلبات توثيق وتقارير صارمة للمواد الكيميائية"
+                            : "Stricter reporting and documentation requirements"}
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-gold-main shrink-0" />
+                        <span>
+                          {isRTL
+                            ? "معايير محسّنة لأمن البيانات والامتثال الرقمي"
+                            : "Enhanced data privacy and security standards"}
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-gold-main shrink-0" />
+                        <span>
+                          {isRTL
+                            ? "تحديثات الامتثال الخاصة بكل قطاع صناعي"
+                            : "Industry-specific compliance updates"}
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h4 className="font-heading font-bold text-base text-gray-900">
-                    {isRTL ? "مجالات التركيز الرئيسية:" : "Focus Areas:"}
-                  </h4>
-                  <ul className="space-y-2 font-subheading text-xs sm:text-sm text-gray-600">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-gold-main shrink-0 stroke-[2.5]" />
-                      <span>
-                        {isRTL
-                          ? "متطلبات إعداد التقارير والتوثيق الأكثر صرامة."
-                          : "Stricter reporting and documentation requirements"}
-                      </span>
+
+                {/* Article Section 2: Impact on Businesses */}
+                <div className="space-y-3">
+                  <h3 className="font-heading font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
+                    {isRTL ? "2. التأثير على الأعمال" : "2. Impact on Businesses"}
+                  </h3>
+                  <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
+                    {isRTL
+                      ? "تؤثر هذه التغييرات على سير العمل والأنظمة والعمليات التجارية العامة. يجب على الشركات تقييم عملياتها الحالية وتنفيذ التعديلات اللازمة لضمان تدفق سلس للإمدادات."
+                      : "These changes affect workflows, systems, and overall business operations. Companies should assess their current processes and implement necessary adjustments."}
+                  </p>
+                  <ul className="list-disc pl-5 rtl:pr-5 space-y-1.5 font-subheading text-xs sm:text-sm text-gray-600 marker:text-gold-main">
+                    <li>
+                      {isRTL
+                        ? "زيادة عمليات التدقيق ومراقبة الجودة الدورية"
+                        : "Increased compliance audits and monitoring"}
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-gold-main shrink-0 stroke-[2.5]" />
-                      <span>
-                        {isRTL
-                          ? "معايير محسنة لخصوصية البيانات والأمن التشغيلي."
-                          : "Enhanced data privacy and security standards"}
-                      </span>
+                    <li>
+                      {isRTL
+                        ? "عقوبات وتكاليف محتملة لعدم الالتزام بالمعايير"
+                        : "Potential penalties for non-compliance"}
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-gold-main shrink-0 stroke-[2.5]" />
-                      <span>
-                        {isRTL
-                          ? "تحديثات الامتثال المخصصة للقطاع الكيميائي واللوجستي."
-                          : "Industry-specific compliance updates"}
-                      </span>
+                    <li>
+                      {isRTL
+                        ? "ضرورة تدريب الموظفين وتوعيتهم باللوائح الجديدة"
+                        : "Need for employee training and awareness"}
                     </li>
                   </ul>
                 </div>
-              </div>
-            </div>
 
-            {/* Article Section 2: Impact on Businesses */}
-            <div className="space-y-3">
-              <h3 className="font-heading font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
-                {isRTL ? "2. التأثير على الأعمال والشركات" : "2. Impact on Businesses"}
-              </h3>
-              <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
-                {isRTL
-                  ? "تؤثر هذه التغييرات على مسارات العمل والأنظمة والعمليات التجارية العامة. يجب على الشركات تقييم عملياتها الحالية وتطبيق التعديلات اللازمة."
-                  : "These changes affect workflows, systems, and overall business operations. Companies should assess their current processes and implement necessary adjustments."}
-              </p>
+                {/* Article Section 3: How to Stay Compliant */}
+                <div className="space-y-3">
+                  <h3 className="font-heading font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
+                    {isRTL ? "3. كيف تضمن الامتثال الكامل؟" : "3. How to Stay Compliant"}
+                  </h3>
+                  <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
+                    {isRTL
+                      ? "التخطيط الاستباقي والأدوات المناسبة تساعد أعمالك على البقاء في المقدمة وتجنب أي تعطل في الإمدادات. إليك أفضل الممارسات:"
+                      : "Proactive planning and the right tools can help your business stay ahead. Here are some best practices:"}
+                  </p>
+                  <div className="space-y-2 font-subheading text-xs sm:text-sm text-gray-600">
+                    <p className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-gold-main/20 text-gold-dark font-heading font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">1</span>
+                      <span>
+                        {isRTL
+                          ? "مراجعة وتحديث سياسات الامتثال التنظيمي بانتظام"
+                          : "Regularly review and update regulatory compliance policies"}
+                      </span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-gold-main/20 text-gold-dark font-heading font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">2</span>
+                      <span>
+                        {isRTL
+                          ? "الاستثمار في حلول إدارة الجودة المتكاملة"
+                          : "Invest in compliance management solutions and tracking tools"}
+                      </span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <span className="w-5 h-5 rounded-full bg-gold-main/20 text-gold-dark font-heading font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">3</span>
+                      <span>
+                        {isRTL
+                          ? "تدريب الفرق وبناء ثقافة الالتزام المؤسسي"
+                          : "Train your team and build a compliance-first corporate culture"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
 
-              {/* Bullet Points with Gold Dots matching Reference Screenshot #1 */}
-              <ul className="space-y-2.5 font-subheading text-xs sm:text-sm text-gray-700 pt-1">
-                <li className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-gradient-gold-animated shrink-0 shadow-sm" />
-                  <span>
+                {/* Article Section: Conclusion */}
+                <div className="space-y-3 pt-2">
+                  <h3 className="font-heading font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
+                    {isRTL ? "الخاتمة" : "Conclusion"}
+                  </h3>
+                  <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
                     {isRTL
-                      ? "زيادة تدقيق الامتثال والمراقبة الدورية."
-                      : "Increased compliance audits and monitoring"}
-                  </span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-gradient-gold-animated shrink-0 shadow-sm" />
-                  <span>
-                    {isRTL
-                      ? "عقوبات محتملة لعدم الامتثال للوائح الدولية."
-                      : "Potential penalties for non-compliance"}
-                  </span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-gradient-gold-animated shrink-0 shadow-sm" />
-                  <span>
-                    {isRTL
-                      ? "الحاجة إلى تدريب الموظفين وتوعيتهم بالسلامة."
-                      : "Need for employee training and awareness"}
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Article Section 3: How to Stay Compliant */}
-            <div className="space-y-3">
-              <h3 className="font-heading font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
-                {isRTL ? "3. كيفية الحفاظ على الامتثال" : "3. How to Stay Compliant"}
-              </h3>
-              <p className="font-subheading text-gray-600 text-xs sm:text-sm leading-relaxed">
-                {isRTL
-                  ? "التخطيط الاستباقي والأدوات المناسبة يمكن أن تساعد عملك على البقاء في الصدارة. إليك بعض أفضل الممارسات:"
-                  : "Proactive planning and the right tools can help your business stay ahead. Here are some best practices:"}
-              </p>
-
-              <ul className="space-y-2.5 font-subheading text-xs sm:text-sm text-gray-700 pt-1">
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-gold-main shrink-0" />
-                  <span>
-                    {isRTL
-                      ? "مراجعة تحديثات اللوائح بانتظام."
-                      : "Regularly review regulatory updates"}
-                  </span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-gold-main shrink-0" />
-                  <span>
-                    {isRTL
-                      ? "الاستثمار في حلول إدارة الامتثال الرقمية."
-                      : "Invest in compliance management solutions"}
-                  </span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-gold-main shrink-0" />
-                  <span>
-                    {isRTL
-                      ? "تدريب فريقك وبناء ثقافة الامتثال أولاً."
-                      : "Train your team and build a compliance-first culture"}
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Article Section: Conclusion */}
-            <div className="space-y-3 pt-2">
-              <h3 className="font-heading font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
-                {isRTL ? "الخاتمة" : "Conclusion"}
-              </h3>
-              <p className="font-subheading text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed">
-                {isRTL
-                  ? "يتطلب الحفاظ على الامتثال في عام 2026 الوعي والاستعداد والتحسين المستمر. من خلال فهم أحدث اللوائح واتخاذ خطوات استباقية، يمكن للشركات تقليل المخاطر وفتح فرص جديدة للنمو."
-                  : "Staying compliant in 2026 requires awareness, preparation, and continuous improvement. By understanding the latest regulations and taking proactive steps, businesses can minimize risks and unlock new opportunities for growth."}
-              </p>
-            </div>
-            </>
+                      ? "يتطلب البقاء متوافقاً في عام 2026 وعياً مستمراً واستعداداً وتطويراً مستمراً. من خلال فهم أحدث اللوائح واتخاذ خطوات استباقية، يمكن للشركات تقليل المخاطر واكتشاف فرص جديدة للنمو والاستدامة."
+                      : "Staying compliant in 2026 requires awareness, preparation, and continuous improvement. By understanding the latest regulations and taking proactive steps, businesses can minimize risks and unlock new opportunities for growth."}
+                  </p>
+                </div>
+              </>
             )}
 
             {/* Mobile Share Bar Row (All 5 Share Options) */}
@@ -420,19 +409,19 @@ export default function BlogDetailsBody({ blog }) {
               </div>
             </div>
 
-            {/* Interactive Feedback Box */}
-            <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="font-heading font-bold text-xs sm:text-sm text-gray-800">
+            {/* Article Feedback: Was this helpful? */}
+            <div className="pt-6 sm:pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <span className="font-heading font-bold text-xs sm:text-sm text-gray-900">
                 {isRTL ? "هل كان هذا المقال مفيداً؟" : "Was this article helpful?"}
               </span>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <button
                   type="button"
                   onClick={() => setHelpfulFeedback("YES")}
                   className={`px-4 py-2 rounded-xl text-xs font-heading font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                     helpfulFeedback === "YES"
-                      ? "bg-gold-main text-black shadow-md"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      ? "bg-gold-main text-black shadow-md scale-105"
+                      : "bg-gray-100 text-gray-700 hover:bg-gold-main/20 hover:text-black"
                   }`}
                 >
                   <ThumbsUp className="w-3.5 h-3.5" />
@@ -443,7 +432,7 @@ export default function BlogDetailsBody({ blog }) {
                   onClick={() => setHelpfulFeedback("NO")}
                   className={`px-4 py-2 rounded-xl text-xs font-heading font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                     helpfulFeedback === "NO"
-                      ? "bg-gray-800 text-white shadow-md"
+                      ? "bg-gray-800 text-white shadow-md scale-105"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
@@ -457,7 +446,7 @@ export default function BlogDetailsBody({ blog }) {
             <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
               {prevArticle ? (
                 <Link
-                  href={`/knowledge-center/${prevArticle.slug}`}
+                  href={`/knowledge-center/${prevArticle.slug || prevArticle.id}`}
                   className="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 font-heading font-bold text-xs hover:border-gold-main hover:text-gold-main transition-colors flex items-center gap-1.5"
                 >
                   <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
@@ -465,17 +454,27 @@ export default function BlogDetailsBody({ blog }) {
                 </Link>
               ) : (
                 <span className="text-xs text-gray-300 font-subheading">
-                  {isRTL ? "الأحدث" : "Previous"}
+                  {isRTL ? "الأحدث" : "Latest"}
                 </span>
               )}
 
-              <Link
-                href={`/knowledge-center/${nextArticle.slug}`}
-                className="px-5 py-2 rounded-xl bg-white border-2 border-gold-main text-gold-main font-heading font-bold text-xs hover:bg-gradient-gold-animated hover:text-black hover:border-transparent transition-all shadow-sm flex items-center gap-1.5"
-              >
-                <span>{isRTL ? "التالي" : "Next"}</span>
-                <ChevronRight className="w-4 h-4 rtl:rotate-180" />
-              </Link>
+              {nextArticle ? (
+                <Link
+                  href={`/knowledge-center/${nextArticle.slug || nextArticle.id}`}
+                  className="px-5 py-2 rounded-xl bg-white border-2 border-gold-main text-gold-main font-heading font-bold text-xs hover:bg-gradient-gold-animated hover:text-black hover:border-transparent transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <span>{isRTL ? "التالي" : "Next"}</span>
+                  <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                </Link>
+              ) : (
+                <Link
+                  href="/knowledge-center"
+                  className="px-5 py-2 rounded-xl bg-white border border-gray-200 hover:border-gold-main text-gray-700 hover:text-gold-dark font-heading font-bold text-xs transition-all shadow-sm flex items-center gap-1.5"
+                >
+                  <span>{isRTL ? "جميع المقالات" : "All Articles"}</span>
+                  <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                </Link>
+              )}
             </div>
 
           </article>
@@ -485,7 +484,7 @@ export default function BlogDetailsBody({ blog }) {
               ═══════════════════════════════════════════ */}
           <aside className="lg:col-span-3 space-y-6">
 
-            {/* ── SIDEBAR WIDGET 1: CATEGORIES LIST ── */}
+            {/* ── SIDEBAR WIDGET 1: CATEGORIES LIST (Dynamic & Active Matching) ── */}
             <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 text-black shadow-xl border border-gray-100">
               <h4 className="font-heading font-bold text-base text-gray-900">
                 {isRTL ? "التصنيفات" : "Categories"}
@@ -524,38 +523,51 @@ export default function BlogDetailsBody({ blog }) {
 
               {/* Author Header: Left Avatar + Right Details */}
               <div className="flex items-center gap-3 mb-3 text-left rtl:text-right">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gold-main shrink-0 shadow-sm">
-                  <Image
-                    src="/images/careers/careers.avif"
-                    alt="Author Ananya Sharma"
-                    fill
-                    className="object-cover"
-                  />
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gold-main shrink-0 shadow-sm bg-gray-100 flex items-center justify-center text-gray-400">
+                  {currentBlog.authorImage ? (
+                    <img
+                      src={currentBlog.authorImage}
+                      alt={currentBlog.author || "Author"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="font-heading font-bold text-base text-gold-dark">
+                      {(currentBlog.author || "LG")[0]}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <h5 className="font-heading font-bold text-sm text-gray-900 leading-snug">
-                    {isRTL ? "أنانيا شارما" : "Ananya Sharma"}
+                    {isRTL
+                      ? (currentBlog.authorAr || currentBlog.author || "فريق تحرير ليلا جلف")
+                      : (currentBlog.author || "Leela Gulf Editorial Team")}
                   </h5>
                   <span className="font-subheading text-[11px] text-gray-500 block">
-                    {isRTL ? "أخصائية الامتثال" : "Compliance Specialist"}
+                    {isRTL
+                      ? (currentBlog.authorRoleAr || currentBlog.authorRole || "كاتب")
+                      : (currentBlog.authorRole || "Author")}
                   </span>
                   <span className="font-heading font-bold text-[10.5px] text-gold-main tracking-wider block uppercase">
-                    LEELA GULF
+                    {isRTL
+                      ? (currentBlog.authorCompanyAr || currentBlog.authorCompany || "ليلا جلف")
+                      : (currentBlog.authorCompany || "LEELA GULF")}
                   </span>
                 </div>
               </div>
 
               {/* Author Bio */}
-              <p className="font-subheading text-xs text-gray-500 leading-relaxed text-left rtl:text-right mb-4">
-                {isRTL
-                  ? "أنانيا أخصائية امثتال معتمدة بخبرة تزيد عن 8 سنوات في مساعدة الشركات على تطبيق معايير السلامة الدولية."
-                  : "Ananya is a compliance expert with 8+ years of experience helping businesses navigate complex regulations and ensure adherence to industry standards."}
-              </p>
+              {(currentBlog.authorBio || currentBlog.authorBioAr) && (
+                <p className="font-subheading text-xs text-gray-500 leading-relaxed text-left rtl:text-right mb-4">
+                  {isRTL
+                    ? (currentBlog.authorBioAr || currentBlog.authorBio)
+                    : (currentBlog.authorBio || currentBlog.authorBioAr)}
+                </p>
+              )}
 
               {/* Author Social Links */}
               <div className="flex items-center gap-3 pt-1 justify-start">
                 <a
-                  href="https://linkedin.com"
+                  href={currentBlog.authorLinkedIn || "https://linkedin.com"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gold-main hover:text-black transition-colors"
@@ -563,7 +575,7 @@ export default function BlogDetailsBody({ blog }) {
                   <LinkedinIcon className="w-4 h-4 fill-current stroke-none" />
                 </a>
                 <a
-                  href="mailto:contact@leelagulf.com"
+                  href={currentBlog.authorEmail ? `mailto:${currentBlog.authorEmail}` : "mailto:contact@leelagulf.com"}
                   className="text-gold-main hover:text-black transition-colors"
                 >
                   <Mail className="w-4 h-4" />

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/adminRoutes.js";
 import leadRoutes from "./routes/leadRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 import translateRoutes from "./routes/translateRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
@@ -74,6 +75,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/admin", adminRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/blogs", blogRoutes);
 app.use("/api/translate", translateRoutes);
 app.use("/api/upload", uploadRoutes);
 

@@ -81,6 +81,9 @@ export default function BlogDetailsHero({ blog }) {
       className="relative w-full bg-[var(--color-primary)] pt-16 sm:pt-24 md:pt-28 pb-4 sm:pb-10 overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-3 sm:px-6 md:px-10 lg:px-16 xl:px-20 relative z-10">
+        {/* Subtle Ambient Gold Glow for Depth */}
+        <div className="absolute -top-16 -left-16 w-96 h-96 bg-gold-main/[0.07] rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute -bottom-16 -right-16 w-96 h-96 bg-gold-main/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
         {/* ═══════════════════════════════════════════
             TOP BREADCRUMB BAR (Home / Blogs / {Blog Title})
@@ -112,10 +115,10 @@ export default function BlogDetailsHero({ blog }) {
 
         {/* ═══════════════════════════════════════════
             MAIN HERO CARD CONTAINER
-            Matches CareersHero & KnowledgeCenterHero Dimensions 100%
+            Uses 100% Globals.css Token: var(--color-card-dark)
             ═══════════════════════════════════════════ */}
         <div
-          className={`relative rounded-xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden bg-[var(--color-primary)] shadow-2xl transition-all duration-1000 ease-out ${
+          className={`relative rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden bg-[var(--color-card-dark)] border border-white/5 shadow-2xl transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -127,7 +130,7 @@ export default function BlogDetailsHero({ blog }) {
               src={heroBgImage}
               alt={title}
               fill
-              className={`object-cover opacity-85 sm:opacity-100 ${
+              className={`object-cover opacity-90 sm:opacity-100 ${
                 isRTL ? "object-left sm:object-left" : "object-right sm:object-right"
               }`}
               priority
@@ -136,17 +139,18 @@ export default function BlogDetailsHero({ blog }) {
 
             {/* ═══════════════════════════════════════════
                 DIRECTION-AWARE GRADIENT OVERLAY (RTL / LTR)
+                100% Global Theme Token: var(--color-card-dark)
                 ═══════════════════════════════════════════ */}
             {isRTL ? (
               /* ARABIC (RTL): Dark Overlay starts from RIGHT and fades to LEFT */
-              <div className="absolute top-0 bottom-0 right-0 left-auto w-full sm:w-[82%] md:w-[78%] lg:w-[72%] bg-gradient-to-l from-[var(--color-primary)] via-[var(--color-primary)] via-50% to-transparent z-0" />
+              <div className="absolute top-0 bottom-0 right-0 left-auto w-full sm:w-[85%] md:w-[80%] lg:w-[72%] bg-gradient-to-l from-[var(--color-card-dark)] via-[var(--color-card-dark)]/90 via-45% to-transparent z-0" />
             ) : (
               /* ENGLISH (LTR): Dark Overlay starts from LEFT and fades to RIGHT */
-              <div className="absolute top-0 bottom-0 left-0 right-auto w-full sm:w-[82%] md:w-[78%] lg:w-[72%] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)] via-50% to-transparent z-0" />
+              <div className="absolute top-0 bottom-0 left-0 right-auto w-full sm:w-[85%] md:w-[80%] lg:w-[72%] bg-gradient-to-r from-[var(--color-card-dark)] via-[var(--color-card-dark)]/90 via-45% to-transparent z-0" />
             )}
 
             {/* Mobile Top/Bottom Shadow */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/80 via-transparent to-[var(--color-primary)]/40 sm:hidden z-0" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-card-dark)]/80 via-transparent to-[var(--color-card-dark)]/30 sm:hidden z-0" />
 
             {/* ═══════════════════════════════════════════
                 TEXT CONTENT OVERLAY CONTAINER

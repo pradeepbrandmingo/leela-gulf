@@ -34,7 +34,13 @@ export default function ProductDetailPage() {
       try {
         const res = await apiRequest(`/products/${productId}`, { silent: true });
         if (res?.success && res?.data) {
-          setDbProduct(res.data);
+          // If product is draft and user is not admin, hide from public
+          const isAdmin = typeof window !== "undefined" && !!localStorage.getItem("adminToken");
+          if (res.data.status === "Draft" && !isAdmin) {
+            setError(true);
+          } else {
+            setDbProduct(res.data);
+          }
         } else {
           setError(true);
         }

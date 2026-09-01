@@ -37,10 +37,10 @@ export async function uploadSingleFile(req, res) {
     }
 
     const isPdf = req.file.mimetype === "application/pdf";
-    const folder = isPdf ? "documents" : "products";
+    const requestedFolder = req.body?.folder ? req.body.folder.replace(/^leela-gulf\//, "") : (isPdf ? "documents" : "blogs");
     const resourceType = isPdf ? "raw" : "image";
 
-    const result = await uploadBufferToCloudinary(req.file.buffer, folder, resourceType);
+    const result = await uploadBufferToCloudinary(req.file.buffer, requestedFolder, resourceType);
 
     return res.status(200).json({
       success: true,
@@ -57,7 +57,7 @@ export async function uploadSingleFile(req, res) {
     console.error("Cloudinary Single Upload Error:", error);
     return res.status(500).json({
       success: false,
-      message: "Upload to Cloudinary failed.",
+      message: error.message || "Upload to Cloudinary failed.",
       error: error.message,
     });
   }

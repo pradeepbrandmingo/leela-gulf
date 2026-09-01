@@ -508,6 +508,7 @@ export default function AdminProductsPage() {
             tags: p.en?.applicationTags || ["Chemical"],
             status: p.status || "Published",
             createdAt: p.createdAt,
+            image: (p.images && p.images[0]) || p.image || p.productImage || "",
             description: p.en?.shortOverview || "",
             specs: `CAS: ${p.casNumber || "-"}, HS: ${p.hsCode || "-"}, Formula: ${p.chemicalFormula || "-"}`,
           }));
@@ -858,9 +859,15 @@ export default function AdminProductsPage() {
                       {/* Product Name + Compact Container Box + 1-Line Truncated Title */}
                       <td className="py-2.5 px-3 max-w-[260px]">
                         <div className="flex items-center gap-2.5">
-                          {/* Compact Glass Container Thumbnail */}
-                          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-gray-50 to-gray-100/90 border border-gray-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:border-gold-main/50 transition-all">
-                            {isBottle ? (
+                          {/* Compact Container / Image Thumbnail */}
+                          <div className="w-9 h-9 rounded-lg overflow-hidden bg-gradient-to-b from-gray-50 to-gray-100/90 border border-gray-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:border-gold-main/50 transition-all">
+                            {product.image ? (
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : isBottle ? (
                               <svg className="w-5 h-5 text-gray-600 drop-shadow-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <path d="M9 3h6v3H9zM10 6v3l-3 5v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-6l-3-5V6" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M7 14h10" opacity="0.4" strokeDasharray="2 2" />
@@ -871,11 +878,7 @@ export default function AdminProductsPage() {
                                 <path d="M7 13h10" opacity="0.4" strokeLinecap="round" />
                               </svg>
                             ) : (
-                              <svg className="w-5 h-5 text-gray-600 drop-shadow-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M10 2v6.5L4 18.5A2 2 0 0 0 5.7 21.5h12.6a2 2 0 0 0 1.7-3L14 8.5V2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M8.5 2h7" strokeLinecap="round" />
-                                <path d="M7 15h10" opacity="0.4" />
-                              </svg>
+                              <FlaskConical className="w-5 h-5 text-gray-500" />
                             )}
                           </div>
 
@@ -1120,8 +1123,16 @@ export default function AdminProductsPage() {
             </button>
 
             <div className="flex items-center gap-3.5 pb-2 border-b border-gray-100">
-              <div className="w-13 h-13 rounded-2xl bg-[#fdfaf0] border border-gold-main/40 flex items-center justify-center text-gold-dark shrink-0">
-                <FlaskConical className="w-6 h-6" />
+              <div className="w-14 h-14 rounded-2xl bg-[#fdfaf0] border border-gold-main/40 flex items-center justify-center text-gold-dark shrink-0 overflow-hidden">
+                {selectedProductModal.image ? (
+                  <img
+                    src={selectedProductModal.image}
+                    alt={selectedProductModal.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <FlaskConical className="w-6 h-6" />
+                )}
               </div>
               <div>
                 <h3 className="text-xl font-heading font-extrabold text-gray-900">

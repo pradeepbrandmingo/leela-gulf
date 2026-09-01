@@ -12,9 +12,12 @@ export const API_BASE_URL =
 export async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
-  const defaultHeaders = {
-    "Content-Type": "application/json",
-  };
+  const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
+
+  const defaultHeaders = {};
+  if (!isFormData) {
+    defaultHeaders["Content-Type"] = "application/json";
+  }
 
   // Get token from localStorage if cookie is not supported
   const token = typeof window !== "undefined" ? localStorage.getItem("adminToken") : null;
@@ -22,9 +25,9 @@ export async function apiRequest(endpoint, options = {}) {
     defaultHeaders["Authorization"] = `Bearer ${token}`;
   }
 
-  // Automatically JSON stringify body if passed as object
+  // Automatically JSON stringify body if passed as object (except FormData)
   let body = options.body;
-  if (body && typeof body === "object") {
+  if (body && typeof body === "object" && !isFormData) {
     body = JSON.stringify(body);
   }
 

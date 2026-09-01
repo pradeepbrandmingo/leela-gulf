@@ -41,11 +41,11 @@ export default function ProductsListing() {
   const dropdownRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Fetch live products from MongoDB Backend
+  // Fetch live products from MongoDB Backend (Published Only)
   useEffect(() => {
     async function loadLiveProducts() {
       try {
-        const res = await apiRequest("/products", { silent: true });
+        const res = await apiRequest("/products?status=Published", { silent: true });
         if (res?.success && Array.isArray(res.data)) {
           setDbProducts(res.data);
         }
@@ -69,9 +69,13 @@ export default function ProductsListing() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ── Normalized Live Products from MongoDB ──
+  // ── Normalized Live Products from MongoDB (Published Only) ──
   const allProductsList = useMemo(() => {
-    return dbProducts.map((p) => {
+    const publishedOnly = dbProducts.filter(
+      (p) => (p.status || "Published") === "Published"
+    );
+
+    return publishedOnly.map((p) => {
       const loc = isRTL ? (p.ar?.title ? p.ar : p.en) : (p.en || p);
       const industryName = p.primaryIndustry || p.en?.primaryIndustry || "Industrial Chemicals";
 

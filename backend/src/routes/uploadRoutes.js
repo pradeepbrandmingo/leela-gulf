@@ -13,7 +13,8 @@ const upload = multer({
   },
 });
 
-// POST /api/upload/single
+// POST /api/upload & /api/upload/single
+router.post("/", upload.single("file"), uploadSingleFile);
 router.post("/single", upload.single("file"), uploadSingleFile);
 
 // POST /api/upload/multiple

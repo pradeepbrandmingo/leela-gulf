@@ -1,30 +1,20 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
-import { Search, SlidersHorizontal, Calendar, ArrowRight, ChevronDown, Check, X, RotateCcw, BookOpen } from "lucide-react";
-import { BLOGS_DATA } from "@/data/blogsData";
+import { Search, SlidersHorizontal, Calendar, ArrowRight, ChevronDown, Check, X, RotateCcw, BookOpen, Loader2 } from "lucide-react";
+import { apiRequest } from "@/config/api";
 
-const CATEGORY_OPTIONS = [
-  { key: "ALL", label: "All Categories", labelAr: "جميع التصنيفات" },
-  { key: "COMPLIANCE", label: "Compliance", labelAr: "الامتثال والتنظيم" },
-  { key: "QUALITY", label: "Quality Assurance", labelAr: "ضمان الجودة" },
-  {
-    key: "INDUSTRY INSIGHTS",
-    label: "Industry Insights",
-    labelAr: "رؤى القطاع",
-  },
-  {
-    key: "LEELA GULF UPDATES",
-    label: "Leela Gulf Updates",
-    labelAr: "تحديثات ليلا جلف",
-  },
-];
-
-export default function LatestBlogsSection() {
+function LatestBlogsContent() {
   const { isRTL } = useLanguage();
+  const searchParams = useSearchParams();
+
+  // State for live blogs (Defaults to empty array - NO dummy blogs on load/refresh)
+  const [blogsList, setBlogsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Filter & Search Controls State
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,6 +28,39 @@ export default function LatestBlogsSection() {
 
   const categoryRef = useRef(null);
   const sortRef = useRef(null);
+
+  // Read URL search params on mount or param changes
+  useEffect(() => {
+    const catParam = searchParams.get("category");
+    const searchParam = searchParams.get("search");
+    if (catParam) {
+      setSelectedCategory(catParam.toUpperCase());
+    }
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+  }, [searchParams]);
+
+  // Fetch Live Published Blogs from API
+  useEffect(() => {
+    async function loadLiveBlogs() {
+      setIsLoading(true);
+      try {
+        const res = await apiRequest("/blogs?status=Published", { silent: true });
+        if (res?.success && Array.isArray(res.data)) {
+          setBlogsList(res.data);
+        } else {
+          setBlogsList([]);
+        }
+      } catch (err) {
+        console.warn("Backend /api/blogs error:", err?.message);
+        setBlogsList([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadLiveBlogs();
+  }, []);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -53,27 +76,103 @@ export default function LatestBlogsSection() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filtered & Sorted Blogs Computation
+  // Dynamic Categories Options computation from live MongoDB blogs
+  const dynamicCategoryOptions = useMemo(() => {
+    const baseOptions = [
+      { key: "ALL", label: "All Categories", labelAr: "جميع التصنيفات" },
+      { key: "COMPLIANCE", label: "Compliance", labelAr: "الامتثال والتنظيم" },
+      { key: "QUALITY", label: "Quality", labelAr: "ضمان الجودة" },
+      { key: "INDUSTRY INSIGHTS", label: "Industry Insights", labelAr: "رؤى القطاع" },
+      { key: "REGULATIONS", label: "Regulations", labelAr: "اللوائح العامة" },
+      { key: "TECHNOLOGY", label: "Technology", labelAr: "التقنية والابتكار" },
+      { key: "LEELA GULF UPDATES", label: "Leela Gulf Updates", labelAr: "تحديثات ليلا جلف" },
+    ];
+
+    const categoryTranslations = {
+      compliance: "الامتثال والتنظيم",
+      quality: "ضمان الجودة",
+      "quality assurance": "ضمان الجودة",
+      "industry insights": "رؤى القطاع",
+      "industry trends": "اتجاهات الصناعة",
+      regulations: "اللوائح العامة",
+      technology: "التقنية والابتكار",
+      "leela gulf updates": "تحديثات ليلا جلف",
+      sustainability: "الاستدامة",
+      general: "عام",
+    };
+
+    const uniqueCats = new Set();
+    blogsList.forEach((b) => {
+      if (b?.category) uniqueCats.add(b.category.trim());
+      if (Array.isArray(b?.categories)) {
+        b.categories.forEach((c) => c && uniqueCats.add(c.trim()));
+      }
+    });
+
+    const result = [{ key: "ALL", label: "All Categories", labelAr: "جميع التصنيفات" }];
+
+    uniqueCats.forEach((cat) => {
+      const upper = cat.toUpperCase();
+      const lower = cat.toLowerCase();
+      if (!result.some((r) => r.key === upper)) {
+        result.push({
+          key: upper,
+          label: cat,
+          labelAr: categoryTranslations[lower] || cat,
+        });
+      }
+    });
+
+    baseOptions.forEach((b) => {
+      if (!result.some((r) => r.key === b.key)) {
+        result.push(b);
+      }
+    });
+
+    return result;
+  }, [blogsList]);
+
+  // Filtered & Sorted Blogs Computation (Real-Time Search & Category Filter)
   const filteredBlogs = useMemo(() => {
-    return BLOGS_DATA.filter((blog) => {
-      const titleText = isRTL ? blog.titleAr : blog.title;
-      const categoryText = blog.category;
-      const excerptText = isRTL ? blog.excerptAr : blog.excerpt;
+    return blogsList.filter((blog) => {
+      // Exclude drafts
+      if (blog.status && blog.status !== "Published") return false;
 
+      const titleText = isRTL ? (blog.titleAr || blog.title || "") : (blog.title || "");
+      const excerptText = isRTL ? (blog.excerptAr || blog.excerpt || "") : (blog.excerpt || "");
+      const categoryText = (blog.category || "").toUpperCase();
+      const categoryArText = (blog.categoryAr || "").toUpperCase();
+      const authorText = isRTL ? (blog.authorAr || blog.author || "") : (blog.author || "");
+      const tags = Array.isArray(blog.categories) ? blog.categories.map((c) => (c || "").toUpperCase()) : [];
+
+      // Multi-Field Search (Matches title, excerpt, category, tags, author, slug)
+      const searchLower = searchTerm.trim().toLowerCase();
       const matchesSearch =
-        searchTerm.trim() === "" ||
-        titleText.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        excerptText.toLowerCase().includes(searchTerm.toLowerCase());
+        searchLower === "" ||
+        titleText.toLowerCase().includes(searchLower) ||
+        excerptText.toLowerCase().includes(searchLower) ||
+        authorText.toLowerCase().includes(searchLower) ||
+        categoryText.toLowerCase().includes(searchLower) ||
+        categoryArText.toLowerCase().includes(searchLower) ||
+        tags.some((t) => t.toLowerCase().includes(searchLower)) ||
+        (blog.slug || "").toLowerCase().includes(searchLower);
 
+      // Category Filter Matching
       const matchesCategory =
-        selectedCategory === "ALL" || categoryText === selectedCategory;
+        selectedCategory === "ALL" ||
+        categoryText === selectedCategory ||
+        categoryText.includes(selectedCategory) ||
+        tags.includes(selectedCategory) ||
+        tags.some((t) => t.includes(selectedCategory));
 
       return matchesSearch && matchesCategory;
     }).sort((a, b) => {
-      if (sortBy === "LATEST") return b.timestamp - a.timestamp;
-      return a.timestamp - b.timestamp;
+      const timeA = a.timestamp || (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+      const timeB = b.timestamp || (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+      if (sortBy === "LATEST") return timeB - timeA;
+      return timeA - timeB;
     });
-  }, [searchTerm, selectedCategory, sortBy, isRTL]);
+  }, [blogsList, searchTerm, selectedCategory, sortBy, isRTL]);
 
   // Reset pagination count when filter changes
   useEffect(() => {
@@ -90,6 +189,10 @@ export default function LatestBlogsSection() {
   };
 
   const paginatedBlogs = filteredBlogs.slice(0, visibleCount);
+
+  const isCatActive = selectedCategory !== "ALL";
+  const selectedCatObj = dynamicCategoryOptions.find((c) => c.key === selectedCategory);
+  const selectedCatLabel = isRTL ? (selectedCatObj?.labelAr || selectedCatObj?.label) : (selectedCatObj?.label || "Categories");
 
   return (
     <section className="w-full bg-[var(--color-primary)] py-8 sm:py-16 overflow-hidden">
@@ -130,8 +233,8 @@ export default function LatestBlogsSection() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={
                   isRTL
-                    ? "ابحث عن المدونات..."
-                    : "Search blogs by title, keyword..."
+                    ? "ابحث بالعنوان، الكاتب، الوسم..."
+                    : "Search blogs by title, tags, keyword..."
                 }
                 className="w-full pl-10 pr-9 rtl:pr-10 rtl:pl-9 py-2.5 rounded-xl bg-transparent border border-gold-main/50 text-white text-xs font-subheading placeholder-gray-400 outline-none focus:border-gold-light focus:ring-1 focus:ring-gold-light transition-all shadow-md"
               />
@@ -157,51 +260,52 @@ export default function LatestBlogsSection() {
                     setIsCategoryOpen(!isCategoryOpen);
                     setIsSortOpen(false);
                   }}
-                  className={`w-full sm:w-auto px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-heading font-bold flex items-center justify-between sm:justify-start gap-2 transition-all shadow-md cursor-pointer outline-none border ${
-                    selectedCategory !== "ALL"
-                      ? "bg-gradient-gold-animated text-black border-transparent"
+                  className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs sm:text-sm font-heading font-bold flex items-center justify-between sm:justify-start gap-2.5 transition-all shadow-md cursor-pointer outline-none border ${
+                    isCatActive
+                      ? "bg-gradient-gold-animated text-black border-transparent font-extrabold shadow-lg"
                       : "bg-transparent text-white border-gold-main/50 hover:border-gold-light hover:text-gold-light"
                   }`}
                 >
-                  <div className="flex items-center gap-1.5 truncate">
-                    <SlidersHorizontal className="w-3.5 h-3.5 stroke-[2.2] shrink-0 text-gold-light" />
-                    <span className="truncate">
+                  <div className="flex items-center gap-2 truncate">
+                    <SlidersHorizontal className={`w-3.5 h-3.5 shrink-0 ${isCatActive ? "text-black stroke-[2.5]" : "text-gold-light stroke-[2.2]"}`} />
+                    <span className={`truncate ${isCatActive ? "text-black font-extrabold" : "text-white"}`}>
                       {selectedCategory === "ALL"
                         ? isRTL
                           ? "التصنيفات"
                           : "Categories"
-                        : CATEGORY_OPTIONS.find(
-                            (c) => c.key === selectedCategory,
-                          )?.[isRTL ? "labelAr" : "label"]}
+                        : selectedCatLabel}
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 shrink-0 text-gold-light transition-transform ${isCategoryOpen ? "rotate-180" : ""}`}
+                    className={`w-3.5 h-3.5 shrink-0 transition-transform ${isCatActive ? "text-black stroke-[2.5]" : "text-gold-light"} ${isCategoryOpen ? "rotate-180" : ""}`}
                   />
                 </button>
 
                 {/* Categories Popup Menu */}
                 {isCategoryOpen && (
-                  <div className="absolute left-0 rtl:left-auto rtl:right-0 top-full mt-2 w-56 bg-[#14161d] border border-gold-main/40 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-[fadeIn_0.15s_ease-out]">
-                    {CATEGORY_OPTIONS.map((cat) => (
-                      <div
-                        key={cat.key}
-                        onClick={() => {
-                          setSelectedCategory(cat.key);
-                          setIsCategoryOpen(false);
-                        }}
-                        className={`px-4 py-2.5 text-xs font-subheading flex items-center justify-between cursor-pointer transition-colors ${
-                          selectedCategory === cat.key
-                            ? "bg-gold-main/20 text-gold-light font-bold"
-                            : "text-gray-300 hover:bg-[#1a1d28] hover:text-white"
-                        }`}
-                      >
-                        <span>{isRTL ? cat.labelAr : cat.label}</span>
-                        {selectedCategory === cat.key && (
-                          <Check className="w-4 h-4 text-gold-light shrink-0" />
-                        )}
-                      </div>
-                    ))}
+                  <div className="absolute left-0 rtl:left-auto rtl:right-0 top-full mt-2 w-64 bg-[#14161d] border border-gold-main/40 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 max-h-72 overflow-y-auto animate-[fadeIn_0.15s_ease-out]">
+                    {dynamicCategoryOptions.map((cat) => {
+                      const isSelected = selectedCategory === cat.key;
+                      return (
+                        <div
+                          key={cat.key}
+                          onClick={() => {
+                            setSelectedCategory(cat.key);
+                            setIsCategoryOpen(false);
+                          }}
+                          className={`px-4 py-2.5 text-xs font-subheading flex items-center justify-between cursor-pointer transition-colors ${
+                            isSelected
+                              ? "bg-gold-main/20 text-gold-light font-bold"
+                              : "text-gray-300 hover:bg-[#1a1d28] hover:text-white"
+                          }`}
+                        >
+                          <span className="truncate">{isRTL ? cat.labelAr : cat.label}</span>
+                          {isSelected && (
+                            <Check className="w-4 h-4 text-gold-light shrink-0 ml-2" />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -232,7 +336,7 @@ export default function LatestBlogsSection() {
 
                 {/* Sort Popup Menu */}
                 {isSortOpen && (
-                  <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-44 bg-[#14161d] border border-gold-main/40 rounded-xl shadow-2xl z-50 overflow-hidden py-1 animate-[fadeIn_0.15s_ease-out]">
+                  <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-44 bg-[#14161d] border border-gold-main/40 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-[fadeIn_0.15s_ease-out]">
                     <div
                       onClick={() => {
                         setSortBy("LATEST");
@@ -246,7 +350,7 @@ export default function LatestBlogsSection() {
                     >
                       <span>{isRTL ? "الأحدث أولاً" : "Latest First"}</span>
                       {sortBy === "LATEST" && (
-                        <Check className="w-4 h-4 text-gold-light" />
+                        <Check className="w-4 h-4 text-gold-light shrink-0" />
                       )}
                     </div>
                     <div
@@ -262,146 +366,210 @@ export default function LatestBlogsSection() {
                     >
                       <span>{isRTL ? "الأقدم أولاً" : "Oldest First"}</span>
                       {sortBy === "OLDEST" && (
-                        <Check className="w-4 h-4 text-gold-light" />
+                        <Check className="w-4 h-4 text-gold-light shrink-0" />
                       )}
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Clear Filters Button */}
-              {hasActiveFilters && (
-                <button
-                  type="button"
-                  onClick={handleClearFilters}
-                  className="px-3 py-2.5 rounded-xl bg-gray-800 text-gold-light hover:bg-gray-700 font-heading font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">
-                    {isRTL ? "إعادة ضبط" : "Reset"}
-                  </span>
-                </button>
-              )}
-
             </div>
-
           </div>
-
-        </div>
-
-        {/* Active Search & Count Summary Bar */}
-        <div className="flex items-center justify-between text-xs font-subheading text-gray-400 mb-6 px-1">
-          <span>
-            {isRTL
-              ? `عرض ${paginatedBlogs.length} من أصل ${filteredBlogs.length} مقال`
-              : `Showing ${paginatedBlogs.length} of ${filteredBlogs.length} articles`}
-          </span>
-          {hasActiveFilters && (
-            <span className="text-gold-light font-bold">
-              {isRTL ? "تصفية نشطة" : "Filtered view active"}
-            </span>
-          )}
         </div>
 
         {/* ═══════════════════════════════════════════
-            BLOG CARDS GRID CONTAINER (Clean Dummy Images for All Cards)
+            ACTIVE FILTERS CHIP BAR
             ═══════════════════════════════════════════ */}
-        {filteredBlogs.length === 0 ? (
-          <div className="text-center py-16 sm:py-20 bg-white/5 rounded-3xl border border-white/10 px-4">
-            <BookOpen className="w-12 h-12 text-gold-main mx-auto mb-3 opacity-80" />
-            <h4 className="font-heading font-bold text-lg text-white mb-1">
-              {isRTL ? "لم يتم العثور على مدونات" : "No Articles Found"}
-            </h4>
-            <p className="font-subheading text-gray-400 text-xs sm:text-sm max-w-md mx-auto mb-6">
+        {hasActiveFilters && (
+          <div className="flex items-center flex-wrap gap-2 mb-6 sm:mb-8 text-xs">
+            <span className="text-gray-400 font-subheading">
+              {isRTL ? "الفلاتر النشطة:" : "Active Filters:"}
+            </span>
+
+            {searchTerm && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-main/15 text-gold-light border border-gold-main/30 font-subheading">
+                <span>&ldquo;{searchTerm}&rdquo;</span>
+                <X
+                  className="w-3 h-3 cursor-pointer hover:text-white"
+                  onClick={() => setSearchTerm("")}
+                />
+              </span>
+            )}
+
+            {selectedCategory !== "ALL" && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-main/15 text-gold-light border border-gold-main/30 font-subheading">
+                <span>
+                  {dynamicCategoryOptions.find((c) => c.key === selectedCategory)?.[
+                    isRTL ? "labelAr" : "label"
+                  ] || selectedCategory}
+                </span>
+                <X
+                  className="w-3 h-3 cursor-pointer hover:text-white"
+                  onClick={() => setSelectedCategory("ALL")}
+                />
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={handleClearFilters}
+              className="inline-flex items-center gap-1 text-gray-400 hover:text-gold-light transition-colors ml-1 font-subheading cursor-pointer"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>{isRTL ? "إعادة تعيين" : "Reset All"}</span>
+            </button>
+          </div>
+        )}
+
+        {/* Showing Count Indicator */}
+        <div className="text-xs font-subheading text-gray-400 mb-6 flex items-center justify-between">
+          <span>
+            {isLoading
+              ? (isRTL ? "جاري تحميل المقالات..." : "Loading articles...")
+              : (isRTL
+                ? `عرض ${filteredBlogs.length} من أصل ${blogsList.length} مقالات`
+                : `Showing ${filteredBlogs.length} of ${blogsList.length} articles`)}
+          </span>
+        </div>
+
+        {/* ═══════════════════════════════════════════
+            BLOGS CARDS GRID / SIMPLE SPINNER / EMPTY STATE
+            ═══════════════════════════════════════════ */}
+        {isLoading ? (
+          /* Simple Clean Luxury Spinner Loading */
+          <div className="w-full py-24 flex flex-col items-center justify-center gap-3">
+            <Loader2 className="w-8 h-8 animate-spin text-gold-main" />
+            <span className="font-heading text-xs sm:text-sm text-gray-400 font-semibold tracking-wide">
+              {isRTL ? "جاري تحميل المقالات..." : "Loading articles..."}
+            </span>
+          </div>
+        ) : filteredBlogs.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 lg:gap-7">
+            {paginatedBlogs.map((blog, idx) => {
+              const title = isRTL ? (blog.titleAr || blog.title) : blog.title;
+              const excerpt = isRTL ? (blog.excerptAr || blog.excerpt) : blog.excerpt;
+              const category = isRTL ? (blog.categoryAr || blog.category) : (blog.category || "General");
+              const date = isRTL ? (blog.dateAr || blog.date) : blog.date;
+              const image = blog.heroImage || blog.image || "/images/blogimage/blogdetails.jpg";
+              const targetSlug = blog.slug || blog.id || `article-${idx + 1}`;
+
+              return (
+                <div
+                  key={blog._id || blog.slug || blog.id || idx}
+                  className="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 border border-white/10"
+                >
+                  {/* Top Image Container */}
+                  <Link
+                    href={`/knowledge-center/${targetSlug}`}
+                    className="relative w-full h-52 sm:h-56 bg-gray-950 overflow-hidden cursor-pointer block"
+                  >
+                    <Image
+                      src={image}
+                      alt={title || "Blog Image"}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  </Link>
+
+                  {/* Card Content Body */}
+                  <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between bg-white text-black">
+                    
+                    {/* Meta Row: Category Badge + Date */}
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="font-heading font-bold text-[10.5px] uppercase tracking-wider text-gold-dark">
+                          {category}
+                        </span>
+
+                        <div className="flex items-center gap-1.5 text-gray-400 text-[11px] font-subheading">
+                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                          <span>{date}</span>
+                        </div>
+                      </div>
+
+                      {/* Article Title */}
+                      <Link href={`/knowledge-center/${targetSlug}`} className="block">
+                        <h3 className="font-heading font-bold text-base sm:text-lg text-gray-900 leading-snug line-clamp-2 group-hover:text-gold-dark transition-colors cursor-pointer mb-2.5">
+                          {title}
+                        </h3>
+                      </Link>
+
+                      {/* Excerpt */}
+                      <p className="font-subheading text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed mb-4">
+                        {excerpt}
+                      </p>
+                    </div>
+
+                    {/* Bottom Action: Read More Link */}
+                    <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
+                      <Link
+                        href={`/knowledge-center/${targetSlug}`}
+                        className="inline-flex items-center gap-1.5 font-heading font-bold text-xs sm:text-sm text-gold-dark hover:text-black transition-colors group-hover:gap-2 duration-200 cursor-pointer"
+                      >
+                        <span>{isRTL ? "اقرأ المزيد" : "Read More"}</span>
+                        <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 text-gold-dark group-hover:text-black" />
+                      </Link>
+                    </div>
+
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="w-full py-16 text-center rounded-3xl border border-dashed border-gold-main/30 bg-[#12141a] px-6">
+            <div className="w-14 h-14 mx-auto rounded-full bg-gold-main/15 text-gold-light flex items-center justify-center mb-4">
+              <BookOpen className="w-7 h-7" />
+            </div>
+            <h3 className="font-heading font-bold text-lg text-white mb-1.5">
+              {isRTL ? "لم يتم العثور على مقالات" : "No Articles Found"}
+            </h3>
+            <p className="font-subheading text-xs text-gray-400 max-w-md mx-auto mb-5">
               {isRTL
-                ? "لا توجد نتائج تطابق معايير البحث أو التصنيف المحدد. يرجى تجربة كلمات بحث أخرى."
-                : "No blogs match your search query or selected category. Try clearing filters to view all articles."}
+                ? "لم نتمكن من العثور على أي مقالات تطابق بحثك الحالي. جرب استخدام كلمات بحث مختلفة أو تغيير التصنيف."
+                : "We couldn't find any articles matching your search criteria. Try using different keywords or resetting filters."}
             </p>
             <button
               type="button"
               onClick={handleClearFilters}
-              className="px-5 py-2.5 rounded-xl bg-gradient-gold-animated text-black font-heading font-bold text-xs inline-flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-gradient-gold-animated text-black font-heading font-bold text-xs hover:scale-105 transition-all shadow-md cursor-pointer"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>{isRTL ? "إعادة عرض الكل" : "View All Blogs"}</span>
+              {isRTL ? "إعادة تعيين الفلاتر" : "Reset Filters"}
             </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            {paginatedBlogs.map((blog) => (
-              <Link
-                key={blog.id}
-                href={`/knowledge-center/${blog.slug}`}
-                className="bg-white rounded-2xl p-0 overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between border border-gray-100 group cursor-pointer h-full"
-              >
-                <div>
-                  {/* Top Image Container (Standard High-Res Photo Image) */}
-                  <div className="h-44 sm:h-48 w-full relative overflow-hidden bg-gray-950">
-                    <Image
-                      src={blog.heroImage || "/images/blogimage/blogdetails.jpg"}
-                      alt={blog.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                  </div>
-
-                  {/* Card Body */}
-                  <div className="p-4 sm:p-5">
-                    {/* Meta Row: Category + Date */}
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
-                      <span className="font-heading font-bold text-[10.5px] text-gold-main uppercase tracking-wider truncate">
-                        {isRTL ? blog.categoryAr : blog.category}
-                      </span>
-                      <div className="flex items-center gap-1 text-gray-500 font-subheading text-[11px] shrink-0">
-                        <Calendar className="w-3 h-3 text-gray-400" />
-                        <span>{isRTL ? blog.dateAr : blog.date}</span>
-                      </div>
-                    </div>
-
-                    {/* Blog Title */}
-                    <h3 className="font-heading font-bold text-sm sm:text-base text-gray-900 leading-snug mb-2 line-clamp-2 min-h-[2.5rem] group-hover:text-gold-main transition-colors">
-                      {isRTL ? blog.titleAr : blog.title}
-                    </h3>
-
-                    {/* Blog Excerpt */}
-                    <p className="font-subheading text-xs text-gray-600 leading-relaxed line-clamp-2 min-h-[2.25rem]">
-                      {isRTL ? blog.excerptAr : blog.excerpt}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Read More Footer */}
-                <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-gold-main group-hover:gap-2.5 transition-all">
-                    <span>{isRTL ? "اقرأ المزيد" : "Read More"}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-gold-main stroke-[2.2] rtl:rotate-180" />
-                  </div>
-                </div>
-              </Link>
-            ))}
           </div>
         )}
 
         {/* ═══════════════════════════════════════════
-            PAGINATION / LOAD MORE BUTTON
+            PAGINATION: LOAD MORE BUTTON
             ═══════════════════════════════════════════ */}
-        {visibleCount < filteredBlogs.length && (
-          <div className="mt-10 sm:mt-12 text-center">
+        {!isLoading && filteredBlogs.length > visibleCount && (
+          <div className="text-center mt-10 sm:mt-14">
             <button
               type="button"
               onClick={() => setVisibleCount((prev) => prev + 4)}
-              className="px-7 py-3 rounded-2xl bg-gradient-gold-animated text-black font-heading font-bold text-xs sm:text-sm tracking-wide shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer inline-flex items-center gap-2"
+              className="px-8 py-3 rounded-2xl bg-transparent border-2 border-gold-main text-gold-light font-heading font-bold text-xs sm:text-sm hover:bg-gradient-gold-animated hover:text-black hover:border-transparent transition-all shadow-lg hover:shadow-gold-main/20 hover:scale-105 active:scale-95 cursor-pointer"
             >
-              <span>
-                {isRTL ? "تحميل المزيد من المقالات" : "Load More Articles"}
-              </span>
-              <ChevronDown className="w-4 h-4 text-black stroke-[2.5]" />
+              {isRTL ? "عرض المزيد من المقالات" : "Load More Articles"}
             </button>
           </div>
         )}
 
       </div>
     </section>
+  );
+}
+
+export default function LatestBlogsSection() {
+  return (
+    <Suspense fallback={
+      <div className="w-full py-24 flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-gold-main" />
+        <span className="font-heading text-xs text-gray-400">Loading articles...</span>
+      </div>
+    }>
+      <LatestBlogsContent />
+    </Suspense>
   );
 }
