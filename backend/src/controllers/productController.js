@@ -1,5 +1,38 @@
 import Product from "../models/Product.js";
 import { translateProductPayload } from "../utils/translator.js";
+import { deleteCloudinaryAsset } from "./uploadController.js";
+
+/**
+ * Collect all Cloudinary asset URLs from a product object or update payload
+ */
+function collectProductAssetUrls(item) {
+  const urls = [];
+  if (!item) return urls;
+
+  // Main images
+  if (Array.isArray(item.images)) {
+    item.images.forEach((img) => typeof img === "string" && img.includes("cloudinary.com") && urls.push(img));
+  }
+
+  // TDS PDF document
+  if (typeof item.tdsUrl === "string" && item.tdsUrl.includes("cloudinary.com")) {
+    urls.push(item.tdsUrl);
+  }
+
+  // Section 5: Application Cards (EN & AR)
+  if (Array.isArray(item.en?.applicationCards)) {
+    item.en.applicationCards.forEach(
+      (card) => typeof card?.image === "string" && card.image.includes("cloudinary.com") && urls.push(card.image)
+    );
+  }
+  if (Array.isArray(item.ar?.applicationCards)) {
+    item.ar.applicationCards.forEach(
+      (card) => typeof card?.image === "string" && card.image.includes("cloudinary.com") && urls.push(card.image)
+    );
+  }
+
+  return [...new Set(urls)];
+}
 
 /**
  * Generate clean URL slug from title
@@ -249,7 +282,7 @@ export async function getProductBySlugOrId(req, res) {
 }
 
 /**
- * Update an existing product
+ * Update an existing product (Automatically cleans up old Cloudinary images/PDFs if replaced)
  */
 export async function updateProduct(req, res) {
   try {
@@ -264,7 +297,10 @@ export async function updateProduct(req, res) {
       });
     }
 
-    // If English was updated but Arabic was not passed, re-translate
+    // 1. Collect all old Cloudinary asset URLs from the database document
+    const oldAssetUrls = collectProductAssetUrls(product);
+
+    // 2. Re-translate if English was updated
     if (updateData.en && (!updateData.ar || !updateData.ar.title)) {
       try {
         updateData.ar = await translateProductPayload(updateData.en, "ar");
@@ -273,8 +309,22 @@ export async function updateProduct(req, res) {
       }
     }
 
+    // 3. Collect new asset URLs from the incoming update payload
+    const newAssetUrls = collectProductAssetUrls(updateData);
+
+    // 4. Identify old assets that were deleted or replaced
+    const removedAssetUrls = oldAssetUrls.filter((oldUrl) => !newAssetUrls.includes(oldUrl));
+
+    // 5. Apply changes and save to database
     Object.assign(product, updateData);
     await product.save();
+
+    // 6. Delete replaced or removed files from Cloudinary asynchronously
+    if (removedAssetUrls.length > 0) {
+      Promise.allSettled(removedAssetUrls.map((url) => deleteCloudinaryAsset(url))).catch((err) =>
+        console.error("[Product Update Cloudinary Cleanup Error]:", err)
+      );
+    }
 
     return res.status(200).json({
       success: true,
@@ -292,12 +342,12 @@ export async function updateProduct(req, res) {
 }
 
 /**
- * Delete a product
+ * Delete a product (Automatically cleans up all associated Cloudinary images & PDFs)
  */
 export async function deleteProduct(req, res) {
   try {
     const { id } = req.params;
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
 
     if (!product) {
       return res.status(404).json({
@@ -306,9 +356,22 @@ export async function deleteProduct(req, res) {
       });
     }
 
+    // 1. Collect all Cloudinary asset URLs attached to this product
+    const assetUrls = collectProductAssetUrls(product);
+
+    // 2. Delete product from MongoDB
+    await Product.findByIdAndDelete(id);
+
+    // 3. Delete all images, TDS PDF, and card images from Cloudinary asynchronously
+    if (assetUrls.length > 0) {
+      Promise.allSettled(assetUrls.map((url) => deleteCloudinaryAsset(url))).catch((err) =>
+        console.error("[Product Delete Cloudinary Cleanup Error]:", err)
+      );
+    }
+
     return res.status(200).json({
       success: true,
-      message: "Product deleted successfully.",
+      message: "Product and all associated Cloudinary files deleted successfully.",
     });
   } catch (error) {
     console.error("Delete Product Error:", error);

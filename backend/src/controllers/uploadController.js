@@ -105,3 +105,74 @@ export async function uploadMultipleFiles(req, res) {
     });
   }
 }
+
+/**
+ * Robust helper to delete an asset from Cloudinary using its full URL
+ */
+export async function deleteCloudinaryAsset(url) {
+  if (!url || typeof url !== "string" || !url.includes("cloudinary.com")) {
+    return false;
+  }
+  try {
+    const isRaw =
+      url.includes("/raw/upload/") ||
+      url.toLowerCase().endsWith(".pdf") ||
+      url.toLowerCase().endsWith(".doc") ||
+      url.toLowerCase().endsWith(".docx");
+    const resourceType = isRaw ? "raw" : "image";
+
+    const uploadIdx = url.indexOf("/upload/");
+    if (uploadIdx === -1) return false;
+
+    let pathAfterUpload = url.substring(uploadIdx + 8);
+    // Remove transformations and version prefix (e.g. v1740984920/ or c_scale,w_500/v1740984920/)
+    pathAfterUpload = pathAfterUpload.replace(/^(?:[a-z0-9_,]+\/)*v\d+\//i, "").replace(/^v\d+\//i, "");
+
+    let publicId = pathAfterUpload;
+    if (!isRaw) {
+      // Remove file extension for image assets
+      publicId = publicId.replace(/\.[^/.]+$/, "");
+    }
+
+    const result = await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+      invalidate: true,
+    });
+
+    console.log(`[Cloudinary Cleanup] Destroyed ${publicId} (${resourceType}):`, result.result);
+    return result.result === "ok" || result.result === "not found";
+  } catch (error) {
+    console.error(`[Cloudinary Cleanup Error] Failed for ${url}:`, error.message);
+    return false;
+  }
+}
+
+/**
+ * Endpoint to explicitly delete a single file by URL
+ * POST /api/upload/delete { url: "https://..." }
+ */
+export async function deleteFile(req, res) {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({
+        success: false,
+        message: "File URL is required for deletion.",
+      });
+    }
+
+    const success = await deleteCloudinaryAsset(url);
+
+    return res.status(200).json({
+      success: true,
+      message: success ? "File deleted from Cloudinary." : "File could not be found or was already removed.",
+    });
+  } catch (error) {
+    console.error("Cloudinary Delete Endpoint Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Deletion failed.",
+      error: error.message,
+    });
+  }
+}

@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { uploadSingleFile, uploadMultipleFiles } from "../controllers/uploadController.js";
+import { uploadSingleFile, uploadMultipleFiles, deleteFile } from "../controllers/uploadController.js";
 
 const router = express.Router();
 
@@ -18,5 +18,8 @@ router.post("/single", upload.single("file"), uploadSingleFile);
 
 // POST /api/upload/multiple
 router.post("/multiple", upload.array("files", 10), uploadMultipleFiles);
+
+// POST /api/upload/delete
+router.post("/delete", deleteFile);
 
 export default router;

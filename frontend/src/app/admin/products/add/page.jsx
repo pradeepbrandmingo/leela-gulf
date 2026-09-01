@@ -55,7 +55,8 @@ import {
   Gem,
   Search,
   Link2,
-  UploadCloud
+  UploadCloud,
+  LayoutGrid
 } from "lucide-react";
 
 // Official Leela Gulf Industries Catalog List (11 Categories)
@@ -190,8 +191,7 @@ function renderFeatureBadgeIcon(iconName) {
   return <Sparkles className={iconClass} />;
 }
 
-function FeatureIconSelect({ value, onChange }) {
-  const [isOpen, setIsOpen] = useState(false);
+function FeatureIconSelect({ value, onChange, isOpen, onToggle, onClose }) {
   const [activeTab, setActiveTab] = useState("catalog"); // "catalog" | "custom"
   const [iconSearch, setIconSearch] = useState("");
   const [customUrlInput, setCustomUrlInput] = useState("");
@@ -201,18 +201,21 @@ function FeatureIconSelect({ value, onChange }) {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    setSavedIcons(getSavedCustomIcons());
+    if (isOpen) {
+      setSavedIcons(getSavedCustomIcons());
+    }
   }, [isOpen]);
 
   useEffect(() => {
+    if (!isOpen) return;
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsOpen(false);
+        onClose?.();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isOpen, onClose]);
 
   const isCustomUrl =
     typeof value === "string" &&
@@ -223,6 +226,14 @@ function FeatureIconSelect({ value, onChange }) {
       value.includes(".svg") ||
       value.includes(".png") ||
       value.includes(".webp"));
+
+  const isFontAwesome =
+    typeof value === "string" &&
+    (value.includes("fa-") ||
+      value.startsWith("fa ") ||
+      value.startsWith("fas ") ||
+      value.startsWith("far ") ||
+      value.startsWith("fab "));
 
   const selectedPreset = FEATURE_ICON_OPTIONS.find((item) => item.id === value);
   const SelectedIcon = selectedPreset ? selectedPreset.icon : Sparkles;
@@ -252,7 +263,7 @@ function FeatureIconSelect({ value, onChange }) {
         saveCustomIconToStorage(uploadedUrl);
         setSavedIcons(getSavedCustomIcons());
         onChange(uploadedUrl);
-        setIsOpen(false);
+        onClose?.();
       } else {
         alert(data.message || "Failed to upload custom icon.");
       }
@@ -267,12 +278,17 @@ function FeatureIconSelect({ value, onChange }) {
 
   const handleApplyCustomUrl = () => {
     if (!customUrlInput.trim()) return;
-    const url = customUrlInput.trim();
-    saveCustomIconToStorage(url);
-    setSavedIcons(getSavedCustomIcons());
+    let url = customUrlInput.trim();
+    const match = url.match(/class=["']([^"']+)["']/i);
+    if (match) url = match[1];
+
+    if (url.startsWith("http") || url.startsWith("/uploads") || url.includes(".png") || url.includes(".svg") || url.includes("fa-")) {
+      saveCustomIconToStorage(url);
+      setSavedIcons(getSavedCustomIcons());
+    }
     onChange(url);
     setCustomUrlInput("");
-    setIsOpen(false);
+    onClose?.();
   };
 
   const handleClearSavedIcons = () => {
@@ -286,7 +302,7 @@ function FeatureIconSelect({ value, onChange }) {
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={onToggle}
         className="flex items-center gap-1.5 px-2 py-1.5 bg-white border border-gray-200 hover:border-gold-main/60 focus:border-gold-main rounded-xl text-xs font-semibold text-gray-800 shadow-2xs transition-all cursor-pointer w-full max-w-[165px] justify-between"
       >
         <div className="flex items-center gap-1.5 truncate min-w-0">
@@ -296,39 +312,45 @@ function FeatureIconSelect({ value, onChange }) {
               alt="Custom Icon"
               className="w-3.5 h-3.5 object-contain rounded shrink-0 [filter:brightness(0)_saturate(100%)_invert(74%)_sepia(85%)_saturate(380%)_hue-rotate(5deg)_brightness(95%)_contrast(85%)]"
             />
+          ) : isFontAwesome ? (
+            <i className={`${value.replace(/[<>]/g, "").trim()} text-gold-dark text-xs shrink-0`} />
           ) : (
             <SelectedIcon className="w-3.5 h-3.5 text-gold-dark shrink-0" />
           )}
           <span className="truncate text-[11px] font-heading font-bold text-gray-800">
-            {isCustomUrl ? "Custom Icon" : selectedPreset ? selectedPreset.label.split("/")[0].trim() : "Sparkles"}
+            {isCustomUrl ? "Custom Icon" : isFontAwesome ? value.split(" ").pop() : selectedPreset ? selectedPreset.label.split("/")[0].trim() : "Sparkles"}
           </span>
         </div>
         <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 shrink-0 ${isOpen ? "rotate-180 text-gold-dark" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1.5 w-72 sm:w-80 max-w-[calc(100vw-32px)] bg-white border border-gold-main/40 rounded-2xl shadow-2xl z-50 p-3 animate-[fadeIn_0.15s_ease-out]">
-          {/* Header Tab Switcher */}
+        <div className="absolute right-0 top-full mt-1.5 w-72 sm:w-80 max-w-[calc(100vw-32px)] bg-white border border-gold-main/40 rounded-2xl shadow-2xl z-[100] p-3 animate-[fadeIn_0.15s_ease-out]">
+          {/* Header Tab Switcher with Vector Icons Only (Zero Emojis) */}
           <div className="flex items-center gap-1 p-1 bg-gray-50 border border-gray-200 rounded-xl mb-2.5">
             <button
               type="button"
               onClick={() => setActiveTab("catalog")}
-              className={`flex-1 py-1.5 text-[10px] font-heading font-bold rounded-lg transition-all ${activeTab === "catalog"
+              className={`flex-1 py-1.5 text-[10px] font-heading font-bold rounded-lg transition-all inline-flex items-center justify-center gap-1.5 ${
+                activeTab === "catalog"
                   ? "bg-white text-gold-dark shadow-xs border border-gold-main/30"
                   : "text-gray-600 hover:text-gray-900"
-                }`}
+              }`}
             >
-              🎨 30+ Icons Library
+              <LayoutGrid className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              <span>30+ Icons Catalog</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("custom")}
-              className={`flex-1 py-1.5 text-[10px] font-heading font-bold rounded-lg transition-all ${activeTab === "custom"
+              className={`flex-1 py-1.5 text-[10px] font-heading font-bold rounded-lg transition-all inline-flex items-center justify-center gap-1.5 ${
+                activeTab === "custom"
                   ? "bg-white text-gold-dark shadow-xs border border-gold-main/30"
                   : "text-gray-600 hover:text-gray-900"
-                }`}
+              }`}
             >
-              📤 Custom Icon ({savedIcons.length})
+              <UploadCloud className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              <span>Custom / FA {savedIcons.length > 0 ? `(${savedIcons.length})` : ""}</span>
             </button>
           </div>
 
@@ -360,12 +382,13 @@ function FeatureIconSelect({ value, onChange }) {
                         type="button"
                         onClick={() => {
                           onChange(item.id);
-                          setIsOpen(false);
+                          onClose?.();
                         }}
-                        className={`w-full px-2.5 py-1.5 text-left text-xs font-medium rounded-lg flex items-center justify-between transition-colors cursor-pointer ${isItemSel
+                        className={`w-full px-2.5 py-1.5 text-left text-xs font-medium rounded-lg flex items-center justify-between transition-colors cursor-pointer ${
+                          isItemSel
                             ? "bg-gold-main/15 text-gold-dark font-bold border border-gold-main/30"
                             : "text-gray-700 hover:bg-gold-main/10 hover:text-gold-dark"
-                          }`}
+                        }`}
                       >
                         <div className="flex items-center gap-2 truncate">
                           <ItemIcon className="w-3.5 h-3.5 text-gold-dark shrink-0" />
@@ -384,9 +407,10 @@ function FeatureIconSelect({ value, onChange }) {
               {savedIcons.length > 0 && (
                 <div className="space-y-1.5 p-2 bg-[#fdfaf0]/80 rounded-xl border border-gold-main/30">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-heading font-extrabold text-gold-dark">
-                      ✨ Click to use saved icon ({savedIcons.length}):
-                    </span>
+                    <div className="inline-flex items-center gap-1 text-[10px] font-heading font-extrabold text-gold-dark">
+                      <UploadCloud className="w-3 h-3 text-gold-dark shrink-0" />
+                      <span>Saved Uploaded Icons ({savedIcons.length}):</span>
+                    </div>
                     <button
                       type="button"
                       onClick={handleClearSavedIcons}
@@ -402,12 +426,13 @@ function FeatureIconSelect({ value, onChange }) {
                         type="button"
                         onClick={() => {
                           onChange(iconUrl);
-                          setIsOpen(false);
+                          onClose?.();
                         }}
-                        className={`h-12 rounded-xl bg-white border flex items-center justify-center p-1.5 hover:border-gold-main hover:scale-105 transition-all cursor-pointer shadow-xs ${value === iconUrl
+                        className={`h-12 rounded-xl bg-white border flex items-center justify-center p-1.5 hover:border-gold-main hover:scale-105 transition-all cursor-pointer shadow-xs ${
+                          value === iconUrl
                             ? "border-gold-main ring-2 ring-gold-main/50 bg-gold-main/10"
                             : "border-gray-200"
-                          }`}
+                        }`}
                         title="Click to select this saved icon"
                       >
                         <img
@@ -446,15 +471,17 @@ function FeatureIconSelect({ value, onChange }) {
                 <p className="text-[9px] text-gray-400 mt-1">SVG/PNG will automatically adapt to Brand Gold color</p>
               </div>
 
-              {/* Paste Direct URL */}
+              {/* Paste Direct FontAwesome Class or Image URL */}
               <div className="space-y-1 pt-1 border-t border-gray-100">
-                <label className="text-[10px] font-heading font-bold text-gray-600">Or Paste Custom Icon URL:</label>
+                <label className="text-[10px] font-heading font-bold text-gray-600">
+                  Or Paste FontAwesome Class / Image URL:
+                </label>
                 <div className="flex items-center gap-1">
                   <input
-                    type="url"
+                    type="text"
                     value={customUrlInput}
                     onChange={(e) => setCustomUrlInput(e.target.value)}
-                    placeholder="https://example.com/icon.svg"
+                    placeholder="e.g. fa-regular fa-house or https://...svg"
                     className="flex-1 px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-[11px] placeholder-gray-400 focus:outline-none focus:border-gold-main"
                   />
                   <button
@@ -488,6 +515,7 @@ export default function AddNewProductPage() {
   const [isUploadingTds, setIsUploadingTds] = useState(false);
   const [uploadingCardIdx, setUploadingCardIdx] = useState(null);
   const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false);
+  const [openFeatureDropdownIdx, setOpenFeatureDropdownIdx] = useState(null);
   const industryDropdownRef = useRef(null);
 
   // Close dropdown on outside click
@@ -519,7 +547,7 @@ export default function AddNewProductPage() {
       const data = await res.json();
       if (data.success && data.data?.url) {
         setProductImages([data.data.url]);
-        setSuccessMsg("✨ Product image uploaded to Cloudinary!");
+        setSuccessMsg("Product image uploaded to Cloudinary successfully!");
         setTimeout(() => setSuccessMsg(""), 4000);
       } else {
         throw new Error(data.message || "Upload failed");
@@ -553,7 +581,7 @@ export default function AddNewProductPage() {
           tdsUrl: data.data.url,
           tdsFileName: file.name,
         }));
-        setSuccessMsg("✨ TDS Document uploaded successfully to Cloudinary!");
+        setSuccessMsg("TDS Document uploaded successfully to Cloudinary!");
         setTimeout(() => setSuccessMsg(""), 4000);
       } else {
         throw new Error(data.message || "TDS Upload failed");
@@ -837,7 +865,7 @@ export default function AddNewProductPage() {
         if (Array.isArray(ar.relatedProducts)) setArRelatedProducts(ar.relatedProducts);
 
         setHasTranslated(true);
-        setSuccessMsg("✨ All product sections automatically translated to Arabic! You can switch to the Arabic tab to preview or edit.");
+        setSuccessMsg("All product sections automatically translated to Arabic! You can switch to the Arabic tab to preview or edit.");
         setTimeout(() => setSuccessMsg(""), 5000);
       }
     } catch (err) {
@@ -1188,8 +1216,8 @@ export default function AddNewProductPage() {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
-                  <span>✨ Auto-Translate to Arabic</span>
+                  <Languages className="w-3.5 h-3.5 text-white" />
+                  <span>Auto-Translate to Arabic</span>
                 </>
               )}
             </button>
@@ -1222,22 +1250,24 @@ export default function AddNewProductPage() {
             <button
               type="button"
               onClick={() => setActiveLang("en")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${activeLang === "en"
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                activeLang === "en"
                   ? "bg-white text-gray-900 shadow-2xs border border-gray-200"
                   : "text-gray-500 hover:text-gray-900"
-                }`}
+              }`}
             >
-              <span>🇬🇧 English (Original Form)</span>
+              <span>English (Original Form)</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveLang("ar")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${activeLang === "ar"
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                activeLang === "ar"
                   ? "bg-[#fdfaf0] text-gold-dark shadow-2xs border border-gold-main/40"
                   : "text-gray-500 hover:text-gray-900"
-                }`}
+              }`}
             >
-              <span>🇦🇪 Arabic (العربية)</span>
+              <span>Arabic (العربية)</span>
               {hasTranslated && (
                 <span className="w-2 h-2 rounded-full bg-emerald-500" title="Auto-translated" />
               )}
@@ -1854,7 +1884,7 @@ export default function AddNewProductPage() {
         <div className="flex items-center justify-between pb-3 border-b border-gray-100">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark font-bold">
-              <Sparkles className="w-4 h-4" />
+              <Layers className="w-4 h-4" />
             </div>
             <div>
               <h2 className="text-sm font-heading font-extrabold text-gray-900">
@@ -1879,11 +1909,17 @@ export default function AddNewProductPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {curFeatures.map((feat, idx) => {
             const iconPreview = renderFeatureBadgeIcon(feat.icon);
+            const isThisDropdownOpen = openFeatureDropdownIdx === idx;
 
             return (
               <div
                 key={feat.id}
-                className="relative bg-white border border-gray-200 rounded-2xl shadow-2xs hover:border-gold-main/50 transition-all group z-10 hover:z-20 flex flex-col justify-between"
+                style={{ zIndex: isThisDropdownOpen ? 100 : 1 }}
+                className={`relative bg-white border rounded-2xl shadow-2xs transition-all flex flex-col justify-between ${
+                  isThisDropdownOpen
+                    ? "border-gold-main ring-2 ring-gold-main/30 shadow-xl"
+                    : "border-gray-200 hover:border-gold-main/40"
+                }`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 p-3 bg-gray-50/70 border-b border-gray-100 rounded-t-2xl">
@@ -1900,6 +1936,9 @@ export default function AddNewProductPage() {
                       <FeatureIconSelect
                         value={feat.icon}
                         onChange={(newIcon) => handleFeatureChange(idx, "icon", newIcon)}
+                        isOpen={isThisDropdownOpen}
+                        onToggle={() => setOpenFeatureDropdownIdx(isThisDropdownOpen ? null : idx)}
+                        onClose={() => setOpenFeatureDropdownIdx(null)}
                       />
 
                       {curFeatures.length > 1 && (

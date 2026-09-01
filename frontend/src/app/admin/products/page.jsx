@@ -536,7 +536,7 @@ export default function AdminProductsPage() {
     try {
       const res = await apiRequest(`/products/${id}`, { method: "DELETE" });
       if (res?.success) {
-        setToastMsg("✨ Product deleted from database successfully!");
+        setToastMsg("Product deleted from database successfully!");
         setProductsList((prev) => prev.filter((p) => p._id !== id));
         setTimeout(() => setToastMsg(""), 3500);
       } else {
@@ -545,7 +545,7 @@ export default function AdminProductsPage() {
     } catch (err) {
       console.log("Backend delete error:", err);
       setProductsList((prev) => prev.filter((p) => p._id !== id));
-      setToastMsg("✨ Product removed!");
+      setToastMsg("Product removed!");
       setTimeout(() => setToastMsg(""), 3500);
     } finally {
       setIsDeleting(false);
@@ -1143,8 +1143,9 @@ export default function AdminProductsPage() {
 
               <div>
                 <span className="text-gray-400 font-semibold block mb-0.5">Status</span>
-                <span className="font-bold">
-                  {selectedProductModal.status === "Published" ? "🟢 Published" : "🟡 Draft"}
+                <span className="font-bold inline-flex items-center gap-1.5 text-gray-900">
+                  <span className={`w-2 h-2 rounded-full ${selectedProductModal.status === "Published" ? "bg-emerald-500" : "bg-amber-500"}`} />
+                  <span>{selectedProductModal.status || "Published"}</span>
                 </span>
               </div>
 
