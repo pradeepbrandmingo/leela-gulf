@@ -247,6 +247,8 @@ export default function AdminDashboardPage() {
   const [dbLeadsTotal, setDbLeadsTotal] = useState(0);
   const [dbLeadsList, setDbLeadsList] = useState([]);
   const [dbProductsTotal, setDbProductsTotal] = useState(null);
+  const [dbBlogsTotal, setDbBlogsTotal] = useState(null);
+  const [dbBlogsList, setDbBlogsList] = useState([]);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   useEffect(() => {
@@ -258,9 +260,10 @@ export default function AdminDashboardPage() {
         if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
         const leadQuery = `?${leadParams.join("&")}`;
 
-        const [leadsRes, productsRes] = await Promise.allSettled([
+        const [leadsRes, productsRes, blogsRes] = await Promise.allSettled([
           apiRequest(`/leads${leadQuery}`, { method: "GET" }),
           apiRequest(`/products?limit=1`, { method: "GET" }),
+          apiRequest(`/blogs?limit=5`, { method: "GET" }),
         ]);
 
         if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
@@ -275,6 +278,17 @@ export default function AdminDashboardPage() {
           setDbProductsTotal(count);
         } else {
           setDbProductsTotal(0);
+        }
+
+        if (blogsRes.status === "fulfilled" && blogsRes.value?.success) {
+          const bCount =
+            blogsRes.value.pagination?.total ??
+            (Array.isArray(blogsRes.value.data) ? blogsRes.value.data.length : 0);
+          setDbBlogsTotal(bCount);
+          setDbBlogsList(Array.isArray(blogsRes.value.data) ? blogsRes.value.data : []);
+        } else {
+          setDbBlogsTotal(0);
+          setDbBlogsList([]);
         }
       } catch (err) {
         console.warn("Could not fetch dashboard live stats:", err);
@@ -341,18 +355,65 @@ export default function AdminDashboardPage() {
     };
   }, [dbLeadsList]);
 
+  // Dynamic Donut Chart SVG Arcs Calculation
+  const donutArcs = useMemo(() => {
+    const circumference = 2 * Math.PI * 38; // ~238.761
+    const { product, contact, blog, other } = leadSourceStats;
+    const total = dbLeadsList.length || 0;
+
+    if (total === 0) {
+      return {
+        productArc: "0 238.76",
+        productOffset: 0,
+        contactArc: "0 238.76",
+        contactOffset: 0,
+        blogArc: "0 238.76",
+        blogOffset: 0,
+        otherArc: "0 238.76",
+        otherOffset: 0,
+        hasData: false,
+      };
+    }
+
+    const pLen = (product.count / total) * circumference;
+    const cLen = (contact.count / total) * circumference;
+    const bLen = (blog.count / total) * circumference;
+    const oLen = (other.count / total) * circumference;
+
+    let offset = 0;
+    const pOffset = -offset;
+    offset += pLen;
+    const cOffset = -offset;
+    offset += cLen;
+    const bOffset = -offset;
+    offset += bLen;
+    const oOffset = -offset;
+
+    return {
+      productArc: `${pLen.toFixed(1)} ${circumference.toFixed(2)}`,
+      productOffset: pOffset,
+      contactArc: `${cLen.toFixed(1)} ${circumference.toFixed(2)}`,
+      contactOffset: cOffset,
+      blogArc: `${bLen.toFixed(1)} ${circumference.toFixed(2)}`,
+      blogOffset: bOffset,
+      otherArc: `${oLen.toFixed(1)} ${circumference.toFixed(2)}`,
+      otherOffset: oOffset,
+      hasData: true,
+    };
+  }, [leadSourceStats, dbLeadsList]);
+
   // 6 Metric Summary Cards Data
   const metricCards = [
     {
       title: "Total Products",
-      value: dbProductsTotal !== null ? String(dbProductsTotal) : "...",
+      value: dbProductsTotal !== null ? String(dbProductsTotal) : (isLoadingStats ? "..." : "0"),
       linkText: "View all products",
       href: "/admin/products",
       icon: Package,
     },
     {
       title: "Total Blogs",
-      value: "42",
+      value: dbBlogsTotal !== null ? String(dbBlogsTotal) : (isLoadingStats ? "..." : "0"),
       linkText: "View all blogs",
       href: "/admin/blogs",
       icon: FileEdit,
@@ -437,34 +498,19 @@ export default function AdminDashboardPage() {
     ];
   }, [dbLeadsList]);
 
-  // Dynamic Recent Blogs Table Data
-  const recentBlogs = [
-    {
-      title: "The Future of Sustainable Chemical Supply Chain",
-      status: "Published",
-      date: getRelativeDateStr(0),
-    },
-    {
-      title: "Understanding Industrial Chemical Trends in 2025",
-      status: "Published",
-      date: getRelativeDateStr(1),
-    },
-    {
-      title: "Safety and Compliance in Chemical Handling",
-      status: "Published",
-      date: getRelativeDateStr(2),
-    },
-    {
-      title: "Innovations Driving the Chemical Industry",
-      status: "Draft",
-      date: getRelativeDateStr(3),
-    },
-    {
-      title: "Choosing the Right Chemical Partner",
-      status: "Draft",
-      date: getRelativeDateStr(4),
-    },
-  ];
+  // Dynamic Recent Blogs Table Data (from Live MongoDB)
+  const recentBlogs = useMemo(() => {
+    if (dbBlogsList && dbBlogsList.length > 0) {
+      return dbBlogsList.slice(0, 5).map((b) => ({
+        _id: b._id,
+        slug: b.slug,
+        title: b.title || b.en?.title || "Untitled Blog",
+        status: b.status || "Published",
+        date: formatDateShort(b.createdAt || b.date),
+      }));
+    }
+    return [];
+  }, [dbBlogsList]);
 
   return (
     <div className="space-y-6 pb-10">
@@ -890,50 +936,68 @@ export default function AdminDashboardPage() {
             {/* SVG Donut Chart (100% Perfectly Round & Compact) */}
             <div className="relative w-44 h-44 sm:w-48 sm:h-48 shrink-0 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90 overflow-visible" viewBox="0 0 100 100">
-                {/* Product Page Arc (53.5% - Dark/Black) */}
+                {/* Background track circle */}
                 <circle
                   cx="50"
                   cy="50"
                   r="38"
                   fill="none"
-                  stroke="#111827"
+                  stroke="#f3f4f6"
                   strokeWidth="14"
-                  strokeDasharray="127.7 238.76"
-                  strokeDashoffset="0"
                 />
-                {/* Contact Page Arc (32.6% - Dark Gray) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#4b5563"
-                  strokeWidth="14"
-                  strokeDasharray="77.8 238.76"
-                  strokeDashoffset="-127.7"
-                />
-                {/* Blog Page Arc (9.3% - Muted Light Gray) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  strokeWidth="14"
-                  strokeDasharray="22.2 238.76"
-                  strokeDashoffset="-205.5"
-                />
-                {/* Other Sources Arc (4.6% - Gold) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#d6b92a"
-                  strokeWidth="14"
-                  strokeDasharray="11.0 238.76"
-                  strokeDashoffset="-227.7"
-                />
+
+                {donutArcs.hasData && (
+                  <>
+                    {/* Product Page Arc (Dark/Black) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="38"
+                      fill="none"
+                      stroke="#111827"
+                      strokeWidth="14"
+                      strokeDasharray={donutArcs.productArc}
+                      strokeDashoffset={donutArcs.productOffset}
+                      className="transition-all duration-700 ease-out"
+                    />
+                    {/* Contact Page Arc (Dark Gray) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="38"
+                      fill="none"
+                      stroke="#4b5563"
+                      strokeWidth="14"
+                      strokeDasharray={donutArcs.contactArc}
+                      strokeDashoffset={donutArcs.contactOffset}
+                      className="transition-all duration-700 ease-out"
+                    />
+                    {/* Blog Page Arc (Muted Light Gray) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="38"
+                      fill="none"
+                      stroke="#d1d5db"
+                      strokeWidth="14"
+                      strokeDasharray={donutArcs.blogArc}
+                      strokeDashoffset={donutArcs.blogOffset}
+                      className="transition-all duration-700 ease-out"
+                    />
+                    {/* Other Sources Arc (Gold) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="38"
+                      fill="none"
+                      stroke="#d6b92a"
+                      strokeWidth="14"
+                      strokeDasharray={donutArcs.otherArc}
+                      strokeDashoffset={donutArcs.otherOffset}
+                      className="transition-all duration-700 ease-out"
+                    />
+                  </>
+                )}
               </svg>
 
               {/* Center Donut Label */}
@@ -1069,30 +1133,66 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
-                {recentBlogs.map((blog, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                    <td className="py-3 font-medium text-gray-900 max-w-[220px] truncate">
-                      {blog.title}
-                    </td>
-                    <td className="py-3">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-heading font-bold ${
-                          blog.status === "Published"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
-                            : "bg-amber-50 text-amber-700 border border-amber-200/60"
-                        }`}
-                      >
-                        {blog.status}
-                      </span>
-                    </td>
-                    <td className="py-3 text-gray-500 whitespace-nowrap">{blog.date}</td>
-                    <td className="py-3 text-right">
-                      <button className="text-gray-400 hover:text-gray-700 p-1 cursor-pointer">
-                        <MoreVertical className="w-3.5 h-3.5" />
-                      </button>
+                {isLoadingStats ? (
+                  <tr>
+                    <td colSpan={4} className="py-6 text-center text-gray-400 font-subheading text-xs">
+                      Loading recent blogs...
                     </td>
                   </tr>
-                ))}
+                ) : recentBlogs.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-6 text-center text-gray-400 font-subheading text-xs">
+                      No blogs created yet.{" "}
+                      <Link href="/admin/blogs/add" className="text-gold-dark font-bold hover:underline">
+                        + Add your first blog
+                      </Link>
+                    </td>
+                  </tr>
+                ) : (
+                  recentBlogs.map((blog, idx) => (
+                    <tr key={blog._id || idx} className="hover:bg-gray-50/80 transition-colors">
+                      <td className="py-3 font-medium text-gray-900 max-w-[220px] truncate">
+                        <Link
+                          href={`/admin/blogs/edit/${blog._id}`}
+                          className="hover:text-gold-dark transition-colors font-bold"
+                        >
+                          {blog.title}
+                        </Link>
+                      </td>
+                      <td className="py-3">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-heading font-bold ${
+                            blog.status === "Published"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
+                              : "bg-amber-50 text-amber-700 border border-amber-200/60"
+                          }`}
+                        >
+                          {blog.status}
+                        </span>
+                      </td>
+                      <td className="py-3 text-gray-500 whitespace-nowrap">{blog.date}</td>
+                      <td className="py-3 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Link
+                            href={`/knowledge-center/${blog.slug || blog._id}`}
+                            target="_blank"
+                            className="text-gray-400 hover:text-gray-900 p-1 cursor-pointer transition-colors"
+                            title="View Live Article"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </Link>
+                          <Link
+                            href={`/admin/blogs/edit/${blog._id}`}
+                            className="text-gray-400 hover:text-gold-dark p-1 cursor-pointer transition-colors"
+                            title="Edit Blog"
+                          >
+                            <FileEdit className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
