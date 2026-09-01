@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { apiRequest } from "@/config/api";
+import { apiRequest, API_BASE_URL } from "@/config/api";
 import {
   ArrowLeft,
   Save,
@@ -171,7 +171,7 @@ export default function AddNewProductPage() {
       const uploadData = new FormData();
       uploadData.append("file", file);
 
-      const res = await fetch("http://localhost:8000/api/upload/single", {
+      const res = await fetch(`${API_BASE_URL}/upload/single`, {
         method: "POST",
         body: uploadData,
       });
@@ -201,7 +201,7 @@ export default function AddNewProductPage() {
       const uploadData = new FormData();
       uploadData.append("file", file);
 
-      const res = await fetch("http://localhost:8000/api/upload/single", {
+      const res = await fetch(`${API_BASE_URL}/upload/single`, {
         method: "POST",
         body: uploadData,
       });
@@ -233,7 +233,7 @@ export default function AddNewProductPage() {
       const uploadData = new FormData();
       uploadData.append("file", file);
 
-      const res = await fetch("http://localhost:8000/api/upload/single", {
+      const res = await fetch(`${API_BASE_URL}/upload/single`, {
         method: "POST",
         body: uploadData,
       });

@@ -13,22 +13,31 @@ const app = express();
 // Security
 app.use(helmet());
 
-// CORS configuration (Global environment-driven for production readiness)
-const allowedOrigins = [
+// CORS configuration (Global environment-driven for localhost + production deployments)
+const explicitAllowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:3000",
+  "http://localhost:3001",
   "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  "https://leela-gulf.vercel.app",
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl)
+      // Allow requests with no origin (like mobile apps, curl, server-side fetch)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === "development") {
+
+      // Allow explicit origins or any Vercel deployment preview / production domain
+      if (
+        explicitAllowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app") ||
+        process.env.NODE_ENV === "development"
+      ) {
         return callback(null, true);
       }
-      return callback(new Error("Not allowed by CORS"));
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     credentials: true,
   })
