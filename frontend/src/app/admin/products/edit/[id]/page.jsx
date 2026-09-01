@@ -36,7 +36,27 @@ import {
   Loader2,
   Globe,
   AlertCircle,
-  ExternalLink
+  ExternalLink,
+  Flame,
+  Gauge,
+  Compass,
+  Factory,
+  Waves,
+  Activity,
+  Cpu,
+  Target,
+  Star,
+  Box,
+  Microscope,
+  Wind,
+  Thermometer,
+  Eye,
+  Settings,
+  TrendingUp,
+  Gem,
+  Search,
+  Link2,
+  UploadCloud
 } from "lucide-react";
 
 // Official 11 Leela Gulf Industries
@@ -68,11 +88,122 @@ const FEATURE_ICON_OPTIONS = [
   { id: "recycle", label: "Recycle / Eco Friendly", icon: Recycle },
   { id: "heart", label: "Heart / Safe & Mild", icon: Heart },
   { id: "check", label: "Check / Certified Quality", icon: CheckCircle2 },
+  { id: "flame", label: "Flame / Thermal Reactivity", icon: Flame },
+  { id: "gauge", label: "Gauge / Viscosity Control", icon: Gauge },
+  { id: "factory", label: "Factory / Industrial Grade", icon: Factory },
+  { id: "globe", label: "Globe / Global Export", icon: Globe },
+  { id: "waves", label: "Waves / Surfactant & Emulsion", icon: Waves },
+  { id: "activity", label: "Activity / High Reactivity", icon: Activity },
+  { id: "package", label: "Package / Bulk Packaging", icon: Package },
+  { id: "layers", label: "Layers / Coating & Film", icon: Layers },
+  { id: "cpu", label: "Cpu / Tech Synthesis", icon: Cpu },
+  { id: "target", label: "Target / High Precision", icon: Target },
+  { id: "star", label: "Star / High Purity Grade", icon: Star },
+  { id: "microscope", label: "Microscope / Lab Tested", icon: Microscope },
+  { id: "wind", label: "Wind / Low Volatility", icon: Wind },
+  { id: "thermometer", label: "Thermometer / Temp Stable", icon: Thermometer },
+  { id: "trend", label: "Trending / High Yield", icon: TrendingUp },
+  { id: "gem", label: "Gem / Crystalline Pure", icon: Gem },
+  { id: "box", label: "Box / Standard Formulation", icon: Box },
+  { id: "compass", label: "Compass / Direction & Flow", icon: Compass },
+  { id: "settings", label: "Settings / Custom Modified", icon: Settings },
+  { id: "eye", label: "Eye / Optical Clarity", icon: Eye },
 ];
+
+function getSavedCustomIcons() {
+  if (typeof window === "undefined") return [];
+  try {
+    const saved = localStorage.getItem("leela_saved_feature_icons");
+    return saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveCustomIconToStorage(url) {
+  if (typeof window === "undefined" || !url) return;
+  try {
+    const prev = getSavedCustomIcons();
+    const filtered = prev.filter((item) => item !== url);
+    const updated = [url, ...filtered].slice(0, 16); // Keep last 16 icons
+    localStorage.setItem("leela_saved_feature_icons", JSON.stringify(updated));
+  } catch (e) {
+    console.warn("Storage save error:", e);
+  }
+}
+
+function renderFeatureBadgeIcon(iconName) {
+  const iconClass = "w-4 h-4 text-gold-main";
+  const key = (iconName || "").trim().toLowerCase();
+
+  // Custom Uploaded Image/SVG Icon URL
+  if (
+    key.startsWith("http://") ||
+    key.startsWith("https://") ||
+    key.startsWith("/uploads/") ||
+    key.startsWith("data:image/") ||
+    key.includes(".svg") ||
+    key.includes(".png") ||
+    key.includes(".webp")
+  ) {
+    return (
+      <img
+        src={iconName}
+        alt="Feature Icon"
+        className="w-5 h-5 object-contain [filter:brightness(0)_saturate(100%)_invert(74%)_sepia(85%)_saturate(380%)_hue-rotate(5deg)_brightness(95%)_contrast(85%)]"
+      />
+    );
+  }
+
+  if (key.includes("sparkle") || key.includes("foam") || key.includes("active")) return <Sparkles className={iconClass} />;
+  if (key.includes("feather") || key.includes("gentle") || key.includes("skin") || key.includes("mild")) return <Feather className={iconClass} />;
+  if (key.includes("leaf") || key.includes("natural") || key.includes("bio") || key.includes("plant") || key.includes("eco")) return <Leaf className={iconClass} />;
+  if (key.includes("droplet") || key.includes("soluble") || key.includes("water") || key.includes("liquid")) return <Droplet className={iconClass} />;
+  if (key.includes("flask") || key.includes("chemical") || key.includes("versatile") || key.includes("lab")) return <FlaskConical className={iconClass} />;
+  if (key.includes("shield") || key.includes("safety") || key.includes("protect") || key.includes("stable")) return <ShieldCheck className={iconClass} />;
+  if (key.includes("zap") || key.includes("fast") || key.includes("power") || key.includes("energy")) return <Zap className={iconClass} />;
+  if (key.includes("award") || key.includes("pure") || key.includes("quality") || key.includes("cert") || key.includes("premium")) return <Award className={iconClass} />;
+  if (key.includes("sun") || key.includes("heat") || key.includes("light") || key.includes("thermal")) return <Sun className={iconClass} />;
+  if (key.includes("recycle") || key.includes("sustain") || key.includes("green")) return <Recycle className={iconClass} />;
+  if (key.includes("heart") || key.includes("safe") || key.includes("care")) return <Heart className={iconClass} />;
+  if (key.includes("flame") || key.includes("fire")) return <Flame className={iconClass} />;
+  if (key.includes("gauge") || key.includes("pressure") || key.includes("speed")) return <Gauge className={iconClass} />;
+  if (key.includes("check") || key.includes("verified")) return <CheckCircle2 className={iconClass} />;
+  if (key.includes("factory") || key.includes("plant") || key.includes("industry")) return <Factory className={iconClass} />;
+  if (key.includes("globe") || key.includes("world") || key.includes("export")) return <Globe className={iconClass} />;
+  if (key.includes("wave") || key.includes("marine") || key.includes("surfactant")) return <Waves className={iconClass} />;
+  if (key.includes("activity") || key.includes("reaction")) return <Activity className={iconClass} />;
+  if (key.includes("package") || key.includes("bulk") || key.includes("drum")) return <Package className={iconClass} />;
+  if (key.includes("layer") || key.includes("coating") || key.includes("film")) return <Layers className={iconClass} />;
+  if (key.includes("cpu") || key.includes("tech") || key.includes("smart")) return <Cpu className={iconClass} />;
+  if (key.includes("target") || key.includes("precision") || key.includes("focus")) return <Target className={iconClass} />;
+  if (key.includes("star") || key.includes("grade")) return <Star className={iconClass} />;
+  if (key.includes("microscope") || key.includes("research") || key.includes("purity")) return <Microscope className={iconClass} />;
+  if (key.includes("wind") || key.includes("air") || key.includes("gas")) return <Wind className={iconClass} />;
+  if (key.includes("thermometer") || key.includes("temp")) return <Thermometer className={iconClass} />;
+  if (key.includes("trend") || key.includes("yield") || key.includes("efficiency")) return <TrendingUp className={iconClass} />;
+  if (key.includes("gem") || key.includes("crystal") || key.includes("pure")) return <Gem className={iconClass} />;
+  if (key.includes("box")) return <Box className={iconClass} />;
+  if (key.includes("compass")) return <Compass className={iconClass} />;
+  if (key.includes("setting")) return <Settings className={iconClass} />;
+  if (key.includes("eye")) return <Eye className={iconClass} />;
+
+  return <Sparkles className={iconClass} />;
+}
 
 function FeatureIconSelect({ value, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("catalog"); // "catalog" | "custom"
+  const [iconSearch, setIconSearch] = useState("");
+  const [customUrlInput, setCustomUrlInput] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [savedIcons, setSavedIcons] = useState([]);
   const dropdownRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setSavedIcons(getSavedCustomIcons());
+  }, [isOpen]);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -84,50 +215,260 @@ function FeatureIconSelect({ value, onChange }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selected = FEATURE_ICON_OPTIONS.find((item) => item.id === (value || "sparkles")) || FEATURE_ICON_OPTIONS[0];
-  const SelectedIcon = selected.icon;
+  const isCustomUrl =
+    typeof value === "string" &&
+    (value.startsWith("http://") ||
+      value.startsWith("https://") ||
+      value.startsWith("/uploads/") ||
+      value.startsWith("data:image/") ||
+      value.includes(".svg") ||
+      value.includes(".png") ||
+      value.includes(".webp"));
+
+  const selectedPreset = FEATURE_ICON_OPTIONS.find((item) => item.id === value);
+  const SelectedIcon = selectedPreset ? selectedPreset.icon : Sparkles;
+
+  const filteredIcons = FEATURE_ICON_OPTIONS.filter((item) =>
+    item.label.toLowerCase().includes(iconSearch.toLowerCase()) ||
+    item.id.toLowerCase().includes(iconSearch.toLowerCase())
+  );
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${API_BASE_URL}/upload/single`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      const uploadedUrl = data.data?.url || data.url;
+
+      if (data.success && uploadedUrl) {
+        saveCustomIconToStorage(uploadedUrl);
+        setSavedIcons(getSavedCustomIcons());
+        onChange(uploadedUrl);
+        setIsOpen(false);
+      } else {
+        alert(data.message || "Failed to upload custom icon.");
+      }
+    } catch (err) {
+      console.error("Icon upload error:", err);
+      alert("Error uploading custom icon.");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleApplyCustomUrl = () => {
+    if (!customUrlInput.trim()) return;
+    const url = customUrlInput.trim();
+    saveCustomIconToStorage(url);
+    setSavedIcons(getSavedCustomIcons());
+    onChange(url);
+    setCustomUrlInput("");
+    setIsOpen(false);
+  };
+
+  const handleClearSavedIcons = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("leela_saved_feature_icons");
+      setSavedIcons([]);
+    }
+  };
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-2.5 py-1.5 bg-white border border-gray-200 hover:border-gold-main/60 focus:border-gold-main rounded-xl text-xs font-semibold text-gray-800 shadow-2xs transition-all cursor-pointer min-w-[175px] justify-between"
+        className="flex items-center gap-1.5 px-2 py-1.5 bg-white border border-gray-200 hover:border-gold-main/60 focus:border-gold-main rounded-xl text-xs font-semibold text-gray-800 shadow-2xs transition-all cursor-pointer w-full max-w-[165px] justify-between"
       >
-        <div className="flex items-center gap-1.5 truncate">
-          <SelectedIcon className="w-3.5 h-3.5 text-gold-dark shrink-0" />
-          <span className="truncate text-[11px] font-heading font-bold text-gray-800">{selected.label}</span>
+        <div className="flex items-center gap-1.5 truncate min-w-0">
+          {isCustomUrl ? (
+            <img
+              src={value}
+              alt="Custom Icon"
+              className="w-3.5 h-3.5 object-contain rounded shrink-0 [filter:brightness(0)_saturate(100%)_invert(74%)_sepia(85%)_saturate(380%)_hue-rotate(5deg)_brightness(95%)_contrast(85%)]"
+            />
+          ) : (
+            <SelectedIcon className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+          )}
+          <span className="truncate text-[11px] font-heading font-bold text-gray-800">
+            {isCustomUrl ? "Custom Icon" : selectedPreset ? selectedPreset.label.split("/")[0].trim() : "Sparkles"}
+          </span>
         </div>
         <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 shrink-0 ${isOpen ? "rotate-180 text-gold-dark" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1.5 w-64 bg-white border border-gold-main/30 rounded-2xl shadow-2xl z-50 max-h-56 overflow-y-auto py-1.5 animate-[fadeIn_0.15s_ease-out] [scrollbar-width:thin]">
-          {FEATURE_ICON_OPTIONS.map((item) => {
-            const ItemIcon = item.icon;
-            const isItemSel = (value || "sparkles") === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  onChange(item.id);
-                  setIsOpen(false);
-                }}
-                className={`w-full px-3 py-2 text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${
-                  isItemSel
-                    ? "bg-gold-main/15 text-gold-dark font-bold border-l-2 border-gold-main"
-                    : "text-gray-700 hover:bg-gold-main/10 hover:text-gold-dark"
+        <div className="absolute right-0 top-full mt-1.5 w-72 sm:w-80 max-w-[calc(100vw-32px)] bg-white border border-gold-main/40 rounded-2xl shadow-2xl z-50 p-3 animate-[fadeIn_0.15s_ease-out]">
+          {/* Header Tab Switcher */}
+          <div className="flex items-center gap-1 p-1 bg-gray-50 border border-gray-200 rounded-xl mb-2.5">
+            <button
+              type="button"
+              onClick={() => setActiveTab("catalog")}
+              className={`flex-1 py-1.5 text-[10px] font-heading font-bold rounded-lg transition-all ${activeTab === "catalog"
+                  ? "bg-white text-gold-dark shadow-xs border border-gold-main/30"
+                  : "text-gray-600 hover:text-gray-900"
                 }`}
-              >
-                <div className="flex items-center gap-2 truncate">
-                  <ItemIcon className="w-3.5 h-3.5 text-gold-dark shrink-0" />
-                  <span className="truncate text-[11px] font-heading">{item.label}</span>
+            >
+              🎨 30+ Icons Library
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("custom")}
+              className={`flex-1 py-1.5 text-[10px] font-heading font-bold rounded-lg transition-all ${activeTab === "custom"
+                  ? "bg-white text-gold-dark shadow-xs border border-gold-main/30"
+                  : "text-gray-600 hover:text-gray-900"
+                }`}
+            >
+              📤 Custom Icon ({savedIcons.length})
+            </button>
+          </div>
+
+          {activeTab === "catalog" ? (
+            <div>
+              {/* Search Bar */}
+              <div className="relative mb-2">
+                <Search className="w-3 h-3 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={iconSearch}
+                  onChange={(e) => setIconSearch(e.target.value)}
+                  placeholder="Search icons (e.g. eco, lab, foam)..."
+                  className="w-full pl-7 pr-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-[11px] placeholder-gray-400 focus:outline-none focus:border-gold-main"
+                />
+              </div>
+
+              {/* Scrollable Icon List */}
+              <div className="max-h-48 overflow-y-auto space-y-0.5 [scrollbar-width:thin] pr-1">
+                {filteredIcons.length === 0 ? (
+                  <div className="text-center py-4 text-xs text-gray-400">No icons match "{iconSearch}"</div>
+                ) : (
+                  filteredIcons.map((item) => {
+                    const ItemIcon = item.icon;
+                    const isItemSel = value === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          onChange(item.id);
+                          setIsOpen(false);
+                        }}
+                        className={`w-full px-2.5 py-1.5 text-left text-xs font-medium rounded-lg flex items-center justify-between transition-colors cursor-pointer ${isItemSel
+                            ? "bg-gold-main/15 text-gold-dark font-bold border border-gold-main/30"
+                            : "text-gray-700 hover:bg-gold-main/10 hover:text-gold-dark"
+                          }`}
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <ItemIcon className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+                          <span className="truncate text-[11px] font-heading">{item.label}</span>
+                        </div>
+                        {isItemSel && <Check className="w-3 h-3 text-gold-dark shrink-0" />}
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2.5 py-1">
+              {/* TOP: Previously Uploaded / Saved Custom Icons Gallery */}
+              {savedIcons.length > 0 && (
+                <div className="space-y-1.5 p-2 bg-[#fdfaf0]/80 rounded-xl border border-gold-main/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-heading font-extrabold text-gold-dark">
+                      ✨ Click to use saved icon ({savedIcons.length}):
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleClearSavedIcons}
+                      className="text-[9px] text-gray-400 hover:text-rose-600 underline cursor-pointer"
+                    >
+                      Clear all
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto p-1 [scrollbar-width:thin]">
+                    {savedIcons.map((iconUrl, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          onChange(iconUrl);
+                          setIsOpen(false);
+                        }}
+                        className={`h-12 rounded-xl bg-white border flex items-center justify-center p-1.5 hover:border-gold-main hover:scale-105 transition-all cursor-pointer shadow-xs ${value === iconUrl
+                            ? "border-gold-main ring-2 ring-gold-main/50 bg-gold-main/10"
+                            : "border-gray-200"
+                          }`}
+                        title="Click to select this saved icon"
+                      >
+                        <img
+                          src={iconUrl}
+                          alt="Saved icon"
+                          className="w-6 h-6 object-contain [filter:brightness(0)_saturate(100%)_invert(74%)_sepia(85%)_saturate(380%)_hue-rotate(5deg)_brightness(95%)_contrast(85%)]"
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                {isItemSel && <Check className="w-3 h-3 text-gold-dark shrink-0" />}
-              </button>
-            );
-          })}
+              )}
+
+              {/* Custom Image Upload Button */}
+              <div className="border border-dashed border-gold-main/40 hover:border-gold-main bg-gray-50/70 rounded-xl p-2.5 text-center transition-colors">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept="image/png, image/jpeg, image/svg+xml, image/webp"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  disabled={isUploading}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#d6b92a] hover:bg-gold-dark text-black hover:text-white rounded-lg text-xs font-heading font-bold cursor-pointer transition-all shadow-xs disabled:opacity-50"
+                >
+                  {isUploading ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <UploadCloud className="w-3.5 h-3.5" />
+                  )}
+                  <span>{isUploading ? "Uploading..." : "Upload New SVG/PNG"}</span>
+                </button>
+                <p className="text-[9px] text-gray-400 mt-1">SVG/PNG will automatically adapt to Brand Gold color</p>
+              </div>
+
+              {/* Paste Direct URL */}
+              <div className="space-y-1 pt-1 border-t border-gray-100">
+                <label className="text-[10px] font-heading font-bold text-gray-600">Or Paste Custom Icon URL:</label>
+                <div className="flex items-center gap-1">
+                  <input
+                    type="url"
+                    value={customUrlInput}
+                    onChange={(e) => setCustomUrlInput(e.target.value)}
+                    placeholder="https://example.com/icon.svg"
+                    className="flex-1 px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-[11px] placeholder-gray-400 focus:outline-none focus:border-gold-main"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCustomUrl}
+                    className="px-2.5 py-1 bg-gray-900 hover:bg-black text-white text-[11px] font-heading font-bold rounded-lg transition-colors cursor-pointer"
+                  >
+                    Set
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -781,7 +1122,7 @@ export default function EditProductPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-24 text-gray-800">
-      
+
       {/* ── Top Header Navigation Bar ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-2xs">
         <div className="flex items-center gap-3">
@@ -818,7 +1159,7 @@ export default function EditProductPage() {
               <span>Preview Live</span>
             </a>
           )}
-          
+
           <button
             type="button"
             onClick={() => handleSubmit("Draft")}
@@ -873,22 +1214,20 @@ export default function EditProductPage() {
             <button
               type="button"
               onClick={() => setActiveLang("en")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeLang === "en"
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeLang === "en"
                   ? "bg-gold-main text-black shadow-xs"
                   : "text-gray-400 hover:text-white"
-              }`}
+                }`}
             >
               English Form
             </button>
             <button
               type="button"
               onClick={() => setActiveLang("ar")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeLang === "ar"
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeLang === "ar"
                   ? "bg-gold-main text-black shadow-xs"
                   : "text-gray-400 hover:text-white"
-              }`}
+                }`}
             >
               العربية (Arabic Form)
             </button>
@@ -991,11 +1330,10 @@ export default function EditProductPage() {
                         setFormData({ ...formData, primaryIndustry: ind });
                         setIsIndustryDropdownOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${
-                        isSelected
+                      className={`w-full px-3.5 py-2.5 text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${isSelected
                           ? "bg-gold-main/15 text-gold-dark font-bold border-l-3 border-gold-main"
                           : "text-gray-700 hover:bg-gold-main/10 hover:text-gold-dark"
-                      }`}
+                        }`}
                     >
                       <span className="truncate">{ind}</span>
                       {isSelected && <Check className="w-3.5 h-3.5 text-gold-dark shrink-0" />}
@@ -1510,76 +1848,68 @@ export default function EditProductPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {curFeatures.map((feat, idx) => {
-            const iconPreview = (() => {
-              const cls = "w-4 h-4 text-gold-main";
-              const key = feat.icon?.toLowerCase() || "";
-              if (key.includes("sparkle")) return <Sparkles className={cls} />;
-              if (key.includes("feather")) return <Feather className={cls} />;
-              if (key.includes("leaf")) return <Leaf className={cls} />;
-              if (key.includes("droplet")) return <Droplet className={cls} />;
-              if (key.includes("flask")) return <FlaskConical className={cls} />;
-              if (key.includes("shield")) return <ShieldCheck className={cls} />;
-              if (key.includes("zap")) return <Zap className={cls} />;
-              if (key.includes("award")) return <Award className={cls} />;
-              if (key.includes("sun")) return <Sun className={cls} />;
-              if (key.includes("recycle")) return <Recycle className={cls} />;
-              if (key.includes("heart")) return <Heart className={cls} />;
-              if (key.includes("check")) return <CheckCircle2 className={cls} />;
-              return <Sparkles className={cls} />;
-            })();
+            const iconPreview = renderFeatureBadgeIcon(feat.icon);
 
             return (
               <div
                 key={feat.id || idx}
-                className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-2xs hover:border-gold-main/40 transition-all group"
+                className="relative bg-white border border-gray-200 rounded-2xl shadow-2xs hover:border-gold-main/50 transition-all group z-10 hover:z-20 flex flex-col justify-between"
               >
-                <div className="flex items-center justify-between p-3.5 bg-gray-50/60 border-b border-gray-100">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center shrink-0 shadow-2xs">
-                      {iconPreview}
+                <div>
+                  <div className="flex items-center justify-between gap-2 p-3 bg-gray-50/70 border-b border-gray-100 rounded-t-2xl">
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="w-8 h-8 rounded-xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center shrink-0 shadow-2xs">
+                        {iconPreview}
+                      </div>
+                      <span className="text-xs font-mono font-extrabold text-gold-dark bg-[#fdfaf0] px-2 py-0.5 rounded-lg border border-gold-main/30">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
                     </div>
-                    <span className="text-xs font-mono font-extrabold text-gold-dark bg-[#fdfaf0] px-2 py-0.5 rounded border border-gold-main/30">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
+
+                    <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-end">
+                      <FeatureIconSelect
+                        value={feat.icon}
+                        onChange={(newIcon) => handleFeatureChange(idx, "icon", newIcon)}
+                      />
+
+                      {curFeatures.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFeature(idx)}
+                          className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 cursor-pointer"
+                          title="Remove feature"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <FeatureIconSelect
-                      value={feat.icon}
-                      onChange={(newIcon) => handleFeatureChange(idx, "icon", newIcon)}
-                    />
+                  <div className="p-3.5 space-y-2.5">
+                    <div>
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Feature Title</label>
+                      <input
+                        type="text"
+                        value={feat.title}
+                        onChange={(e) => handleFeatureChange(idx, "title", e.target.value)}
+                        placeholder="e.g. Active Foaming Action"
+                        className="w-full p-2.5 bg-gray-50/80 border border-gray-200 rounded-xl text-xs font-extrabold text-gray-900 focus:outline-none focus:border-gold-main focus:bg-white transition-all placeholder:text-gray-400 placeholder:font-normal"
+                      />
+                    </div>
 
-                    {curFeatures.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveFeature(idx)}
-                        className="p-1 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                        title="Remove feature"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
+                    <div>
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Feature Description</label>
+                      <textarea
+                        rows={3}
+                        value={feat.description}
+                        onChange={(e) => handleFeatureChange(idx, "description", e.target.value)}
+                        placeholder="Describe key benefits, performance, or chemical properties..."
+                        className="w-full p-2.5 bg-gray-50/80 border border-gray-200 rounded-xl text-xs text-gray-700 leading-relaxed focus:outline-none focus:border-gold-main focus:bg-white transition-all placeholder:text-gray-400"
+                      />
+                    </div>
                   </div>
-                </div>
-
-                <div className="p-3.5 space-y-2.5">
-                  <input
-                    type="text"
-                    value={feat.title}
-                    onChange={(e) => handleFeatureChange(idx, "title", e.target.value)}
-                    placeholder="Feature Title (e.g. Effective Surfactant)"
-                    className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-extrabold text-gray-900 focus:outline-none focus:border-gold-main focus:bg-white transition-all"
-                  />
-
-                  <textarea
-                    rows={3}
-                    value={feat.description}
-                    onChange={(e) => handleFeatureChange(idx, "description", e.target.value)}
-                    placeholder="Feature description text..."
-                    className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-800 leading-relaxed focus:outline-none focus:border-gold-main focus:bg-white transition-all"
-                  />
                 </div>
               </div>
             );

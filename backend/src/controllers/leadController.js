@@ -106,7 +106,7 @@ export const getAllLeads = async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const skip = (page - 1) * limit;
 
-    const { status, emailStatus, search } = req.query;
+    const { status, emailStatus, search, startDate, endDate } = req.query;
 
     const query = {};
 
@@ -116,6 +116,18 @@ export const getAllLeads = async (req, res, next) => {
 
     if (emailStatus) {
       query.emailStatus = emailStatus;
+    }
+
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) {
+        query.createdAt.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        query.createdAt.$lte = end;
+      }
     }
 
     if (search) {

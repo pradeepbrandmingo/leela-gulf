@@ -16,7 +16,25 @@ import {
   Heart,
   Flame,
   Gauge,
-  Compass
+  Compass,
+  Factory,
+  Globe,
+  Waves,
+  Activity,
+  Package,
+  Layers,
+  Cpu,
+  Target,
+  Star,
+  Box,
+  Microscope,
+  Wind,
+  Thermometer,
+  Eye,
+  Settings,
+  TrendingUp,
+  Gem,
+  Check
 } from "lucide-react";
 
 /**
@@ -34,25 +52,63 @@ import {
 export default function ProductFeaturesSection({ product: customProduct }) {
   const { isRTL } = useLanguage();
 
-  // Helper map for dynamic string icon keys
+  // Helper map for dynamic string icon keys or uploaded image/svg icons
   const getFeatureIcon = (iconName, index) => {
     const iconClass = "w-5 h-5 text-gold-main";
-    const key = iconName?.toLowerCase() || "";
+    const key = (iconName || "").trim().toLowerCase();
 
+    // 1. If it's an uploaded custom icon image/SVG URL -> apply theme gold filter
+    if (
+      key.startsWith("http://") ||
+      key.startsWith("https://") ||
+      key.startsWith("/uploads/") ||
+      key.startsWith("data:image/") ||
+      key.includes(".svg") ||
+      key.includes(".png") ||
+      key.includes(".webp")
+    ) {
+      return (
+        <img
+          src={iconName}
+          alt="Custom Feature Icon"
+          className="w-5 h-5 object-contain [filter:brightness(0)_saturate(100%)_invert(74%)_sepia(85%)_saturate(380%)_hue-rotate(5deg)_brightness(95%)_contrast(85%)]"
+        />
+      );
+    }
+
+    // 2. Comprehensive Lucide Vector Icon Catalog
     if (key.includes("sparkle") || key.includes("foam") || key.includes("active")) return <Sparkles className={iconClass} />;
     if (key.includes("feather") || key.includes("gentle") || key.includes("skin") || key.includes("mild")) return <Feather className={iconClass} />;
     if (key.includes("leaf") || key.includes("natural") || key.includes("bio") || key.includes("plant") || key.includes("eco")) return <Leaf className={iconClass} />;
     if (key.includes("droplet") || key.includes("soluble") || key.includes("water") || key.includes("liquid")) return <Droplet className={iconClass} />;
     if (key.includes("flask") || key.includes("chemical") || key.includes("versatile") || key.includes("lab")) return <FlaskConical className={iconClass} />;
-    if (key.includes("shield") || key.includes("safety") || key.includes("protect")) return <ShieldCheck className={iconClass} />;
-    if (key.includes("zap") || key.includes("fast") || key.includes("power")) return <Zap className={iconClass} />;
-    if (key.includes("award") || key.includes("pure") || key.includes("quality") || key.includes("cert")) return <Award className={iconClass} />;
-    if (key.includes("sun") || key.includes("heat") || key.includes("light")) return <Sun className={iconClass} />;
-    if (key.includes("recycle") || key.includes("sustain")) return <Recycle className={iconClass} />;
-    if (key.includes("heart") || key.includes("safe")) return <Heart className={iconClass} />;
-    if (key.includes("flame")) return <Flame className={iconClass} />;
-    if (key.includes("gauge")) return <Gauge className={iconClass} />;
-    if (key.includes("check")) return <CheckCircle2 className={iconClass} />;
+    if (key.includes("shield") || key.includes("safety") || key.includes("protect") || key.includes("stable")) return <ShieldCheck className={iconClass} />;
+    if (key.includes("zap") || key.includes("fast") || key.includes("power") || key.includes("energy")) return <Zap className={iconClass} />;
+    if (key.includes("award") || key.includes("pure") || key.includes("quality") || key.includes("cert") || key.includes("premium")) return <Award className={iconClass} />;
+    if (key.includes("sun") || key.includes("heat") || key.includes("light") || key.includes("thermal")) return <Sun className={iconClass} />;
+    if (key.includes("recycle") || key.includes("sustain") || key.includes("green")) return <Recycle className={iconClass} />;
+    if (key.includes("heart") || key.includes("safe") || key.includes("care")) return <Heart className={iconClass} />;
+    if (key.includes("flame") || key.includes("fire")) return <Flame className={iconClass} />;
+    if (key.includes("gauge") || key.includes("pressure") || key.includes("speed")) return <Gauge className={iconClass} />;
+    if (key.includes("check") || key.includes("verified")) return <CheckCircle2 className={iconClass} />;
+    if (key.includes("factory") || key.includes("plant") || key.includes("industry")) return <Factory className={iconClass} />;
+    if (key.includes("globe") || key.includes("world") || key.includes("export")) return <Globe className={iconClass} />;
+    if (key.includes("wave") || key.includes("marine") || key.includes("surfactant")) return <Waves className={iconClass} />;
+    if (key.includes("activity") || key.includes("reaction")) return <Activity className={iconClass} />;
+    if (key.includes("package") || key.includes("bulk") || key.includes("drum")) return <Package className={iconClass} />;
+    if (key.includes("layer") || key.includes("coating") || key.includes("film")) return <Layers className={iconClass} />;
+    if (key.includes("cpu") || key.includes("tech") || key.includes("smart")) return <Cpu className={iconClass} />;
+    if (key.includes("target") || key.includes("precision") || key.includes("focus")) return <Target className={iconClass} />;
+    if (key.includes("star") || key.includes("grade")) return <Star className={iconClass} />;
+    if (key.includes("microscope") || key.includes("research") || key.includes("purity")) return <Microscope className={iconClass} />;
+    if (key.includes("wind") || key.includes("air") || key.includes("gas")) return <Wind className={iconClass} />;
+    if (key.includes("thermometer") || key.includes("temp")) return <Thermometer className={iconClass} />;
+    if (key.includes("trend") || key.includes("yield") || key.includes("efficiency")) return <TrendingUp className={iconClass} />;
+    if (key.includes("gem") || key.includes("crystal") || key.includes("pure")) return <Gem className={iconClass} />;
+    if (key.includes("box")) return <Box className={iconClass} />;
+    if (key.includes("compass")) return <Compass className={iconClass} />;
+    if (key.includes("setting")) return <Settings className={iconClass} />;
+    if (key.includes("eye")) return <Eye className={iconClass} />;
 
     // Default by position
     if (index === 0) return <Sparkles className={iconClass} />;
@@ -68,8 +124,8 @@ export default function ProductFeaturesSection({ product: customProduct }) {
   const rawFeatures = Array.isArray(p.featuresData)
     ? p.featuresData
     : Array.isArray(p.features)
-    ? p.features
-    : p.featuresData?.features || [];
+      ? p.features
+      : p.featuresData?.features || [];
 
   const items = rawFeatures
     .map((f, idx) => ({
@@ -99,10 +155,10 @@ export default function ProductFeaturesSection({ product: customProduct }) {
   return (
     <section className="w-full bg-[var(--color-primary)] relative pb-8 sm:pb-10 md:pb-12">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-        
+
         {/* ── MAIN WHITE ROUNDED CONTAINER CARD (#fcfcfb) ── */}
         <div className="bg-[#fcfcfb] rounded-2xl sm:rounded-3xl lg:rounded-[32px] p-5 sm:p-7 md:p-9 lg:p-11 shadow-xl border border-gray-200/60 transition-all duration-300">
-          
+
           {/* 1. Centered Header */}
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
             <h2
@@ -111,23 +167,22 @@ export default function ProductFeaturesSection({ product: customProduct }) {
             >
               {sectionTitle}
             </h2>
-            
+
             <p className="font-subheading text-xs sm:text-sm md:text-base text-gray-500 font-normal leading-relaxed mb-4">
               {subtitle}
             </p>
-            
+
             {/* Centered Gold Accent Divider Line */}
             <div className="w-12 sm:w-16 h-1 bg-gradient-gold-animated rounded-full mx-auto" />
           </div>
 
           {/* 2. Feature Cards Container */}
           <div className="space-y-4 sm:space-y-6">
-            
+
             {/* Main Cards Grid (Row 1: 3 cards) */}
             <div
-              className={`grid grid-cols-1 md:grid-cols-2 ${
-                isExactFiveCards ? "lg:grid-cols-3" : "lg:grid-cols-3"
-              } gap-3.5 sm:gap-4 lg:gap-5 auto-rows-fr`}
+              className={`grid grid-cols-1 md:grid-cols-2 ${isExactFiveCards ? "lg:grid-cols-3" : "lg:grid-cols-3"
+                } gap-3.5 sm:gap-4 lg:gap-5 auto-rows-fr`}
             >
               {topRowItems.map((item, idx) => (
                 <div

@@ -347,10 +347,9 @@ export default function AdminProductsPage() {
   // Search & Dropdown Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [industryFilter, setIndustryFilter] = useState("All Industries");
-  const [tagFilter, setTagFilter] = useState("All Application Tags");
   const [statusFilter, setStatusFilter] = useState("All Status");
 
-  // Open Dropdown Toggle: 'industry' | 'tag' | 'status'
+  // Open Dropdown Toggle: 'industry' | 'status'
   const [openDropdown, setOpenDropdown] = useState(null);
 
   // Pagination State
@@ -385,17 +384,6 @@ export default function AdminProductsPage() {
     ];
   }, []);
 
-  // Extract Dynamic Application Tags List for Dropdown
-  const uniqueTags = useMemo(() => {
-    const set = new Set(["All Application Tags"]);
-    productsList.forEach((p) => {
-      if (Array.isArray(p.tags)) {
-        p.tags.forEach((t) => set.add(t));
-      }
-    });
-    return Array.from(set);
-  }, [productsList]);
-
   // Filtered Products Computation
   const displayedProducts = useMemo(() => {
     return productsList.filter((prod) => {
@@ -411,7 +399,7 @@ export default function AdminProductsPage() {
         return false;
       }
 
-      // 2. Comprehensive Real-Time Search Query (Name, Grade, CAS No, Code, Industries, Tags, Specs)
+      // 2. Comprehensive Real-Time Search Query (Name, Grade, CAS No, Code, Industries, Tags, Specs, Overview)
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const nameMatch = (prod.name || "").toLowerCase().includes(q);
@@ -448,14 +436,7 @@ export default function AdminProductsPage() {
         }
       }
 
-      // 4. Tag Filter
-      if (tagFilter !== "All Application Tags") {
-        if (!prod.tags || !prod.tags.includes(tagFilter)) {
-          return false;
-        }
-      }
-
-      // 5. Status Filter
+      // 4. Status Filter
       if (statusFilter !== "All Status") {
         if (prod.status !== statusFilter) {
           return false;
@@ -468,7 +449,6 @@ export default function AdminProductsPage() {
     productsList,
     searchQuery,
     industryFilter,
-    tagFilter,
     statusFilter,
     selectedFilterOption,
     customStartDate,
@@ -544,7 +524,6 @@ export default function AdminProductsPage() {
   const handleClearFilters = () => {
     setSearchQuery("");
     setIndustryFilter("All Industries");
-    setTagFilter("All Application Tags");
     setStatusFilter("All Status");
     setSelectedFilterOption("All Time");
     setDateRangeText("All Time");
@@ -755,40 +734,7 @@ export default function AdminProductsPage() {
           )}
         </div>
 
-        {/* Dropdown 2: All Application Tags */}
-        <div className="relative">
-          <button
-            onClick={() => setOpenDropdown(openDropdown === "tag" ? null : "tag")}
-            className="flex items-center justify-between gap-3 px-3.5 py-2 bg-white border border-gray-200 hover:border-gold-main/50 rounded-xl text-xs font-medium text-gray-700 min-w-[160px] shadow-xs transition-all"
-          >
-            <div className="flex items-center gap-2 truncate">
-              <Tag className="w-3.5 h-3.5 text-gold-dark shrink-0" />
-              <span className="truncate">{tagFilter}</span>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-          </button>
-
-          {openDropdown === "tag" && (
-            <div className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-40 max-h-60 overflow-y-auto">
-              {uniqueTags.map((tg) => (
-                <button
-                  key={tg}
-                  onClick={() => {
-                    setTagFilter(tg);
-                    setOpenDropdown(null);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center justify-between truncate"
-                >
-                  <span className="truncate">{tg}</span>
-                  {tagFilter === tg && <Check className="w-3.5 h-3.5 text-gold-dark shrink-0" />}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Dropdown 3: All Status */}
+        {/* Dropdown 2: All Status */}
         <div className="relative">
           <button
             onClick={() => setOpenDropdown(openDropdown === "status" ? null : "status")}

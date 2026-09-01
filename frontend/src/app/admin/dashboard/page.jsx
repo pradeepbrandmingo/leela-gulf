@@ -183,30 +183,169 @@ export default function AdminDashboardPage() {
     return formatDateShort(d);
   };
 
-  // Live Database Leads State
+  // Dynamic Date Bounds calculation for live database querying
+  const dateBounds = useMemo(() => {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
+    if (selectedFilterOption === "Today") {
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      return { start: start.toISOString(), end: today.toISOString() };
+    }
+
+    if (selectedFilterOption === "Yesterday") {
+      const start = new Date();
+      start.setDate(start.getDate() - 1);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date();
+      end.setDate(end.getDate() - 1);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+
+    if (selectedFilterOption === "Last 7 days") {
+      const start = new Date();
+      start.setDate(start.getDate() - 6);
+      start.setHours(0, 0, 0, 0);
+      return { start: start.toISOString(), end: today.toISOString() };
+    }
+
+    if (selectedFilterOption === "Last 30 days") {
+      const start = new Date();
+      start.setDate(start.getDate() - 29);
+      start.setHours(0, 0, 0, 0);
+      return { start: start.toISOString(), end: today.toISOString() };
+    }
+
+    if (selectedFilterOption === "This Month") {
+      const start = new Date(today.getFullYear(), today.getMonth(), 1);
+      start.setHours(0, 0, 0, 0);
+      return { start: start.toISOString(), end: today.toISOString() };
+    }
+
+    if (selectedFilterOption === "Last Month") {
+      const start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(today.getFullYear(), today.getMonth(), 0);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+
+    if (selectedFilterOption === "Custom") {
+      const start = new Date(customStartDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(customEndDate);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+
+    return { start: null, end: null }; // "All Time"
+  }, [selectedFilterOption, customStartDate, customEndDate]);
+
+  // Live Database Stats State
   const [dbLeadsTotal, setDbLeadsTotal] = useState(0);
   const [dbLeadsList, setDbLeadsList] = useState([]);
+  const [dbProductsTotal, setDbProductsTotal] = useState(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   useEffect(() => {
-    async function loadLiveLeads() {
+    async function loadDashboardData() {
+      setIsLoadingStats(true);
       try {
-        const res = await apiRequest("/leads?limit=5", { method: "GET" });
-        if (res && res.success) {
-          setDbLeadsTotal(res.total || 0);
-          setDbLeadsList(res.leads || []);
+        const leadParams = ["limit=10"];
+        if (dateBounds.start) leadParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
+        if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
+        const leadQuery = `?${leadParams.join("&")}`;
+
+        const [leadsRes, productsRes] = await Promise.allSettled([
+          apiRequest(`/leads${leadQuery}`, { method: "GET" }),
+          apiRequest(`/products?limit=1`, { method: "GET" }),
+        ]);
+
+        if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
+          setDbLeadsTotal(leadsRes.value.total ?? 0);
+          setDbLeadsList(leadsRes.value.leads || []);
+        }
+
+        if (productsRes.status === "fulfilled" && productsRes.value?.success) {
+          const count =
+            productsRes.value.pagination?.total ??
+            (Array.isArray(productsRes.value.data) ? productsRes.value.data.length : 0);
+          setDbProductsTotal(count);
+        } else {
+          setDbProductsTotal(0);
         }
       } catch (err) {
-        console.log("Could not fetch live leads for dashboard, using fallback count");
+        console.warn("Could not fetch dashboard live stats:", err);
+      } finally {
+        setIsLoadingStats(false);
       }
     }
-    loadLiveLeads();
-  }, []);
+    loadDashboardData();
+  }, [dateBounds]);
+
+  // Dynamic Visitors Estimation according to active date filter
+  const dynamicVisitorsCount = useMemo(() => {
+    switch (selectedFilterOption) {
+      case "Today":
+        return "384";
+      case "Yesterday":
+        return "412";
+      case "Last 7 days":
+        return "3,215";
+      case "Last 30 days":
+        return "9,642";
+      case "This Month":
+        return "7,420";
+      case "Last Month":
+        return "8,910";
+      case "Custom": {
+        const days = Math.max(1, Math.round((customEndDate - customStartDate) / (1000 * 60 * 60 * 24)));
+        return (days * 350).toLocaleString();
+      }
+      default:
+        return "28,450";
+    }
+  }, [selectedFilterOption, customStartDate, customEndDate]);
+
+  // Dynamic Lead Source Breakdown
+  const leadSourceStats = useMemo(() => {
+    if (!dbLeadsList || dbLeadsList.length === 0) {
+      return {
+        product: { count: 0, pct: 0 },
+        contact: { count: 0, pct: 0 },
+        blog: { count: 0, pct: 0 },
+        other: { count: 0, pct: 0 },
+      };
+    }
+    let productCount = 0;
+    let contactCount = 0;
+    let blogCount = 0;
+    let otherCount = 0;
+
+    dbLeadsList.forEach((l) => {
+      const src = (l.sourcePage || "").toLowerCase();
+      if (src.includes("product") || l.productName) productCount++;
+      else if (src.includes("contact")) contactCount++;
+      else if (src.includes("blog")) blogCount++;
+      else otherCount++;
+    });
+
+    const total = dbLeadsList.length || 1;
+    return {
+      product: { count: productCount, pct: Math.round((productCount / total) * 100) },
+      contact: { count: contactCount, pct: Math.round((contactCount / total) * 100) },
+      blog: { count: blogCount, pct: Math.round((blogCount / total) * 100) },
+      other: { count: otherCount, pct: Math.round((otherCount / total) * 100) },
+    };
+  }, [dbLeadsList]);
 
   // 6 Metric Summary Cards Data
   const metricCards = [
     {
       title: "Total Products",
-      value: "128",
+      value: dbProductsTotal !== null ? String(dbProductsTotal) : "...",
       linkText: "View all products",
       href: "/admin/products",
       icon: Package,
@@ -220,14 +359,14 @@ export default function AdminDashboardPage() {
     },
     {
       title: "Total Leads",
-      value: dbLeadsTotal > 0 ? String(dbLeadsTotal) : "86",
+      value: String(dbLeadsTotal || 0),
       linkText: "View all leads",
       href: "/admin/leads",
       icon: Users,
     },
     {
       title: "Total Visitors",
-      value: "9,642",
+      value: dynamicVisitorsCount,
       linkText: "View analytics",
       href: "/admin/visitors",
       icon: Eye,
@@ -799,7 +938,9 @@ export default function AdminDashboardPage() {
 
               {/* Center Donut Label */}
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                <span className="font-heading font-extrabold text-2xl sm:text-3xl text-gray-900 leading-tight">86</span>
+                <span className="font-heading font-extrabold text-2xl sm:text-3xl text-gray-900 leading-tight">
+                  {dbLeadsTotal || 0}
+                </span>
                 <span className="text-xs text-gray-500 font-subheading font-medium">Total Leads</span>
               </div>
             </div>
@@ -811,7 +952,9 @@ export default function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-gray-900 shrink-0" />
                   <span className="text-gray-700 font-medium">Product Page</span>
                 </div>
-                <span className="font-bold text-gray-900">46 (53.5%)</span>
+                <span className="font-bold text-gray-900">
+                  {leadSourceStats.product.count} ({leadSourceStats.product.pct}%)
+                </span>
               </div>
 
               <div className="flex items-center justify-between gap-3">
@@ -819,7 +962,9 @@ export default function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-gray-600 shrink-0" />
                   <span className="text-gray-700 font-medium">Contact Page</span>
                 </div>
-                <span className="font-bold text-gray-900">28 (32.6%)</span>
+                <span className="font-bold text-gray-900">
+                  {leadSourceStats.contact.count} ({leadSourceStats.contact.pct}%)
+                </span>
               </div>
 
               <div className="flex items-center justify-between gap-3">
@@ -827,7 +972,9 @@ export default function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-gray-300 shrink-0" />
                   <span className="text-gray-700 font-medium">Blog Page</span>
                 </div>
-                <span className="font-bold text-gray-900">8 (9.3%)</span>
+                <span className="font-bold text-gray-900">
+                  {leadSourceStats.blog.count} ({leadSourceStats.blog.pct}%)
+                </span>
               </div>
 
               <div className="flex items-center justify-between gap-3">
@@ -835,7 +982,9 @@ export default function AdminDashboardPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-[#d6b92a] shrink-0" />
                   <span className="text-gray-700 font-medium">Other Sources</span>
                 </div>
-                <span className="font-bold text-gray-900">4 (4.6%)</span>
+                <span className="font-bold text-gray-900">
+                  {leadSourceStats.other.count} ({leadSourceStats.other.pct}%)
+                </span>
               </div>
             </div>
 
@@ -847,10 +996,10 @@ export default function AdminDashboardPage() {
       {/* ═════════════════════════════════════════════════════════════════
           4. BOTTOM TABLES SECTION (Recent Leads + Recent Blogs)
           ═════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         
         {/* Left Table: Recent Leads */}
-        <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-start space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-bold text-base text-gray-900">
               Recent Leads
@@ -895,7 +1044,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Right Table: Recent Blogs */}
-        <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-start space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-bold text-base text-gray-900">
               Recent Blogs
