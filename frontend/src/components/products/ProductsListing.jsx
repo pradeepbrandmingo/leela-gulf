@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { X, Loader2, FlaskConical, ArrowRight } from "lucide-react";
+import { X, Loader2, FlaskConical, ArrowRight, SlidersHorizontal, Search } from "lucide-react";
 import { apiRequest } from "@/config/api";
 import LeadEnquiryForm from "@/components/common/LeadEnquiryForm";
 
@@ -199,79 +199,100 @@ export default function ProductsListing() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── TOP CONTROLS BAR: Search (Left) + Category Dropdown (Right) ── */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8 sm:mb-10">
-
-          {/* Search Input */}
-          <div className="relative flex-1 max-w-md">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isRTL ? "ابحث عن المنتجات بالاسم أو الرمز..." : "Search products by name or code..."}
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-[#11131a] border border-[#252a38] rounded-xl text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-main/60 transition-all"
-            />
-            <svg
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+        {/* ── TOP CONTROLS BAR: "Our Products" Heading (Left) + Gold Bordered Search (Center) + White Applications Button (Right) ── */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 sm:gap-5 lg:gap-6 mb-8 sm:mb-12">
+          
+          {/* Left: Heading "Our Products" (Exact match with reference screenshot) */}
+          <div className="shrink-0 max-w-full xl:max-w-md 2xl:max-w-xl">
+            <h2 className="font-heading font-extrabold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-tight leading-tight break-words">
+              <span className="text-white">{isRTL ? "منتجاتنا " : "Our "}</span>
+              <span className="text-gradient-gold-animated inline-block">{isRTL ? "المميزة" : "Products"}</span>
+            </h2>
           </div>
 
-          {/* Category Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-              className="w-full sm:w-auto min-w-[240px] flex items-center justify-between gap-3 px-4 py-2.5 sm:py-3 bg-[#11131a] border border-[#252a38] hover:border-gold-main/50 rounded-xl text-xs sm:text-sm font-semibold text-white transition-all shadow-lg"
-            >
-              <span className="truncate">
-                {isRTL ? activeCategory.nameAr : activeCategory.name}
-              </span>
-              <svg
-                className={`w-4 h-4 text-gold-main shrink-0 transition-transform duration-200 ${
-                  showCategoryDropdown ? "rotate-180" : ""
-                }`}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-              </svg>
-            </button>
+          {/* Right Controls Container: Search Bar (Flex-1) + Applications Filter Button (Shrink-0) */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5 flex-1 xl:max-w-2xl justify-end w-full">
+            
+            {/* Center: Gold Bordered Search Input (Exact match with reference screenshot) */}
+            <div className="relative flex-1 w-full min-w-0">
+              <div className="flex items-center gap-2 p-1 sm:p-1.5 bg-black/40 border border-gold-main rounded-xl transition-all shadow-lg focus-within:border-gold-light focus-within:ring-1 focus-within:ring-gold-main/30">
+                {/* White rounded-square icon box with gold magnifying glass */}
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gold-main stroke-[2.5]" />
+                </div>
 
-            {showCategoryDropdown && (
-              <div className="absolute right-0 mt-2 w-full sm:w-80 bg-[#161822] border border-[#2e3344] rounded-2xl shadow-2xl py-2 z-50 max-h-80 overflow-y-auto">
-                {categoriesWithCounts.map((cat) => (
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={isRTL ? "ابحث باسم المنتج..." : "Search By Product Name..."}
+                  className="w-full bg-transparent px-2 py-1 text-xs sm:text-sm text-white placeholder-gray-400 font-subheading focus:outline-none truncate"
+                />
+
+                {searchQuery && (
                   <button
-                    key={cat.id}
-                    onClick={() => handleCategorySelect(cat.id)}
-                    className={`w-full px-4 py-2.5 text-left text-xs sm:text-sm flex items-center justify-between hover:bg-[#1f2333] transition-colors ${
-                      selectedCategory === cat.id ? "text-gold-main font-bold bg-[#1f2333]/70" : "text-gray-300"
-                    }`}
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer shrink-0"
+                    aria-label="Clear search"
                   >
-                    <span>{isRTL ? cat.nameAr : cat.name}</span>
-                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-[#252a3a] text-gray-400 font-mono">
-                      {cat.count}
-                    </span>
+                    <X className="w-4 h-4" />
                   </button>
-                ))}
+                )}
+              </div>
+            </div>
+
+            {/* Right: Solid White "Applications" Button & Dropdown (Exact match with reference screenshot) */}
+            <div className="relative shrink-0" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                className="w-full sm:w-auto bg-white text-black font-heading font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl shadow-md hover:bg-gray-100 active:scale-98 transition-all flex items-center justify-between sm:justify-center gap-2.5 cursor-pointer select-none shrink-0"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <SlidersHorizontal className="w-4 h-4 text-black stroke-[2.2] shrink-0" />
+                  <span className="truncate max-w-[180px] sm:max-w-[200px] md:max-w-[220px]">
+                    {isRTL
+                      ? (selectedCategory === "all" ? "جميع المنتجات" : activeCategory.nameAr)
+                      : (selectedCategory === "all" ? "All Products" : activeCategory.name)}
+                  </span>
+                </div>
+                {selectedCategory !== "all" && (
+                  <span className="w-2 h-2 rounded-full bg-gold-main shrink-0"></span>
+                )}
+              </button>
+
+            {/* Applications Dropdown Menu */}
+            {showCategoryDropdown && (
+              <div className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 w-full sm:w-80 bg-[var(--color-primary-light)] border border-gold-main/40 rounded-2xl shadow-2xl py-2 z-50 max-h-80 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden animate-[fadeIn_0.15s_ease-out]">
+                {categoriesWithCounts.map((cat) => {
+                  const isSelected = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleCategorySelect(cat.id)}
+                      className={`w-full px-4 py-2.5 text-left rtl:text-right text-xs sm:text-sm font-subheading flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer ${
+                        isSelected ? "text-gold-main font-bold bg-white/10" : "text-gray-300"
+                      }`}
+                    >
+                      <span className="truncate pr-2 rtl:pr-0 rtl:pl-2">
+                        {isRTL ? cat.nameAr : cat.name}
+                      </span>
+                      <span className={`text-[11px] px-2 py-0.5 rounded-md font-mono shrink-0 ${
+                        isSelected ? "bg-gold-main/20 text-gold-light border border-gold-main/30" : "bg-white/10 text-gray-400"
+                      }`}>
+                        {cat.count}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
+
         </div>
+      </div>
 
         {/* ── PRODUCTS GRID (3 Per Row) ── */}
         {isLoading ? (

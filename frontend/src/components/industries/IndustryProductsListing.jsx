@@ -4,32 +4,38 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { X, Loader2, FlaskConical, ArrowRight } from "lucide-react";
+import { X, Loader2, FlaskConical, ArrowRight, SlidersHorizontal, Search } from "lucide-react";
 import { apiRequest } from "@/config/api";
 import LeadEnquiryForm from "@/components/common/LeadEnquiryForm";
 
 // 11 Master Industries List for Applications Filter Dropdown (Matches Admin Categories exactly)
 export const MASTER_INDUSTRIES = [
-  { id: "industrial-chemicals", name: "Industrial Chemicals", ar: "المواد الكيميائية الصناعية", matchNames: ["Industrial Chemicals"] },
-  { id: "water-treatment", name: "Water Treatment", ar: "معالجة المياه", matchNames: ["Water Treatment"] },
-  { id: "home-care-personal-care", name: "Home Care & Personal Care (LEEPOL®)", ar: "العناية المنزلية والشخصية (LEEPOL®)", matchNames: ["Home Care & Personal Care (LEEPOL®)", "Home Care", "Personal Care"] },
-  { id: "pharmaceuticals-api-excipients", name: "Pharmaceuticals API & Excipients", ar: "المواد الصيدلانية الفعالة والمكونات", matchNames: ["Pharmaceuticals API & Excipients", "Pharmaceuticals"] },
-  { id: "food-beverage-chemicals", name: "Food & Beverage Chemicals", ar: "كيماويات الأغذية والمشروبات", matchNames: ["Food & Beverage chemicals", "Food & Beverage"] },
-  { id: "mining-metals", name: "Mining & Metals", ar: "التعدين والمعادن", matchNames: ["Mining & Metals"] },
-  { id: "oil-gas", name: "Oil & Gas", ar: "النفط والغاز", matchNames: ["Oil & Gas"] },
-  { id: "textile-chemicals", name: "Textile Chemicals", ar: "كيماويات النسيج", matchNames: ["Textile Chemicals"] },
-  { id: "packaging-paper-pulp", name: "Packaging & Paper Pulp", ar: "التغليف ولب الورق", matchNames: ["Packaging & Paper pulp industries"] },
-  { id: "fertilizers-chemicals", name: "Fertilizers Chemicals", ar: "أسمدة ومواد كيميائية زراعية", matchNames: ["Fertilizers chemicals", "Fertilizers"] },
-  { id: "case-coatings-adhesives", name: "CASE – Coatings & Adhesives", ar: "الدهانات واللاصقات (CASE)", matchNames: ["CASE – Coatings, Adhesives, Sealants & Elastomers", "CASE"] },
-  { id: "other", name: "Other", ar: "أخرى", matchNames: ["Other"] },
+  { id: "industrial-chemicals", name: "Industrial Chemicals", nameAr: "المواد الكيميائية الصناعية", ar: "المواد الكيميائية الصناعية", matchNames: ["Industrial Chemicals"] },
+  { id: "water-treatment", name: "Water Treatment", nameAr: "معالجة المياه", ar: "معالجة المياه", matchNames: ["Water Treatment"] },
+  { id: "home-care-personal-care", name: "Home Care & Personal Care (LEEPOL®)", nameAr: "العناية المنزلية والشخصية (LEEPOL®)", ar: "العناية المنزلية والشخصية (LEEPOL®)", matchNames: ["Home Care & Personal Care (LEEPOL®)", "Home Care", "Personal Care"] },
+  { id: "pharmaceuticals-api-excipients", name: "Pharmaceuticals API & Excipients", nameAr: "المواد الصيدلانية الفعالة والمكونات", ar: "المواد الصيدلانية الفعالة والمكونات", matchNames: ["Pharmaceuticals API & Excipients", "Pharmaceuticals"] },
+  { id: "food-beverage-chemicals", name: "Food & Beverage Chemicals", nameAr: "كيماويات الأغذية والمشروبات", ar: "كيماويات الأغذية والمشروبات", matchNames: ["Food & Beverage chemicals", "Food & Beverage"] },
+  { id: "mining-metals", name: "Mining & Metals", nameAr: "التعدين والمعادن", ar: "التعدين والمعادن", matchNames: ["Mining & Metals"] },
+  { id: "oil-gas", name: "Oil & Gas", nameAr: "النفط والغاز", ar: "النفط والغاز", matchNames: ["Oil & Gas"] },
+  { id: "textile-chemicals", name: "Textile Chemicals", nameAr: "كيماويات النسيج", ar: "كيماويات النسيج", matchNames: ["Textile Chemicals"] },
+  { id: "packaging-paper-pulp", name: "Packaging & Paper Pulp", nameAr: "صناعات التعبئة ولب الورق", ar: "صناعات التعبئة ولب الورق", matchNames: ["Packaging & Paper pulp industries"] },
+  { id: "fertilizers-chemicals", name: "Fertilizers Chemicals", nameAr: "كيماويات الأسمدة", ar: "كيماويات الأسمدة", matchNames: ["Fertilizers chemicals", "Fertilizers"] },
+  { id: "case-coatings-adhesives", name: "CASE – Coatings & Adhesives", nameAr: "الطلاء والمواد اللاصقة ومانعات التسرب", ar: "الطلاء والمواد اللاصقة ومانعات التسرب", matchNames: ["CASE – Coatings, Adhesives, Sealants & Elastomers", "CASE"] },
 ];
 
 const PRODUCTS_PER_PAGE = 9;
 
-export default function IndustryProductsListing({ selectedIndustry, onIndustrySelect }) {
+export default function IndustryProductsListing({
+  selectedIndustry: propIndustry,
+  industryId,
+  onIndustrySelect,
+}) {
   const { isRTL } = useLanguage();
 
+  const initialIndustry = propIndustry || industryId || "industrial-chemicals";
+
   // ── State ──
+  const [selectedIndustry, setSelectedIndustry] = useState(initialIndustry);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,6 +44,14 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
   const [isLoading, setIsLoading] = useState(true);
   const dropdownRef = useRef(null);
   const sectionRef = useRef(null);
+
+  // Sync prop changes whenever URL / route changes
+  useEffect(() => {
+    const nextId = propIndustry || industryId;
+    if (nextId) {
+      setSelectedIndustry(nextId);
+    }
+  }, [propIndustry, industryId]);
 
   // Fetch live products from MongoDB Backend (Published Only)
   useEffect(() => {
@@ -48,7 +62,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
           setDbProducts(res.data);
         }
       } catch (err) {
-        console.log("Could not load products from API");
+        console.log("Could not load live industry products from API");
       } finally {
         setIsLoading(false);
       }
@@ -67,22 +81,65 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ── Normalized Live Products from MongoDB (Published Only) ──
-  const allProductsList = useMemo(() => {
+  // ── Active Industry Info ──
+  const activeIndustryInfo = useMemo(() => {
+    return (
+      MASTER_INDUSTRIES.find((m) => m.id === selectedIndustry) ||
+      MASTER_INDUSTRIES[0]
+    );
+  }, [selectedIndustry]);
+
+  // ── Dynamic Heading Split (White first word + Running Gold rest of words) ──
+  const dynamicHeading = useMemo(() => {
+    const rawTitle = isRTL
+      ? (activeIndustryInfo.ar || activeIndustryInfo.nameAr || activeIndustryInfo.name)
+      : activeIndustryInfo.name;
+    const words = (rawTitle || "").trim().split(" ");
+    if (words.length <= 1) {
+      return {
+        firstPart: "",
+        goldPart: rawTitle,
+      };
+    }
+    const firstPart = words[0];
+    const goldPart = words.slice(1).join(" ");
+    return {
+      firstPart,
+      goldPart,
+    };
+  }, [activeIndustryInfo, isRTL]);
+
+  // ── Filtered Products based on selected Industry & Search ──
+  const filteredProducts = useMemo(() => {
     const publishedOnly = dbProducts.filter(
       (p) => (p.status || "Published") === "Published"
     );
 
-    return publishedOnly.map((p) => {
-      const loc = isRTL ? (p.ar?.title ? p.ar : p.en) : (p.en || p);
-      const industryName = p.primaryIndustry || p.en?.primaryIndustry || "Industrial Chemicals";
+    const matches = activeIndustryInfo.matchNames || [activeIndustryInfo.name];
 
+    let list = publishedOnly.filter((p) => {
+      const pIndustry = (p.primaryIndustry || p.en?.primaryIndustry || "").toLowerCase();
+      return matches.some((m) => pIndustry.includes(m.toLowerCase()));
+    });
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter((p) => {
+        const title = (p.title || p.en?.title || "").toLowerCase();
+        const code = (p.code || "").toLowerCase();
+        const desc = (p.shortOverview || p.en?.shortOverview || "").toLowerCase();
+        return title.includes(q) || code.includes(q) || desc.includes(q);
+      });
+    }
+
+    return list.map((p) => {
+      const loc = isRTL ? (p.ar?.title ? p.ar : p.en) : (p.en || p);
       return {
         id: p.slug || p._id,
         slug: p.slug || p._id,
         title: loc?.title || p.title,
         code: p.code || "PRD",
-        primaryIndustry: industryName,
+        primaryIndustry: p.primaryIndustry || p.en?.primaryIndustry || activeIndustryInfo.name,
         categoryTag: loc?.categoryTag || p.categoryTag || "CHEMICAL",
         description: loc?.shortOverview || p.en?.shortOverview || "",
         image: (p.images && p.images[0]) || "/images/prodcut/dummy-product.jpg",
@@ -90,59 +147,31 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
         isLive: true,
       };
     });
-  }, [dbProducts, isRTL]);
+  }, [dbProducts, activeIndustryInfo, searchQuery, isRTL]);
 
-  // ── Derived: Current Selected Industry Object ──
-  const activeIndustryInfo = useMemo(() => {
-    return (
-      MASTER_INDUSTRIES.find((ind) => ind.id === selectedIndustry) ||
-      MASTER_INDUSTRIES[0]
-    );
-  }, [selectedIndustry]);
-
-  // ── Filtered Products (by selected industry + search query) ──
-  const filteredProducts = useMemo(() => {
-    const matches = activeIndustryInfo.matchNames || [activeIndustryInfo.name];
-    let products = allProductsList.filter((p) =>
-      matches.some((m) => (p.primaryIndustry || "").toLowerCase().includes(m.toLowerCase()))
-    );
-
-    // Search Query filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase();
-      products = products.filter(
-        (p) =>
-          (p.title || "").toLowerCase().includes(q) ||
-          (p.code || "").toLowerCase().includes(q) ||
-          (p.description || "").toLowerCase().includes(q)
-      );
-    }
-
-    return products;
-  }, [allProductsList, activeIndustryInfo, searchQuery]);
-
-  // ── Pagination Calculations ──
+  // ── Pagination Logic ──
   const totalProducts = filteredProducts.length;
   const totalPages = Math.max(1, Math.ceil(totalProducts / PRODUCTS_PER_PAGE));
   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
   const endIndex = Math.min(startIndex + PRODUCTS_PER_PAGE, totalProducts);
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
-  // Reset to page 1 when industry or search changes
+  // Reset to page 1 on filter changes
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedIndustry, searchQuery]);
 
   // ── Handlers ──
-  const handleIndustryChange = useCallback(
-    (newIndustryId) => {
-      setShowDropdown(false);
-      if (onIndustrySelect) {
-        onIndustrySelect(newIndustryId);
-      }
-    },
-    [onIndustrySelect]
-  );
+  const handleIndustryChange = useCallback((id) => {
+    setSelectedIndustry(id);
+    setShowDropdown(false);
+    if (onIndustrySelect) {
+      onIndustrySelect(id);
+    }
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", `/industries/${id}`);
+    }
+  }, [onIndustrySelect]);
 
   const handlePageChange = useCallback(
     (page) => {
@@ -156,7 +185,7 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
     [totalPages]
   );
 
-  // Generate page numbers for pagination bar
+  // Page Numbers
   const getPageNumbers = () => {
     const pages = [];
     if (totalPages <= 5) {
@@ -180,80 +209,97 @@ export default function IndustryProductsListing({ selectedIndustry, onIndustrySe
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── TOP CONTROLS BAR: Search (Left) + Industry Dropdown (Right) ── */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8 sm:mb-10">
+        {/* ── TOP CONTROLS BAR: Dynamic Heading (Left) + Gold Search (Center) + White Industry Button (Right) ── */}
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
 
-          {/* Search Input */}
-          <div className="relative flex-1 max-w-md">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={
-                isRTL
-                  ? `ابحث في منتجات ${activeIndustryInfo.ar}...`
-                  : `Search within ${activeIndustryInfo.name}...`
-              }
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-[#11131a] border border-[#252a38] rounded-xl text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-main/60 transition-all"
-            />
-            <svg
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+          {/* Left: Dynamic Industry Heading */}
+          <div className="shrink-0">
+            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-tight">
+              {dynamicHeading.firstPart && (
+                <span className="text-white">{dynamicHeading.firstPart} </span>
+              )}
+              <span className="text-gradient-gold-animated inline-block">
+                {dynamicHeading.goldPart}
+              </span>
+            </h2>
           </div>
 
-          {/* Industry Filter Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          {/* Center: Gold Bordered Search Input */}
+          <div className="relative flex-1 max-w-2xl w-full">
+            <div className="flex items-center gap-2 p-1 sm:p-1.5 bg-black/40 border border-gold-main rounded-xl transition-all shadow-lg focus-within:border-gold-light focus-within:ring-1 focus-within:ring-gold-main/30">
+              {/* White rounded-square icon box with gold magnifying glass */}
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-xs">
+                <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gold-main stroke-[2.5]" />
+              </div>
+
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={
+                  isRTL
+                    ? `ابحث في منتجات ${activeIndustryInfo.ar}...`
+                    : `Search within ${activeIndustryInfo.name}...`
+                }
+                className="w-full bg-transparent px-2 py-1 text-xs sm:text-sm text-white placeholder-gray-400 font-subheading focus:outline-none"
+              />
+
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="p-1.5 text-gray-400 hover:text-white transition-colors cursor-pointer shrink-0"
+                  aria-label="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Solid White Industry Filter Button & Dropdown */}
+          <div className="relative shrink-0" ref={dropdownRef}>
             <button
+              type="button"
               onClick={() => setShowDropdown(!showDropdown)}
-              className="w-full sm:w-auto min-w-[260px] flex items-center justify-between gap-3 px-4 py-2.5 sm:py-3 bg-[#11131a] border border-[#252a38] hover:border-gold-main/50 rounded-xl text-xs sm:text-sm font-semibold text-white transition-all shadow-lg"
+              className="w-full lg:w-auto bg-white text-black font-heading font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl shadow-md hover:bg-gray-100 active:scale-98 transition-all flex items-center justify-between sm:justify-center gap-2.5 cursor-pointer select-none"
             >
-              <span className="truncate">
-                {isRTL ? activeIndustryInfo.ar : activeIndustryInfo.name}
-              </span>
-              <svg
-                className={`w-4 h-4 text-gold-main shrink-0 transition-transform duration-200 ${
-                  showDropdown ? "rotate-180" : ""
-                }`}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-              </svg>
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-black stroke-[2.2] shrink-0" />
+                <span className="truncate max-w-[200px]">
+                  {isRTL ? activeIndustryInfo.ar : activeIndustryInfo.name}
+                </span>
+              </div>
             </button>
 
-            {showDropdown && (
-              <div className="absolute right-0 mt-2 w-full sm:w-80 bg-[#161822] border border-[#2e3344] rounded-2xl shadow-2xl py-2 z-50 max-h-80 overflow-y-auto">
-                {MASTER_INDUSTRIES.map((ind) => (
-                  <button
-                    key={ind.id}
-                    onClick={() => handleIndustryChange(ind.id)}
-                    className={`w-full px-4 py-2.5 text-left text-xs sm:text-sm flex items-center justify-between hover:bg-[#1f2333] transition-colors ${
-                      selectedIndustry === ind.id ? "text-gold-main font-bold bg-[#1f2333]/70" : "text-gray-300"
-                    }`}
-                  >
-                    <span>{isRTL ? ind.ar : ind.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+              {/* Industry Dropdown Menu with Hidden Scrollbar & Global Colors */}
+              {showDropdown && (
+                <div className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 w-full sm:w-80 bg-[var(--color-primary-light)] border border-gold-main/40 rounded-2xl shadow-2xl py-2 z-50 max-h-80 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden animate-[fadeIn_0.15s_ease-out]">
+                  {MASTER_INDUSTRIES.map((ind) => {
+                    const isSelected = selectedIndustry === ind.id;
+                    return (
+                      <button
+                        key={ind.id}
+                        type="button"
+                        onClick={() => handleIndustryChange(ind.id)}
+                        className={`w-full px-4 py-2.5 text-left rtl:text-right text-xs sm:text-sm font-subheading flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer ${
+                          isSelected ? "text-gold-main font-bold bg-white/10" : "text-gray-300"
+                        }`}
+                      >
+                        <span className="truncate pr-2 rtl:pr-0 rtl:pl-2">
+                          {isRTL ? ind.ar : ind.name}
+                        </span>
+                        {isSelected && (
+                          <span className="w-2 h-2 rounded-full bg-gold-main shrink-0"></span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
           </div>
-        </div>
 
         {/* ── PRODUCTS GRID (3 Per Row) ── */}
         {isLoading ? (
