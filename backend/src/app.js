@@ -9,6 +9,7 @@ import blogRoutes from "./routes/blogRoutes.js";
 import translateRoutes from "./routes/translateRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
+import careerRoutes from "./routes/careerRoutes.js";
 
 const app = express();
 
@@ -80,6 +81,7 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/translate", translateRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/careers", careerRoutes);
 
 // Global 404 Route Handler
 app.use((req, res) => {

@@ -250,14 +250,17 @@ export default function CareerApplicationForm() {
     handleChange(field, cleanedValue);
   };
 
-  // Auto-hide Thank You success screen automatically after 3 seconds
+  // Auto-hide Thank You success screen automatically after 2.5 to 3 seconds
   useEffect(() => {
+    let timer;
     if (isSubmittedSuccess) {
-      const timer = setTimeout(() => {
-        handleResetForm();
-      }, 3000);
-      return () => clearTimeout(timer);
+      timer = setTimeout(() => {
+        setIsSubmittedSuccess(false);
+      }, 2800);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [isSubmittedSuccess]);
 
   // Handle File Upload
@@ -343,18 +346,107 @@ export default function CareerApplicationForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle listen to select position from job card
+  useEffect(() => {
+    const handleSetRole = (e) => {
+      if (e.detail && e.detail.title) {
+        setFormData((prev) => ({ ...prev, postApplied: e.detail.title }));
+      }
+    };
+    window.addEventListener("selectCareerRole", handleSetRole);
+    return () => window.removeEventListener("selectCareerRole", handleSetRole);
+  }, []);
+
   // Submit Handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    try {
+      // 1. Upload Resume PDF to Cloudinary
+      let resumeUrl = "#";
+      let resumeName = formData.resume ? formData.resume.name : "Resume.pdf";
 
-    // Simulate Backend API Submit
-    setTimeout(() => {
-      setIsSubmitting(false);
+      if (formData.resume instanceof File) {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", formData.resume);
+        uploadFormData.append("folder", "resumes");
+
+        const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/upload/single`, {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        const uploadData = await uploadRes.json();
+        if (uploadData.success && uploadData.data?.url) {
+          resumeUrl = uploadData.data.url;
+        } else {
+          throw new Error(uploadData.message || "Failed to upload resume document.");
+        }
+      }
+
+      // 2. Submit Application to MongoDB
+      const payload = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        phone: `${formData.dialCode} ${formData.phoneNumber.trim()}`,
+        gender: formData.gender || "",
+        currentLocation: formData.location.trim(),
+        residentialAddress: formData.address.trim(),
+        education: formData.education,
+        specialization: formData.specialization,
+        totalExperience: formData.experience,
+        postAppliedFor: formData.postApplied,
+        referralSource: formData.hearAbout,
+        resumeUrl,
+        resumeName,
+        coverNote: formData.whyJoin.trim(),
+      };
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/careers/apply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.message || "Submission failed. Please try again.");
+      }
+
       setIsSubmittedSuccess(true);
-    }, 1200);
+      // Clear form inputs for next candidate
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        dialCode: "+971",
+        phoneNumber: "",
+        gender: "",
+        location: "",
+        address: "",
+        education: "",
+        specialization: "",
+        experience: "",
+        postApplied: "",
+        hearAbout: "",
+        resume: null,
+        whyJoin: "",
+      });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (err) {
+      console.error("Career Application Submit Error:", err);
+      setErrors((prev) => ({
+        ...prev,
+        submit: err.message || (isRTL ? "حدث خطأ أثناء إرسال الطلب" : "Failed to submit application. Please try again."),
+      }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleResetForm = () => {
@@ -376,6 +468,9 @@ export default function CareerApplicationForm() {
       resume: null,
       whyJoin: "",
     });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -421,7 +516,7 @@ export default function CareerApplicationForm() {
         <div className="max-w-4xl mx-auto bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-9 text-black shadow-2xl relative min-h-[380px] flex flex-col justify-center">
 
           {/* ═══════════════════════════════════════════
-              THANK YOU SUCCESS VIEW (Auto-hides after 3s)
+              THANK YOU SUCCESS VIEW (Auto-reverts to form after ~2.8s)
               ═══════════════════════════════════════════ */}
           {isSubmittedSuccess ? (
             <div className="text-center py-6 sm:py-10 animate-[fadeIn_0.4s_ease-out]">
@@ -448,11 +543,22 @@ export default function CareerApplicationForm() {
               </h3>
 
               {/* Subtitle */}
-              <p className="font-subheading text-gray-600 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
+              <p className="font-subheading text-gray-600 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed mb-4">
                 {isRTL
                   ? "شكراً لاهتمامك بالانضمام إلى ليلا جلف. سيتواصل معك فريق الاستقطاب والموارد البشرية لدينا قريباً بعد مراجعة سيرتك الذاتية."
                   : "Thank you for applying to Leela Gulf FZC. Our HR talent acquisition team will review your CV and get back to you shortly."}
               </p>
+
+              {/* Instant Reset Action Button */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsSubmittedSuccess(false)}
+                  className="px-5 py-2 rounded-xl bg-gray-100 hover:bg-gold-main hover:text-black text-gray-700 text-xs font-heading font-bold transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+                >
+                  {isRTL ? "تقديم طلب آخر" : "Submit Another Application"}
+                </button>
+              </div>
             </div>
           ) : (
 

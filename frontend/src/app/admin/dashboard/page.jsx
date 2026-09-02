@@ -249,6 +249,7 @@ export default function AdminDashboardPage() {
   const [dbProductsTotal, setDbProductsTotal] = useState(null);
   const [dbBlogsTotal, setDbBlogsTotal] = useState(null);
   const [dbBlogsList, setDbBlogsList] = useState([]);
+  const [dbEventsTotal, setDbEventsTotal] = useState(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   useEffect(() => {
@@ -260,10 +261,11 @@ export default function AdminDashboardPage() {
         if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
         const leadQuery = `?${leadParams.join("&")}`;
 
-        const [leadsRes, productsRes, blogsRes] = await Promise.allSettled([
+        const [leadsRes, productsRes, blogsRes, eventsRes] = await Promise.allSettled([
           apiRequest(`/leads${leadQuery}`, { method: "GET" }),
           apiRequest(`/products?limit=1`, { method: "GET" }),
           apiRequest(`/blogs?limit=5`, { method: "GET" }),
+          apiRequest(`/events?limit=1`, { method: "GET" }),
         ]);
 
         if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
@@ -289,6 +291,16 @@ export default function AdminDashboardPage() {
         } else {
           setDbBlogsTotal(0);
           setDbBlogsList([]);
+        }
+
+        if (eventsRes.status === "fulfilled" && eventsRes.value?.success) {
+          const eCount =
+            eventsRes.value.total ??
+            eventsRes.value.count ??
+            (Array.isArray(eventsRes.value.data) ? eventsRes.value.data.length : 0);
+          setDbEventsTotal(eCount);
+        } else {
+          setDbEventsTotal(0);
         }
       } catch (err) {
         console.warn("Could not fetch dashboard live stats:", err);
@@ -441,7 +453,7 @@ export default function AdminDashboardPage() {
     },
     {
       title: "Events / Gallery",
-      value: "24",
+      value: dbEventsTotal !== null ? String(dbEventsTotal) : (isLoadingStats ? "..." : "0"),
       linkText: "View gallery",
       href: "/admin/events-gallery",
       icon: ImageIcon,

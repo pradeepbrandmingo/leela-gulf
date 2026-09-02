@@ -4,12 +4,13 @@ import { Readable } from "stream";
 /**
  * Helper to upload buffer to Cloudinary using streams
  */
-function uploadBufferToCloudinary(buffer, folder = "products", resourceType = "auto") {
+function uploadBufferToCloudinary(buffer, folder = "products", resourceType = "auto", customOptions = {}) {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: `leela-gulf/${folder}`,
         resource_type: resourceType,
+        ...customOptions,
       },
       (error, result) => {
         if (error) return reject(error);
@@ -36,11 +37,21 @@ export async function uploadSingleFile(req, res) {
       });
     }
 
-    const isPdf = req.file.mimetype === "application/pdf";
-    const requestedFolder = req.body?.folder ? req.body.folder.replace(/^leela-gulf\//, "") : (isPdf ? "documents" : "blogs");
+    const isPdf = req.file.mimetype === "application/pdf" || req.file.originalname?.toLowerCase().endsWith(".pdf");
+    const requestedFolder = req.body?.folder ? req.body.folder.replace(/^leela-gulf\//, "") : (isPdf ? "resumes" : "blogs");
     const resourceType = isPdf ? "raw" : "image";
 
-    const result = await uploadBufferToCloudinary(req.file.buffer, requestedFolder, resourceType);
+    const customOptions = {};
+    if (isPdf) {
+      const baseName = (req.file.originalname || "Resume")
+        .replace(/\.pdf$/i, "")
+        .replace(/[^a-zA-Z0-9_-]/g, "_");
+      customOptions.public_id = `${baseName}_${Date.now()}.pdf`;
+      customOptions.use_filename = true;
+      customOptions.unique_filename = false;
+    }
+
+    const result = await uploadBufferToCloudinary(req.file.buffer, requestedFolder, resourceType, customOptions);
 
     return res.status(200).json({
       success: true,
@@ -48,7 +59,7 @@ export async function uploadSingleFile(req, res) {
       data: {
         url: result.secure_url || result.url,
         publicId: result.public_id,
-        format: result.format,
+        format: result.format || (isPdf ? "pdf" : ""),
         bytes: result.bytes,
         originalName: req.file.originalname,
       },

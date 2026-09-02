@@ -12,6 +12,7 @@ import {
   Eye,
   Tag,
   Image as ImageIcon,
+  Briefcase,
   LogOut,
   ChevronUp,
   ChevronDown,
@@ -55,6 +56,11 @@ const sidebarMenuItems = [
     name: "Events / Gallery",
     href: "/admin/events-gallery",
     icon: ImageIcon,
+  },
+  {
+    name: "Careers",
+    href: "/admin/careers",
+    icon: Briefcase,
   },
 ];
 
