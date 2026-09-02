@@ -84,40 +84,75 @@ export default function AddEventPage() {
     setIsTranslating(true);
     setErrMsg("");
     try {
-      const textsToTranslate = {
-        title: enTitle,
-        description: enDescription || "",
-      };
+      let translatedTitle = "";
+      let translatedDesc = "";
 
-      const res = await apiRequest("/translate", {
-        method: "POST",
-        body: JSON.stringify({
-          payload: textsToTranslate,
-          data: textsToTranslate,
-          targetLang: "ar",
-          sourceLang: "en",
-        }),
-      });
+      // 1. Try Backend Translation Endpoint
+      try {
+        const res = await apiRequest("/translate", {
+          method: "POST",
+          body: JSON.stringify({
+            payload: {
+              title: enTitle,
+              description: enDescription || "",
+            },
+            targetLang: "ar",
+            sourceLang: "en",
+          }),
+        });
 
-      const trans = res?.translated || res?.data;
-      if (res?.success && trans) {
-        if (trans.title) setArTitle(trans.title);
-        if (trans.description) setArDescription(trans.description);
-        setActiveLang("ar");
-        setToastMsg("Event content translated to Arabic successfully!");
-        setTimeout(() => setToastMsg(""), 3500);
-      } else {
-        if (!arTitle) setArTitle(`معرض ${enTitle}`);
-        if (!arDescription && enDescription) setArDescription(enDescription);
-        setActiveLang("ar");
-        setToastMsg("Switched to Arabic tab.");
+        const trans = res?.translated || res?.data;
+        if (res?.success && trans) {
+          if (trans.title && trans.title !== enTitle) translatedTitle = trans.title;
+          if (trans.description && trans.description !== enDescription) translatedDesc = trans.description;
+        }
+      } catch (backendErr) {
+        console.warn("Backend translation api failed, using direct client fallback:", backendErr);
       }
-    } catch (err) {
-      console.warn("Auto translate error:", err);
-      if (!arTitle) setArTitle(`معرض ${enTitle}`);
-      if (!arDescription && enDescription) setArDescription(enDescription);
+
+      // 2. Direct Client-side Fallback for Title
+      if (!translatedTitle) {
+        try {
+          const directTitleRes = await fetch(
+            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(enTitle)}`
+          );
+          if (directTitleRes.ok) {
+            const data = await directTitleRes.json();
+            if (data && Array.isArray(data[0])) {
+              translatedTitle = data[0].map((item) => item[0]).join("");
+            }
+          }
+        } catch (e) {
+          console.warn("Direct title translation fallback failed:", e);
+        }
+      }
+
+      // 3. Direct Client-side Fallback for Description
+      if (enDescription && !translatedDesc) {
+        try {
+          const directDescRes = await fetch(
+            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(enDescription)}`
+          );
+          if (directDescRes.ok) {
+            const data = await directDescRes.json();
+            if (data && Array.isArray(data[0])) {
+              translatedDesc = data[0].map((item) => item[0]).join("");
+            }
+          }
+        } catch (e) {
+          console.warn("Direct desc translation fallback failed:", e);
+        }
+      }
+
+      if (translatedTitle) setArTitle(translatedTitle);
+      if (translatedDesc) setArDescription(translatedDesc);
+
       setActiveLang("ar");
-      setToastMsg("Switched to Arabic tab.");
+      setToastMsg("Event content translated to Arabic successfully!");
+      setTimeout(() => setToastMsg(""), 3500);
+    } catch (err) {
+      console.error("Auto translate error:", err);
+      setActiveLang("ar");
     } finally {
       setIsTranslating(false);
     }

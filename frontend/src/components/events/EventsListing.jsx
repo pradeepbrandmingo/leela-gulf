@@ -9,7 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Sparkles,
+  Calendar,
   Loader2,
 } from "lucide-react";
 import { apiRequest } from "@/config/api";
@@ -206,7 +206,9 @@ export default function EventsListing({ eventsData, activeTab }) {
         ) : (
           /* Fallback Empty State */
           <div className="text-center py-16 bg-[var(--color-primary)] rounded-3xl border border-white/10 p-8 max-w-xl mx-auto">
-            <Sparkles className="w-10 h-10 text-gold-main mx-auto mb-3 opacity-60" />
+            <div className="w-14 h-14 rounded-2xl bg-gold-main/10 border border-gold-main/25 flex items-center justify-center mx-auto mb-4 text-gold-main shadow-lg">
+              <Calendar className="w-7 h-7 stroke-[1.75]" />
+            </div>
             <h3 className="font-heading font-bold text-xl text-white mb-2">
               {isRTL ? "لا توجد فعاليات حالياً" : "No Events Found"}
             </h3>
