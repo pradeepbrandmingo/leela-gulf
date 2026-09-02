@@ -30,179 +30,7 @@ import {
   ExternalLink
 } from "lucide-react";
 
-// Mock Product Dataset (Matches Leela Gulf Production Chemical Catalog)
-const INITIAL_PRODUCTS = [
-  {
-    _id: "prod-001",
-    name: "Sodium Lauryl Ether Sulphate (SLES 70%)",
-    grade: "Anionic Surfactant",
-    casNo: "68585-34-2",
-    code: "LGF-CH-0001",
-    industries: ["Home Care & Personal Care (LEEPOL®)", "Industrial Chemicals"],
-    tags: ["Surfactant", "Cleaning Agents", "Foaming Agent"],
-    status: "Published",
-    createdAt: "2026-08-25T10:30:00Z",
-    description: "High-purity SLES 70% used widely in household detergent formulations, liquid soaps, shampoo, and industrial cleaning preparations.",
-    specs: "Active Matter: 70% ± 2%, pH Value: 7.0 - 8.5, Unsulfated Matter: Max 2.5%",
-  },
-  {
-    _id: "prod-002",
-    name: "Caustic Soda Flakes 99%",
-    grade: "Industrial & Technical Grade",
-    casNo: "1310-73-2",
-    code: "LGF-CH-0002",
-    industries: ["Water Treatment", "Industrial Chemicals"],
-    tags: ["pH Adjuster", "Water Treatment", "Alkali"],
-    status: "Published",
-    createdAt: "2026-08-24T14:15:00Z",
-    description: "Premium grade Sodium Hydroxide flakes used in water treatment, chemical synthesis, soap making, and textile processing.",
-    specs: "Purity: Min 99.0%, Sodium Carbonate: Max 0.4%, NaCl: Max 0.03%",
-  },
-  {
-    _id: "prod-003",
-    name: "Linear Alkyl Benzene Sulphonic Acid (LABSA 96%)",
-    grade: "LAB 96%",
-    casNo: "27176-87-0",
-    code: "LGF-CH-0003",
-    industries: ["Home Care & Personal Care (LEEPOL®)"],
-    tags: ["Detergent", "Industrial Cleaner", "Anionic"],
-    status: "Published",
-    createdAt: "2026-08-23T09:00:00Z",
-    description: "Main active ingredient for laundry powders and liquid detergents. Outstanding detergency and wetting properties.",
-    specs: "Active Matter: Min 96%, Free Acid: Max 1.5%, Water Content: Max 1.0%",
-  },
-  {
-    _id: "prod-004",
-    name: "Hydrochloric Acid 33%",
-    grade: "Technical / Industrial Grade",
-    casNo: "7647-01-0",
-    code: "LGF-CH-0004",
-    industries: ["Mining & Metals", "Industrial Chemicals"],
-    tags: ["Acid", "Chemical Processing", "Pickling Agent"],
-    status: "Published",
-    createdAt: "2026-08-22T11:45:00Z",
-    description: "Strong mineral acid utilized for steel pickling, pH neutralization, boiler descaling, and chemical synthesis.",
-    specs: "Concentration: 33% ± 1%, Iron (Fe): Max 0.001%, Heavy Metals: Max 0.0005%",
-  },
-  {
-    _id: "prod-005",
-    name: "Soda Ash Light (Sodium Carbonate)",
-    grade: "Dense & Light Grade",
-    casNo: "497-19-8",
-    code: "LGF-CH-0005",
-    industries: ["Packaging & Paper pulp industries", "Industrial Chemicals"],
-    tags: ["Glass Industry", "Detergent Builder", "pH Control"],
-    status: "Published",
-    createdAt: "2026-08-21T16:20:00Z",
-    description: "Essential raw material for container glass, flat glass, sodium salts, detergent builders, and water treatment.",
-    specs: "Na2CO3 Purity: Min 99.2%, NaCl: Max 0.7%, Sulphate (SO4): Max 0.03%",
-  },
-  {
-    _id: "prod-006",
-    name: "Mono Propylene Glycol (MPG)",
-    grade: "USP & Industrial Grade",
-    casNo: "57-55-6",
-    code: "LGF-CH-0006",
-    industries: ["CASE – Coatings, Adhesives, Sealants & Elastomers"],
-    tags: ["Solvent", "Resins", "Humectant"],
-    status: "Draft",
-    createdAt: "2026-08-20T13:10:00Z",
-    description: "Versatile solvent and humectant used in unsaturated polyester resins, paints, coatings, and heat transfer fluids.",
-    specs: "Purity: Min 99.8%, Water Content: Max 0.1%, Specific Gravity: 1.035 - 1.037",
-  },
-  {
-    _id: "prod-007",
-    name: "Citric Acid Monohydrate",
-    grade: "Food & Technical Grade",
-    casNo: "5949-29-1",
-    code: "LGF-CH-0007",
-    industries: ["Food & Beverage chemicals", "Pharmaceuticals API & Excipients"],
-    tags: ["Acidulant", "Food Additive", "Preservative"],
-    status: "Published",
-    createdAt: "2026-08-19T08:50:00Z",
-    description: "Natural organic acidulant for beverages, confectionery, citric salts production, and eco-friendly cleaning formulations.",
-    specs: "Purity: 99.5% - 100.5%, Moisture: 7.5% - 8.8%, Sulfated Ash: Max 0.05%",
-  },
-  {
-    _id: "prod-008",
-    name: "Toluene Technical Grade",
-    grade: "Pure Grade 99.9%",
-    casNo: "108-88-3",
-    code: "LGF-CH-0008",
-    industries: ["CASE – Coatings, Adhesives, Sealants & Elastomers"],
-    tags: ["Solvent", "Coatings", "Thinners"],
-    status: "Published",
-    createdAt: "2026-08-18T15:00:00Z",
-    description: "Aromatic hydrocarbon solvent for paints, lacquers, adhesives, rubber formulations, and chemical intermediates.",
-    specs: "Purity: Min 99.9%, Benzene: Max 100 ppm, Water: Max 0.03%",
-  },
-  {
-    _id: "prod-009",
-    name: "Polyanionic Cellulose (PAC LV)",
-    grade: "Low Viscosity Drilling Grade",
-    casNo: "9004-32-4",
-    code: "LGF-CH-0009",
-    industries: ["Oil & Gas"],
-    tags: ["Fluid Loss Control", "Viscosifier", "Drilling Mud"],
-    status: "Published",
-    createdAt: "2026-08-17T12:30:00Z",
-    description: "High-performance water-soluble polymer providing fluid loss control without significantly increasing viscosity in salt water muds.",
-    specs: "Degree of Substitution: Min 0.9, API Spec 13A Compliant, Moisture: Max 10%",
-  },
-  {
-    _id: "prod-010",
-    name: "Sodium Hypochlorite 12%",
-    grade: "Commercial Disinfectant Grade",
-    casNo: "7681-52-9",
-    code: "LGF-CH-0010",
-    industries: ["Water Treatment"],
-    tags: ["Disinfectant", "Bleaching Agent", "Sanitizer"],
-    status: "Published",
-    createdAt: "2026-08-16T10:15:00Z",
-    description: "Effective liquid disinfectant and bleaching agent used in municipal water purification, swimming pools, and industrial hygiene.",
-    specs: "Available Chlorine: Min 12.0%, Free Alkali (NaOH): 0.5% - 1.5%",
-  },
-  {
-    _id: "prod-011",
-    name: "NPK Granular Compound Component",
-    grade: "Agricultural Grade",
-    casNo: "66455-26-3",
-    code: "LGF-CH-0011",
-    industries: ["Fertilizers chemicals"],
-    tags: ["Fertilizer", "Nutrients", "Agriculture"],
-    status: "Published",
-    createdAt: "2026-08-15T09:00:00Z",
-    description: "High-efficiency agricultural fertilizer raw material providing essential Nitrogen, Phosphorus, and Potassium for crop yield optimization.",
-    specs: "Total Nitrogen: 15%, P2O5: 15%, K2O: 15%, Granule Size: 2-4mm",
-  },
-  {
-    _id: "prod-012",
-    name: "Textile Levelling Agent & Auxiliary",
-    grade: "Textile Processing Grade",
-    casNo: "9005-64-5",
-    code: "LGF-CH-0012",
-    industries: ["Textile Chemicals"],
-    tags: ["Dyeing Auxiliary", "Levelling Agent", "Textile"],
-    status: "Published",
-    createdAt: "2026-08-14T11:20:00Z",
-    description: "Specialized chemical agent ensuring uniform dye absorption and preventing streaking in synthetic and natural fiber processing.",
-    specs: "Appearance: Clear Yellowish Liquid, pH: 6.0 - 7.5, Ionic Character: Non-ionic",
-  },
-  {
-    _id: "prod-013",
-    name: "Specialty Custom Catalyst Blend",
-    grade: "Custom Synthesis Grade",
-    casNo: "7440-06-4",
-    code: "LGF-CH-0013",
-    industries: ["Other"],
-    tags: ["Catalyst", "Specialty Chemical", "Custom"],
-    status: "Published",
-    createdAt: "2026-08-13T14:40:00Z",
-    description: "Customized reaction catalyst formulated for high-selectivity organic synthesis and industrial polymerization.",
-    specs: "Active Metal: 5% Pt/C, Surface Area: > 800 m²/g, Loss on Drying: Max 3%",
-  }
-];
-
+// Date Formatter Utilities
 // Date Formatter Utilities
 const formatDateShort = (dateStr) => {
   if (!dateStr) return "";
@@ -357,8 +185,9 @@ export default function AdminProductsPage() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [showPerPageDropdown, setShowPerPageDropdown] = useState(false);
 
-  // Products Dataset State
-  const [productsList, setProductsList] = useState(INITIAL_PRODUCTS);
+  // Products Dataset State & Loading Indicator
+  const [productsList, setProductsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedProductModal, setSelectedProductModal] = useState(null);
   const [deleteConfirmProduct, setDeleteConfirmProduct] = useState(null);
   const [selectedProductIds, setSelectedProductIds] = useState([]);
@@ -494,9 +323,10 @@ export default function AdminProductsPage() {
   // Live Backend API Fetch
   useEffect(() => {
     async function loadProducts() {
+      setIsLoading(true);
       try {
-        const res = await apiRequest("/products");
-        if (res.success && res.data && res.data.length > 0) {
+        const res = await apiRequest("/products", { silent: true });
+        if (res?.success && Array.isArray(res.data)) {
           const mapped = res.data.map((p) => ({
             _id: p._id,
             slug: p.slug,
@@ -513,9 +343,14 @@ export default function AdminProductsPage() {
             specs: `CAS: ${p.casNumber || "-"}, HS: ${p.hsCode || "-"}, Formula: ${p.chemicalFormula || "-"}`,
           }));
           setProductsList(mapped);
+        } else {
+          setProductsList([]);
         }
       } catch (err) {
-        console.log("Using initial products fallback");
+        console.log("Error loading live products:", err);
+        setProductsList([]);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadProducts();
@@ -655,7 +490,7 @@ export default function AdminProductsPage() {
               All Products
             </h2>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-heading font-extrabold bg-[#fdfaf0] text-gold-dark border border-gold-main/50 shadow-2xs">
-              {displayedProducts.length} Total
+              {isLoading ? "Loading..." : `${displayedProducts.length} Total`}
             </span>
           </div>
           <p className="text-xs text-gray-500 font-medium mt-0.5">
@@ -779,65 +614,114 @@ export default function AdminProductsPage() {
           4. PRODUCTION ULTRA-COMPACT HIGH-DENSITY PRODUCTS TABLE
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden">
-        {displayedProducts.length === 0 ? (
-          <div className="p-10 text-center text-gray-400 text-xs font-semibold">
-            No products found matching your search or filter criteria.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50/80 border-b border-gray-200/80 text-[11px] font-bold text-gray-600 uppercase tracking-wider select-none">
-                  <th className="py-2.5 px-3 w-10 text-center">
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAll}
-                      checked={
-                        displayedProducts.length > 0 &&
-                        selectedProductIds.length === displayedProducts.length
-                      }
-                      className="rounded border-gray-300 text-gold-dark focus:ring-gold-main cursor-pointer"
-                    />
-                  </th>
-                  <th className="py-2.5 px-3 whitespace-nowrap min-w-[220px]">
-                    <div className="flex items-center gap-1.5">
-                      <span>Product Name</span>
-                      <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                      </svg>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-50/80 border-b border-gray-200/80 text-[11px] font-bold text-gray-600 uppercase tracking-wider select-none">
+                <th className="py-2.5 px-3 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={
+                      displayedProducts.length > 0 &&
+                      selectedProductIds.length === displayedProducts.length
+                    }
+                    className="rounded border-gray-300 text-gold-dark focus:ring-gold-main cursor-pointer"
+                  />
+                </th>
+                <th className="py-2.5 px-3 whitespace-nowrap min-w-[220px]">
+                  <div className="flex items-center gap-1.5">
+                    <span>Product Name</span>
+                    <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
+                </th>
+                <th className="py-2.5 px-3 whitespace-nowrap">
+                  <div className="flex items-center gap-1.5">
+                    <span>CAS No.</span>
+                    <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
+                </th>
+                <th className="py-2.5 px-3 whitespace-nowrap">Product Code</th>
+                <th className="py-2.5 px-3 whitespace-nowrap">
+                  <div className="flex items-center gap-1.5">
+                    <span>Industries</span>
+                    <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
+                </th>
+                <th className="py-2.5 px-3 whitespace-nowrap">
+                  <div className="flex items-center gap-1.5">
+                    <span>Application Tags</span>
+                    <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
+                </th>
+                <th className="py-2.5 px-3 whitespace-nowrap">Status</th>
+                <th className="py-2.5 px-3 text-center whitespace-nowrap">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 text-xs font-medium text-gray-700">
+              {isLoading ? (
+                Array.from({ length: 6 }).map((_, idx) => (
+                  <tr key={idx} className="animate-pulse">
+                    <td className="py-3 px-3 text-center">
+                      <div className="w-4 h-4 bg-gray-200 rounded mx-auto" />
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-lg bg-gray-200 shrink-0" />
+                        <div className="space-y-1.5 flex-1 min-w-0">
+                          <div className="h-3.5 bg-gray-200 rounded w-3/4" />
+                          <div className="h-2.5 bg-gray-100 rounded w-1/2" />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="h-3.5 bg-gray-200 rounded w-20" />
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="h-4 bg-gray-200 rounded w-24" />
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="h-4 bg-gray-200 rounded w-28" />
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="h-4 bg-gray-200 rounded w-20" />
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="h-5 bg-gray-200 rounded-full w-18" />
+                    </td>
+                    <td className="py-3 px-3 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <div className="w-6 h-6 bg-gray-200 rounded-lg" />
+                        <div className="w-6 h-6 bg-gray-200 rounded-lg" />
+                        <div className="w-6 h-6 bg-gray-200 rounded-lg" />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : displayedProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-[#fdfaf0] border border-[#f0d84a]/40 flex items-center justify-center text-gold-dark shadow-sm">
+                        <Package className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="font-heading font-bold text-gray-800 text-sm">No Products Found</p>
+                        <p className="text-xs text-gray-400 max-w-sm">No chemical products match your current search and filter criteria.</p>
+                      </div>
                     </div>
-                  </th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5">
-                      <span>CAS No.</span>
-                      <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Product Code</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5">
-                      <span>Industries</span>
-                      <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5">
-                      <span>Application Tags</span>
-                      <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Status</th>
-                  <th className="py-2.5 px-3 text-center whitespace-nowrap">Actions</th>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-xs font-medium text-gray-700">
-                {paginatedProducts.map((product) => {
+              ) : (
+                paginatedProducts.map((product) => {
                   const isBottle = product._id.includes("003") || product._id.includes("005") || product._id.includes("007");
                   const isBeaker = product._id.includes("002") || product._id.includes("004") || product._id.includes("006");
 
@@ -1003,11 +887,11 @@ export default function AdminProductsPage() {
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* ─────────────────────────────────────────────────────────────────────────────
             5. WORKING PAGINATION FOOTER

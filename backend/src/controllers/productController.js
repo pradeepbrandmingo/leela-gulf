@@ -49,13 +49,11 @@ function slugify(text) {
     .replace(/-+$/, "");
 }
 
-/**
- * Create a new product (Auto-translates to Arabic if missing)
- */
 export async function createProduct(req, res) {
   try {
     const {
       title,
+      slug: customSlug,
       code,
       casNumber,
       inciName,
@@ -138,7 +136,8 @@ export async function createProduct(req, res) {
     }
 
     // Generate unique slug
-    let baseSlug = slugify(enPayload.title || "product");
+    let baseSlug = customSlug ? slugify(customSlug) : slugify(enPayload.title || "product");
+    if (!baseSlug) baseSlug = "product";
     let slug = baseSlug;
     let counter = 1;
     while (await Product.findOne({ slug })) {
@@ -299,6 +298,22 @@ export async function updateProduct(req, res) {
 
     // 1. Collect all old Cloudinary asset URLs from the database document
     const oldAssetUrls = collectProductAssetUrls(product);
+
+    // 1.5 Handle custom slug updates
+    if (updateData.slug) {
+      const cleanSlug = slugify(updateData.slug);
+      if (cleanSlug && cleanSlug !== product.slug) {
+        let uniqueSlug = cleanSlug;
+        let counter = 1;
+        while (await Product.findOne({ slug: uniqueSlug, _id: { $ne: id } })) {
+          uniqueSlug = `${cleanSlug}-${counter}`;
+          counter++;
+        }
+        updateData.slug = uniqueSlug;
+      } else if (cleanSlug) {
+        updateData.slug = cleanSlug;
+      }
+    }
 
     // 2. Re-translate if English was updated
     if (updateData.en && (!updateData.ar || !updateData.ar.title)) {

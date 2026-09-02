@@ -75,6 +75,7 @@ const OFFICIAL_INDUSTRIES = [
   "CASE – Coatings, Adhesives, Sealants & Elastomers",
   "Other"
 ];
+const INDUSTRY_OPTIONS = OFFICIAL_INDUSTRIES;
 
 const FEATURE_ICON_OPTIONS = [
   { id: "sparkles", label: "Sparkles / Active Foaming", icon: Sparkles },
@@ -502,12 +503,27 @@ function FeatureIconSelect({ value, onChange, isOpen, onToggle, onClose }) {
   );
 }
 
+// Slug generator
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
+
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const productId = params?.id;
 
   const [activeLang, setActiveLang] = useState("en"); // "en" | "ar"
+  const [slug, setSlug] = useState("");
+  const [isSlugCustom, setIsSlugCustom] = useState(false);
   const [isLoadingProduct, setIsLoadingProduct] = useState(true);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -522,6 +538,18 @@ export default function EditProductPage() {
   const [openFeatureDropdownIdx, setOpenFeatureDropdownIdx] = useState(null);
   const [productSlug, setProductSlug] = useState("");
   const industryDropdownRef = useRef(null);
+
+  // Auto-generate slug when English title changes
+  const handleTitleChange = (val) => {
+    if (activeLang === "en") {
+      setFormData((prev) => ({ ...prev, title: val }));
+      if (!isSlugCustom) {
+        setSlug(slugify(val));
+      }
+    } else {
+      setArFormData((prev) => ({ ...prev, title: val }));
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -614,6 +642,7 @@ export default function EditProductPage() {
         if (res?.success && res?.data) {
           const p = res.data;
           setProductSlug(p.slug || p._id);
+          setSlug(p.slug || slugify(p.en?.title || p.title || ""));
 
           const en = p.en || {};
           const ar = p.ar || {};
@@ -829,7 +858,7 @@ export default function EditProductPage() {
         relatedProducts,
       };
 
-      const res = await apiRequest("/translate/product", {
+      const res = await apiRequest("/translate", {
         method: "POST",
         body: { payload: enPayload, targetLang: "ar" },
       });
@@ -1103,6 +1132,7 @@ export default function EditProductPage() {
 
       const fullPayload = {
         title: formData.title,
+        slug: slug ? slugify(slug) : slugify(formData.title),
         code: formData.code,
         casNumber: formData.casNumber,
         inciName: formData.inciName,
@@ -1151,141 +1181,140 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-24 text-gray-800">
-
-      {/* ── Top Header Navigation Bar ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-2xs">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/admin/products"
-            className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </Link>
+    <div className="space-y-6 pb-20 max-w-5xl mx-auto">
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          1. HEADER ROW: Breadcrumbs, Title, View Live, Translate, Save Draft & Update
+          ───────────────────────────────────────────────────────────────────────────── */}
+      <div className="flex flex-col gap-4 border-b border-gray-100 pb-4 sticky top-0 bg-white/95 backdrop-blur-md z-30 py-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs text-gray-400 font-medium mb-0.5">
-              <Link href="/admin/products" className="hover:text-gold-dark transition-colors">
-                Products
+            <div className="flex items-center gap-2 text-[11px] font-medium text-gray-400 mb-1">
+              <Link href="/admin/products" className="hover:text-gold-dark flex items-center gap-1 transition-colors">
+                <ArrowLeft className="w-3 h-3" /> Back to Products
               </Link>
               <span>&gt;</span>
-              <span className="text-gray-700 font-semibold">Edit Product</span>
+              <span className="text-gray-900 font-bold">Edit Product</span>
             </div>
-            <h1 className="text-lg sm:text-xl font-heading font-extrabold text-gray-900 tracking-tight">
-              Edit Product: <span className="text-gold-dark">{formData.title || "Product"}</span>
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-gray-900 tracking-tight">
+                Edit Product Listing
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                • Editing Mode
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {/* View Live on Frontend Button */}
+            {productSlug && (
+              <Link
+                href={`/products/${slug || productSlug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs transition-colors flex items-center gap-1.5 shrink-0"
+                title="View this product live on public website"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>View Live</span>
+              </Link>
+            )}
+
+            {/* Re-Translate to Arabic */}
+            <button
+              type="button"
+              disabled={isTranslating}
+              onClick={handleAutoTranslate}
+              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 disabled:opacity-50"
+              title="Re-translates English fields to Arabic"
+            >
+              {isTranslating ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Translating...</span>
+                </>
+              ) : (
+                <>
+                  <Languages className="w-3.5 h-3.5 text-white" />
+                  <span>Re-Translate English to Arabic</span>
+                </>
+              )}
+            </button>
+
+            {/* Save Draft */}
+            <button
+              type="button"
+              disabled={isSubmitting}
+              onClick={() => handleSubmit("Draft")}
+              className="px-4 py-2 bg-white border border-gray-200 hover:border-gray-300 rounded-xl text-xs font-bold text-gray-700 shadow-2xs hover:bg-gray-50 transition-all flex items-center gap-1.5 shrink-0"
+            >
+              <Save className="w-3.5 h-3.5 text-gray-500" />
+              <span>Save Draft</span>
+            </button>
+
+            {/* Update / Publish Button */}
+            <button
+              type="button"
+              disabled={isSubmitting}
+              onClick={() => handleSubmit("Published")}
+              className="px-5 py-2 bg-[#d6b92a] text-black font-extrabold hover:bg-gold-dark hover:text-white rounded-xl text-xs shadow-xs transition-all flex items-center gap-1.5 shrink-0"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+              <span>Update Product</span>
+            </button>
           </div>
         </div>
 
-        {/* Quick Actions (Preview Live + Save Status) */}
-        <div className="flex items-center gap-2.5">
-          {productSlug && (
-            <a
-              href={`/products/${productSlug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-heading font-bold text-xs inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+        {/* ── Language Switcher Tabs ── */}
+        <div className="flex items-center justify-between bg-gray-50/80 p-1.5 rounded-xl border border-gray-200/80">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setActiveLang("en")}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                activeLang === "en"
+                  ? "bg-white text-gray-900 shadow-2xs border border-gray-200"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Preview Live</span>
-            </a>
-          )}
-
-          <button
-            type="button"
-            onClick={() => handleSubmit("Draft")}
-            disabled={isSubmitting}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-heading font-bold text-xs transition-all disabled:opacity-50 cursor-pointer"
-          >
-            Save as Draft
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubmit("Published")}
-            disabled={isSubmitting}
-            className="btn-gold-primary px-5 py-2 rounded-xl font-heading font-bold text-xs inline-flex items-center gap-1.5 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-black" />
-                <span>Saving...</span>
-              </>
-            ) : (
-              <>
-                <Save className="w-3.5 h-3.5 text-black" />
-                <span>Update & Publish</span>
-              </>
-            )}
-          </button>
+              <span>English (Original Form)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveLang("ar")}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+                activeLang === "ar"
+                  ? "bg-[#fdfaf0] text-gold-dark shadow-2xs border border-gold-main/40"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              <span>Arabic (العربية)</span>
+            </button>
+          </div>
+          <span className="text-[11px] text-gray-400 font-medium hidden sm:inline">
+            {activeLang === "en"
+              ? "Editing English fields. Click 'Re-Translate' to update Arabic."
+              : "Viewing and fine-tuning Arabic localized content."}
+          </span>
         </div>
       </div>
 
-      {/* Notifications */}
       {successMsg && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-800 text-xs font-bold animate-[fadeIn_0.2s_ease-out]">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-bold flex items-center gap-2 animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center gap-3 text-rose-800 text-xs font-bold animate-[fadeIn_0.2s_ease-out]">
+        <div className="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl text-xs font-bold flex items-center gap-2 animate-in fade-in">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
-      {/* ── Language Switcher Bar ── */}
-      <div className="bg-[#11131a] text-white p-3.5 sm:p-4 rounded-2xl shadow-md border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Languages className="w-4 h-4 text-gold-main" />
-          <span className="text-xs font-bold">Content Language Mode:</span>
-          <div className="inline-flex p-1 bg-[#1c202d] rounded-xl border border-gray-700">
-            <button
-              type="button"
-              onClick={() => setActiveLang("en")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeLang === "en"
-                  ? "bg-gold-main text-black shadow-xs"
-                  : "text-gray-400 hover:text-white"
-                }`}
-            >
-              English Form
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveLang("ar")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeLang === "ar"
-                  ? "bg-gold-main text-black shadow-xs"
-                  : "text-gray-400 hover:text-white"
-                }`}
-            >
-              العربية (Arabic Form)
-            </button>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleAutoTranslate}
-          disabled={isTranslating}
-          className="px-4 py-1.5 bg-gradient-to-r from-gold-main/20 to-gold-light/20 hover:from-gold-main/30 hover:to-gold-light/30 border border-gold-main/50 text-gold-light rounded-xl text-xs font-bold inline-flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
-        >
-          {isTranslating ? (
-            <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-gold-light" />
-              <span>Translating Entire Form...</span>
-            </>
-          ) : (
-            <>
-              <Languages className="w-3.5 h-3.5 text-gold-main" />
-              <span>Re-Translate English to Arabic</span>
-            </>
-          )}
-        </button>
-      </div>
-
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 1: HERO & IDENTIFICATION INFORMATION
+          SECTION 1: HERO & GENERAL PRODUCT INFORMATION
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
         <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100">
@@ -1307,17 +1336,50 @@ export default function EditProductPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Product Name / Title */}
-          <div className="sm:col-span-2 space-y-1.5">
+          <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
               Product Title / Name <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
               value={curForm.title}
-              onChange={(e) => setCurForm({ ...curForm, title: e.target.value })}
+              onChange={(e) => handleTitleChange(e.target.value)}
               placeholder={activeLang === "en" ? "e.g. Cocamidopropyl Betaine (CAPB 35%)" : "مثال: كوكاميدوبروبيل بيتين (CAPB 35%)"}
               className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main transition-all"
             />
+          </div>
+
+          {/* Slug (URL Path) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-gray-700 block">
+                Slug (URL Path) <span className="text-rose-500">*</span>
+              </label>
+              {isSlugCustom && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSlugCustom(false);
+                    setSlug(slugify(formData.title));
+                  }}
+                  className="text-[10px] text-gold-dark font-bold hover:underline cursor-pointer"
+                >
+                  Auto
+                </button>
+              )}
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                value={slug}
+                onChange={(e) => {
+                  setIsSlugCustom(true);
+                  setSlug(slugify(e.target.value));
+                }}
+                placeholder="e.g. cocamidopropyl-betaine-capb-35"
+                className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main transition-all"
+              />
+            </div>
           </div>
 
           {/* Product SKU / Code */}

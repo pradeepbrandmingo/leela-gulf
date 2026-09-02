@@ -60,7 +60,7 @@ import {
 } from "lucide-react";
 
 // Official Leela Gulf Industries Catalog List (11 Categories)
-const INDUSTRY_OPTIONS = [
+const OFFICIAL_INDUSTRIES = [
   "Industrial Chemicals",
   "Water Treatment",
   "Home Care & Personal Care (LEEPOL®)",
@@ -74,6 +74,7 @@ const INDUSTRY_OPTIONS = [
   "CASE – Coatings, Adhesives, Sealants & Elastomers",
   "Other"
 ];
+const INDUSTRY_OPTIONS = OFFICIAL_INDUSTRIES;
 
 const FEATURE_ICON_OPTIONS = [
   { id: "sparkles", label: "Sparkles / Active Foaming", icon: Sparkles },
@@ -501,9 +502,24 @@ function FeatureIconSelect({ value, onChange, isOpen, onToggle, onClose }) {
   );
 }
 
+// Slug generator
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
+
 export default function AddNewProductPage() {
   const router = useRouter();
   const [activeLang, setActiveLang] = useState("en"); // "en" | "ar"
+  const [slug, setSlug] = useState("");
+  const [isSlugCustom, setIsSlugCustom] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [hasTranslated, setHasTranslated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -517,6 +533,18 @@ export default function AddNewProductPage() {
   const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false);
   const [openFeatureDropdownIdx, setOpenFeatureDropdownIdx] = useState(null);
   const industryDropdownRef = useRef(null);
+
+  // Auto-generate slug when English title changes
+  const handleTitleChange = (val) => {
+    if (activeLang === "en") {
+      setFormData((prev) => ({ ...prev, title: val }));
+      if (!isSlugCustom) {
+        setSlug(slugify(val));
+      }
+    } else {
+      setArFormData((prev) => ({ ...prev, title: val }));
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -1140,6 +1168,7 @@ export default function AddNewProductPage() {
 
       const fullPayload = {
         title: formData.title,
+        slug: slug ? slugify(slug) : slugify(formData.title),
         code: formData.code,
         casNumber: formData.casNumber,
         inciName: formData.inciName,
@@ -1188,15 +1217,16 @@ export default function AddNewProductPage() {
                 <ArrowLeft className="w-3 h-3" /> Back to Products
               </Link>
               <span>&gt;</span>
-              <span className="text-gray-900 font-semibold">Add New Product</span>
+              <span className="text-gray-900 font-bold">Add New Product</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-gray-900 tracking-tight flex items-center gap-2.5">
-              <span>Add New Product Listing</span>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${formData.status === "Published" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"
-                }`}>
-                {formData.status === "Published" ? "● Ready to Publish" : "● Draft Mode"}
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-gray-900 tracking-tight">
+                Add New Product Listing
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                • Ready to Publish
               </span>
-            </h1>
+            </div>
           </div>
 
           {/* Action Buttons: 1-Click Auto Translate, Save Draft & Publish */}
@@ -1206,7 +1236,7 @@ export default function AddNewProductPage() {
               type="button"
               disabled={isTranslating}
               onClick={handleAutoTranslate}
-              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold rounded-xl text-xs shadow-xs transition-all flex items-center gap-2 shrink-0 disabled:opacity-50"
+              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 disabled:opacity-50"
               title="Automatically translates all English fields to Arabic"
             >
               {isTranslating ? (
@@ -1268,12 +1298,8 @@ export default function AddNewProductPage() {
               }`}
             >
               <span>Arabic (العربية)</span>
-              {hasTranslated && (
-                <span className="w-2 h-2 rounded-full bg-emerald-500" title="Auto-translated" />
-              )}
             </button>
           </div>
-
           <span className="text-[11px] text-gray-400 font-medium hidden sm:inline">
             {activeLang === "en"
               ? "Fill form in English. Click Auto-Translate to generate Arabic."
@@ -1319,17 +1345,50 @@ export default function AddNewProductPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Product Name / Title */}
-          <div className="sm:col-span-2 space-y-1.5">
+          <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
               Product Title / Name <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
               value={curForm.title}
-              onChange={(e) => setCurForm({ ...curForm, title: e.target.value })}
+              onChange={(e) => handleTitleChange(e.target.value)}
               placeholder={activeLang === "en" ? "e.g. Cocamidopropyl Betaine (CAPB 35%)" : "مثال: كوكاميدوبروبيل بيتين (CAPB 35%)"}
               className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main transition-all"
             />
+          </div>
+
+          {/* Slug (URL Path) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-gray-700 block">
+                Slug (URL Path) <span className="text-rose-500">*</span>
+              </label>
+              {isSlugCustom && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSlugCustom(false);
+                    setSlug(slugify(formData.title));
+                  }}
+                  className="text-[10px] text-gold-dark font-bold hover:underline cursor-pointer"
+                >
+                  Auto
+                </button>
+              )}
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                value={slug}
+                onChange={(e) => {
+                  setIsSlugCustom(true);
+                  setSlug(slugify(e.target.value));
+                }}
+                placeholder="e.g. cocamidopropyl-betaine-capb-35"
+                className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono text-gray-900 focus:bg-white focus:outline-none focus:border-gold-main transition-all"
+              />
+            </div>
           </div>
 
           {/* Product SKU / Code */}

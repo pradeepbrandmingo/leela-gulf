@@ -48,11 +48,6 @@ const sidebarMenuItems = [
     icon: Eye,
   },
   {
-    name: "Meta Setup",
-    href: "/admin/meta-setup",
-    icon: Tag,
-  },
-  {
     name: "Events / Gallery",
     href: "/admin/events-gallery",
     icon: ImageIcon,
