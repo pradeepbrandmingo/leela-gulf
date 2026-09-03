@@ -614,11 +614,11 @@ export default function AdminProductsPage() {
           4. PRODUCTION ULTRA-COMPACT HIGH-DENSITY PRODUCTS TABLE
           ───────────────────────────────────────────────────────────────────────────── */}
       <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/80 border-b border-gray-200/80 text-[11px] font-bold text-gray-600 uppercase tracking-wider select-none">
-                <th className="py-2.5 px-3 w-10 text-center">
+                <th className="py-2.5 px-2.5 w-10 text-center">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
@@ -629,7 +629,7 @@ export default function AdminProductsPage() {
                     className="rounded border-gray-300 text-gold-dark focus:ring-gold-main cursor-pointer"
                   />
                 </th>
-                <th className="py-2.5 px-3 whitespace-nowrap min-w-[220px]">
+                <th className="py-2.5 px-2.5 whitespace-nowrap min-w-[170px] max-w-[220px]">
                   <div className="flex items-center gap-1.5">
                     <span>Product Name</span>
                     <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -637,7 +637,7 @@ export default function AdminProductsPage() {
                     </svg>
                   </div>
                 </th>
-                <th className="py-2.5 px-3 whitespace-nowrap">
+                <th className="py-2.5 px-2.5 whitespace-nowrap">
                   <div className="flex items-center gap-1.5">
                     <span>CAS No.</span>
                     <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -645,8 +645,8 @@ export default function AdminProductsPage() {
                     </svg>
                   </div>
                 </th>
-                <th className="py-2.5 px-3 whitespace-nowrap">Product Code</th>
-                <th className="py-2.5 px-3 whitespace-nowrap">
+                <th className="py-2.5 px-2.5 whitespace-nowrap">Product Code</th>
+                <th className="py-2.5 px-2.5 whitespace-nowrap">
                   <div className="flex items-center gap-1.5">
                     <span>Industries</span>
                     <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -654,7 +654,7 @@ export default function AdminProductsPage() {
                     </svg>
                   </div>
                 </th>
-                <th className="py-2.5 px-3 whitespace-nowrap">
+                <th className="py-2.5 px-2.5 whitespace-nowrap">
                   <div className="flex items-center gap-1.5">
                     <span>Application Tags</span>
                     <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -662,18 +662,18 @@ export default function AdminProductsPage() {
                     </svg>
                   </div>
                 </th>
-                <th className="py-2.5 px-3 whitespace-nowrap">Status</th>
-                <th className="py-2.5 px-3 text-center whitespace-nowrap">Actions</th>
+                <th className="py-2.5 px-2.5 whitespace-nowrap">Status</th>
+                <th className="py-2.5 px-2.5 text-center whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 text-xs font-medium text-gray-700">
               {isLoading ? (
                 Array.from({ length: 6 }).map((_, idx) => (
                   <tr key={idx} className="animate-pulse">
-                    <td className="py-3 px-3 text-center">
+                    <td className="py-3 px-2.5 text-center">
                       <div className="w-4 h-4 bg-gray-200 rounded mx-auto" />
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-2.5">
                       <div className="flex items-center gap-2.5">
                         <div className="w-9 h-9 rounded-lg bg-gray-200 shrink-0" />
                         <div className="space-y-1.5 flex-1 min-w-0">
@@ -682,22 +682,22 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-2.5">
                       <div className="h-3.5 bg-gray-200 rounded w-20" />
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-2.5">
                       <div className="h-4 bg-gray-200 rounded w-24" />
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-2.5">
                       <div className="h-4 bg-gray-200 rounded w-28" />
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-2.5">
                       <div className="h-4 bg-gray-200 rounded w-20" />
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-2.5">
                       <div className="h-5 bg-gray-200 rounded-full w-18" />
                     </td>
-                    <td className="py-3 px-3 text-center">
+                    <td className="py-3 px-2.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <div className="w-6 h-6 bg-gray-200 rounded-lg" />
                         <div className="w-6 h-6 bg-gray-200 rounded-lg" />
@@ -731,7 +731,7 @@ export default function AdminProductsPage() {
                       className="hover:bg-[#fdfaf0]/50 transition-colors group"
                     >
                       {/* Checkbox */}
-                      <td className="py-2.5 px-3 text-center">
+                      <td className="py-2.5 px-2.5 text-center">
                         <input
                           type="checkbox"
                           checked={selectedProductIds.includes(product._id)}
@@ -741,10 +741,10 @@ export default function AdminProductsPage() {
                       </td>
 
                       {/* Product Name + Compact Container Box + 1-Line Truncated Title */}
-                      <td className="py-2.5 px-3 max-w-[260px]">
-                        <div className="flex items-center gap-2.5">
+                      <td className="py-2.5 px-2.5 max-w-[220px]">
+                        <div className="flex items-center gap-2">
                           {/* Compact Container / Image Thumbnail */}
-                          <div className="w-9 h-9 rounded-lg overflow-hidden bg-gradient-to-b from-gray-50 to-gray-100/90 border border-gray-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:border-gold-main/50 transition-all">
+                          <div className="w-8 h-8 rounded-lg overflow-hidden bg-gradient-to-b from-gray-50 to-gray-100/90 border border-gray-200/80 flex items-center justify-center shrink-0 shadow-2xs group-hover:border-gold-main/50 transition-all">
                             {product.image ? (
                               <img
                                 src={product.image}
@@ -752,17 +752,17 @@ export default function AdminProductsPage() {
                                 className="w-full h-full object-cover"
                               />
                             ) : isBottle ? (
-                              <svg className="w-5 h-5 text-gray-600 drop-shadow-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <svg className="w-4 h-4 text-gray-600 drop-shadow-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <path d="M9 3h6v3H9zM10 6v3l-3 5v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-6l-3-5V6" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M7 14h10" opacity="0.4" strokeDasharray="2 2" />
                               </svg>
                             ) : isBeaker ? (
-                              <svg className="w-5 h-5 text-gray-600 drop-shadow-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <svg className="w-4 h-4 text-gray-600 drop-shadow-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <path d="M6 3h12v3l-1 1v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7L6 6V3z" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M7 13h10" opacity="0.4" strokeLinecap="round" />
                               </svg>
                             ) : (
-                              <FlaskConical className="w-5 h-5 text-gray-500" />
+                              <FlaskConical className="w-4 h-4 text-gray-500" />
                             )}
                           </div>
 
@@ -783,23 +783,23 @@ export default function AdminProductsPage() {
                       </td>
 
                       {/* CAS No (1-Line) */}
-                      <td className="py-2.5 px-3 font-mono text-[11px] text-gray-700 whitespace-nowrap font-medium">
+                      <td className="py-2.5 px-2.5 font-mono text-[11px] text-gray-700 whitespace-nowrap font-medium">
                         {product.casNo}
                       </td>
 
                       {/* Product Code (1-Line Badge) */}
-                      <td className="py-2.5 px-3 font-mono text-[11px] text-gray-800 whitespace-nowrap">
-                        <span className="px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200/80 text-gray-800 font-bold">
+                      <td className="py-2.5 px-2.5 font-mono text-[11px] text-gray-800 whitespace-nowrap">
+                        <span className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200/80 text-gray-800 font-bold">
                           {product.code}
                         </span>
                       </td>
 
                       {/* Industries (Single Horizontal Line + Overflow Badge) */}
-                      <td className="py-2.5 px-3 whitespace-nowrap">
+                      <td className="py-2.5 px-2.5 whitespace-nowrap">
                         <div className="flex items-center gap-1">
                           {product.industries && product.industries.length > 0 && (
                             <span
-                              className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#fdfaf0] text-[#8e7608] border border-[#f0d84a]/50 max-w-[145px] truncate inline-block"
+                              className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#fdfaf0] text-[#8e7608] border border-[#f0d84a]/50 max-w-[130px] truncate inline-block"
                               title={product.industries[0]}
                             >
                               {product.industries[0]}
@@ -817,30 +817,30 @@ export default function AdminProductsPage() {
                       </td>
 
                       {/* Application Tags (Single Horizontal Line) */}
-                      <td className="py-2.5 px-3 whitespace-nowrap">
+                      <td className="py-2.5 px-2.5 whitespace-nowrap">
                         <div className="flex items-center gap-1">
-                          {(product.tags || []).slice(0, 2).map((tg, idx) => (
+                          {(product.tags || []).slice(0, 1).map((tg, idx) => (
                             <span
                               key={idx}
-                              className="px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-700 border border-gray-200 max-w-[100px] truncate inline-block"
+                              className="px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-700 border border-gray-200 max-w-[110px] truncate inline-block"
                               title={tg}
                             >
                               {tg}
                             </span>
                           ))}
-                          {(product.tags || []).length > 2 && (
+                          {(product.tags || []).length > 1 && (
                             <span
                               className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-200 text-gray-700 shrink-0 cursor-help"
-                              title={(product.tags || []).slice(2).join(", ")}
+                              title={(product.tags || []).slice(1).join(", ")}
                             >
-                              +{(product.tags || []).length - 2}
+                              +{(product.tags || []).length - 1}
                             </span>
                           )}
                         </div>
                       </td>
 
                       {/* Status */}
-                      <td className="py-2.5 px-3 whitespace-nowrap">
+                      <td className="py-2.5 px-2.5 whitespace-nowrap">
                         {product.status === "Published" ? (
                           <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />

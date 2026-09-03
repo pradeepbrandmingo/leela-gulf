@@ -71,6 +71,27 @@ const getProductLink = (lead) => {
   return null;
 };
 
+// Helper to sanitize & shorten technical SMTP email reason for clean display
+const formatEmailReason = (reason) => {
+  if (!reason) return "";
+  if (reason.includes("NoSuchUser") || reason.includes("User doesn't exist") || reason.includes("User not found")) {
+    return "Mailbox does not exist on mail server (5.1.1)";
+  }
+  if (reason.includes("Recipient address rejected")) {
+    return "Recipient address rejected by mail server";
+  }
+  if (reason.includes("Disposable temporary")) {
+    return "Disposable / temporary email provider";
+  }
+  if (reason.includes("No MX") || reason.includes("No active mail exchange")) {
+    return "No active mail server found for domain";
+  }
+  if (reason.includes("test/dummy username pattern")) {
+    return "Dummy / test username pattern detected";
+  }
+  return reason.split("http")[0].replace(/[\n\r]/g, " ").trim();
+};
+
 // Date Formatter Utilities
 const formatDateShort = (dateStr) => {
   if (!dateStr) return "";
@@ -951,66 +972,66 @@ export default function AdminLeadsPage() {
           6. COMPLETE COMPREHENSIVE LEAD DETAILS MODAL (VIEW ALL FORM DATA)
           ───────────────────────────────────────────────────────────────────────────── */}
       {selectedLeadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-gold-main/30 space-y-5 relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-gold-main/25 space-y-4.5 relative">
             {/* Close Button */}
             <button
               onClick={() => setSelectedLeadModal(null)}
-              className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+              className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Header with Avatar & Name */}
-            <div className="flex items-center gap-3.5 pb-2 border-b border-gray-100">
+            <div className="flex items-center gap-3.5 pb-3 border-b border-gray-100">
               <div
-                className={`w-13 h-13 rounded-2xl flex items-center justify-center font-extrabold text-xl border shrink-0 ${getAvatarBg(
+                className={`w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-lg border shrink-0 ${getAvatarBg(
                   selectedLeadModal.firstName
                 )}`}
               >
                 {getInitials(selectedLeadModal.firstName, selectedLeadModal.lastName)}
               </div>
               <div>
-                <h3 className="text-xl font-heading font-extrabold text-gray-900">
+                <h3 className="text-lg font-heading font-extrabold text-gray-900 leading-tight">
                   {selectedLeadModal.firstName} {selectedLeadModal.lastName}
                 </h3>
                 <p className="text-xs text-gray-400 font-medium flex items-center gap-1.5 mt-0.5">
-                  <Clock className="w-3.5 h-3.5 text-gray-400" />
+                  <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                   <span>Received on {formatDateFull(selectedLeadModal.createdAt)}</span>
                 </p>
               </div>
             </div>
 
-            {/* Comprehensive Data Grid (All Form Fields) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50/80 rounded-2xl p-4 text-xs border border-gray-100">
+            {/* Comprehensive Data Grid (2 Columns, Clear & Spacious) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-gray-50/80 rounded-2xl p-4 text-xs border border-gray-100">
               {/* Email Address + Spam Verification */}
               <div className="space-y-1">
-                <span className="text-gray-400 font-semibold flex items-center gap-1">
-                  <Mail className="w-3.5 h-3.5 text-gray-400" /> Email Address
+                <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                  <Mail className="w-3.5 h-3.5 text-gray-400 shrink-0" /> Email Address
                 </span>
-                <span className="font-mono text-gray-900 font-bold text-[13px] block break-all">
+                <span className="font-mono text-gray-900 font-bold text-xs block break-all">
                   {selectedLeadModal.email}
                 </span>
-                <div className="flex flex-col gap-1 mt-1">
+                <div className="flex flex-col gap-0.5 pt-0.5">
                   {selectedLeadModal.emailStatus === "undeliverable" || selectedLeadModal.emailStatus === "SPAM" ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded w-fit">
-                      <ShieldAlert className="w-3 h-3 text-rose-600" />
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md w-fit">
+                      <ShieldAlert className="w-3 h-3 text-rose-600 shrink-0" />
                       Undeliverable / Fake (Score: {selectedLeadModal.emailScore || 0}%)
                     </span>
                   ) : selectedLeadModal.emailStatus === "unknown" ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded w-fit">
-                      <AlertTriangle className="w-3 h-3 text-amber-600" />
-                      {selectedLeadModal.emailQuality === "SUSPICIOUS_DUMMY_PATTERN" ? "Suspicious / Test Pattern" : "Unverified / Catch-All"} (Score: {selectedLeadModal.emailScore || 40}%)
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md w-fit">
+                      <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
+                      {selectedLeadModal.emailQuality === "SUSPICIOUS_DUMMY_PATTERN" ? "Suspicious / Test Pattern" : "Unverified / Catch-All"} ({selectedLeadModal.emailScore || 30}%)
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded w-fit">
-                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md w-fit">
+                      <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
                       Deliverable / Real (Score: {selectedLeadModal.emailScore || 95}%)
                     </span>
                   )}
                   {selectedLeadModal.emailReason && (
-                    <span className="text-[11px] text-gray-500 font-medium italic block">
-                      ℹ️ {selectedLeadModal.emailReason}
+                    <span className="text-[11px] text-gray-500 font-medium italic block pt-0.5">
+                      ℹ️ {formatEmailReason(selectedLeadModal.emailReason)}
                     </span>
                   )}
                 </div>
@@ -1018,52 +1039,52 @@ export default function AdminLeadsPage() {
 
               {/* Phone Number */}
               <div className="space-y-1">
-                <span className="text-gray-400 font-semibold flex items-center gap-1">
-                  <Phone className="w-3.5 h-3.5 text-gray-400" /> Phone Number
+                <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                  <Phone className="w-3.5 h-3.5 text-gray-400 shrink-0" /> Phone Number
                 </span>
-                <span className="text-gray-900 font-mono font-bold text-[13px] block">
+                <span className="text-gray-900 font-mono font-bold text-xs block">
                   {selectedLeadModal.phone || "Not Provided"}
                 </span>
               </div>
 
               {/* Country */}
               <div className="space-y-1">
-                <span className="text-gray-400 font-semibold flex items-center gap-1">
-                  <Globe className="w-3.5 h-3.5 text-gray-400" /> Country
+                <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                  <Globe className="w-3.5 h-3.5 text-gray-400 shrink-0" /> Country
                 </span>
-                <span className="text-gray-900 font-bold block">
+                <span className="text-gray-900 font-bold text-xs block">
                   {selectedLeadModal.country || "India"}
                 </span>
               </div>
 
               {/* Company */}
               <div className="space-y-1">
-                <span className="text-gray-400 font-semibold flex items-center gap-1">
-                  <Building className="w-3.5 h-3.5 text-gray-400" /> Company Name
+                <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                  <Building className="w-3.5 h-3.5 text-gray-400 shrink-0" /> Company Name
                 </span>
-                <span className="text-gray-900 font-bold block">
+                <span className="text-gray-900 font-bold text-xs block truncate" title={selectedLeadModal.company}>
                   {selectedLeadModal.company || "General Business / Individual"}
                 </span>
               </div>
 
               {/* Page Source Origin (Clickable Link) */}
               <div className="space-y-1">
-                <span className="text-gray-400 font-semibold flex items-center gap-1">
-                  <FileText className="w-3.5 h-3.5 text-gray-400" /> Page Source
+                <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                  <FileText className="w-3.5 h-3.5 text-gray-400 shrink-0" /> Page Source
                 </span>
                 {getProductLink(selectedLeadModal) ? (
                   <a
                     href={getProductLink(selectedLeadModal)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 hover:underline font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer group"
+                    className="text-blue-600 hover:text-blue-800 hover:underline font-bold text-xs inline-flex items-center gap-1.5 transition-colors cursor-pointer group"
                     title="Open product page in new tab"
                   >
                     <span>{selectedLeadModal.sourcePage || "Contact Us Page"}</span>
                     <ExternalLink className="w-3.5 h-3.5 text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
                   </a>
                 ) : (
-                  <span className="text-blue-700 font-bold block">
+                  <span className="text-blue-700 font-bold text-xs block">
                     {selectedLeadModal.sourcePage || "Contact Us Page"}
                   </span>
                 )}
@@ -1071,33 +1092,33 @@ export default function AdminLeadsPage() {
 
               {/* Service Selected / Inquiry Option */}
               <div className="space-y-1">
-                <span className="text-gray-400 font-semibold flex items-center gap-1">
-                  <Package className="w-3.5 h-3.5 text-gray-400" /> Service Selected
+                <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                  <Package className="w-3.5 h-3.5 text-gray-400 shrink-0" /> Service Selected
                 </span>
-                <span className="text-gray-900 font-bold block">
+                <span className="text-gray-900 font-bold text-xs block">
                   {selectedLeadModal.service || selectedLeadModal.productName || "General Inquiry"}
                 </span>
               </div>
 
               {/* Product Name (if available - Clickable Link) */}
               {selectedLeadModal.productName && (
-                <div className="space-y-1 sm:col-span-2">
-                  <span className="text-gray-400 font-semibold flex items-center gap-1">
-                    <Package className="w-3.5 h-3.5 text-gold-dark" /> Target Product
+                <div className="space-y-1 sm:col-span-2 pt-1 border-t border-gray-100/80">
+                  <span className="text-gray-400 font-semibold flex items-center gap-1 text-xs">
+                    <Package className="w-3.5 h-3.5 text-gold-dark shrink-0" /> Target Product
                   </span>
                   {getProductLink(selectedLeadModal) ? (
                     <a
                       href={getProductLink(selectedLeadModal)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gold-dark hover:text-amber-700 hover:underline font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer group text-sm"
+                      className="text-gold-dark hover:text-amber-700 hover:underline font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer group text-xs"
                       title="Open product page in new tab"
                     >
                       <span>{selectedLeadModal.productName}</span>
                       <ExternalLink className="w-3.5 h-3.5 text-gold-dark group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
                     </a>
                   ) : (
-                    <span className="text-gray-900 font-bold block">
+                    <span className="text-gray-900 font-bold text-xs block">
                       {selectedLeadModal.productName}
                     </span>
                   )}
@@ -1106,12 +1127,12 @@ export default function AdminLeadsPage() {
             </div>
 
             {/* User Message Section */}
-            <div>
-              <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-gold-dark" />
+            <div className="space-y-1.5">
+              <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-gold-dark shrink-0" />
                 User Message / Inquiry Requirements
               </h4>
-              <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl text-xs text-gray-800 leading-relaxed font-sans max-h-36 overflow-y-auto whitespace-pre-wrap">
+              <div className="p-3 bg-gray-50 border border-gray-200/80 rounded-2xl text-xs text-gray-800 leading-relaxed font-sans max-h-24 overflow-y-auto whitespace-pre-wrap">
                 {selectedLeadModal.message || "No message entered by the user."}
               </div>
             </div>
@@ -1120,7 +1141,7 @@ export default function AdminLeadsPage() {
             <div className="flex items-center justify-end pt-3 border-t border-gray-100">
               <button
                 onClick={() => setSelectedLeadModal(null)}
-                className="px-6 py-2.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 transition-colors shadow-xs"
+                className="px-6 py-2.5 bg-black text-gold-main font-bold text-xs rounded-xl hover:bg-gray-900 transition-colors shadow-xs cursor-pointer"
               >
                 Close Window
               </button>

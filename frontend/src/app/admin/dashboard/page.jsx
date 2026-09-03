@@ -256,7 +256,7 @@ export default function AdminDashboardPage() {
     async function loadDashboardData() {
       setIsLoadingStats(true);
       try {
-        const leadParams = ["limit=10"];
+        const leadParams = ["limit=5"];
         if (dateBounds.start) leadParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
         if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
         const leadQuery = `?${leadParams.join("&")}`;
@@ -463,7 +463,7 @@ export default function AdminDashboardPage() {
   // Dynamic Recent Leads Table Data (Combines MongoDB live leads with fallback display)
   const recentLeads = useMemo(() => {
     if (dbLeadsList.length > 0) {
-      return dbLeadsList.map((l) => ({
+      return dbLeadsList.slice(0, 5).map((l) => ({
         name: `${l.firstName || ""} ${l.lastName || ""}`.trim() || l.email,
         source: l.sourcePage || "Contact Page",
         target: l.productName || l.service || "General Inquiry",
