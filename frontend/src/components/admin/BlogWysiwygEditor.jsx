@@ -292,7 +292,7 @@ export default function BlogWysiwygEditor({
 
       const uploadedUrl = res?.data?.url || res?.url;
       if (res?.success && uploadedUrl) {
-        handleInsertImage(uploadedUrl, imageCaption || file.name.replace(/\.[^/.]+$/, ""), imageAlign);
+        handleInsertImage(uploadedUrl, (imageCaption || "").trim(), imageAlign);
       } else {
         alert(res?.message || "Image upload failed. Please try again.");
       }
