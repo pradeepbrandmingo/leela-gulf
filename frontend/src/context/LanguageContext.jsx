@@ -7,27 +7,47 @@ const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState("en");
+  const [mounted, setMounted] = useState(false);
 
-  // Load language preference from localStorage on client side
+  // 1. On mount: Load saved language from localStorage
   useEffect(() => {
-    const savedLang = localStorage.getItem("leela_lang");
-    if (savedLang && (savedLang === "en" || savedLang === "ar")) {
-      setLang(savedLang);
+    try {
+      const savedLang = localStorage.getItem("leela_lang");
+      if (savedLang === "ar" || savedLang === "en") {
+        setLang(savedLang);
+        document.documentElement.lang = savedLang;
+        document.documentElement.dir = savedLang === "ar" ? "rtl" : "ltr";
+      }
+    } catch (e) {
+      console.error("Failed to read language preference:", e);
     }
+    setMounted(true);
   }, []);
 
-  // Update document direction (RTL for Arabic, LTR for English)
+  // 2. Persist whenever lang changes (only after mount)
   useEffect(() => {
+    if (!mounted) return;
     if (typeof document !== "undefined") {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      localStorage.setItem("leela_lang", lang);
+      try {
+        localStorage.setItem("leela_lang", lang);
+      } catch (e) {}
     }
-  }, [lang]);
+  }, [lang, mounted]);
 
   const toggleLanguage = (newLang) => {
-    if (newLang === "en" || newLang === "ar") {
-      setLang(newLang);
+    const targetLang = (newLang === "en" || newLang === "ar")
+      ? newLang
+      : (lang === "en" ? "ar" : "en");
+
+    setLang(targetLang);
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = targetLang;
+      document.documentElement.dir = targetLang === "ar" ? "rtl" : "ltr";
+      try {
+        localStorage.setItem("leela_lang", targetLang);
+      } catch (e) {}
     }
   };
 

@@ -18,7 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${raleway.variable}`}>
+    <html lang="en" className={`${raleway.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased bg-[#1a1a1a] text-white">
         <LanguageProvider>
           <AppShell>{children}</AppShell>

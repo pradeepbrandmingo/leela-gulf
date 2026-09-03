@@ -236,6 +236,8 @@ export default function ProductDetailPage() {
             <LeadEnquiryForm
               sourcePage={`Product Detail Page - ${productData.title}`}
               productName={productData.title}
+              productSlug={productData.slug || productData.id || productData._id || productId}
+              productUrl={`/products/${productData.slug || productData.id || productData._id || productId}`}
               showHeading={false}
               isModal={true}
             />

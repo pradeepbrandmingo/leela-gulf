@@ -440,6 +440,8 @@ export default function ProductsListing() {
             <LeadEnquiryForm
               sourcePage={`Product Listing Quote - ${quoteProduct.title}`}
               productName={quoteProduct.title}
+              productSlug={quoteProduct.slug || quoteProduct.id || quoteProduct._id}
+              productUrl={`/products/${quoteProduct.slug || quoteProduct.id || quoteProduct._id}`}
               showHeading={false}
               isModal={true}
             />

@@ -54,6 +54,14 @@ const leadSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    productSlug: {
+      type: String,
+      trim: true,
+    },
+    productUrl: {
+      type: String,
+      trim: true,
+    },
     agreedToTerms: {
       type: Boolean,
       default: true,
@@ -66,18 +74,15 @@ const leadSchema = new mongoose.Schema(
     // Automatic Email Verification & Health Indicator fields for Admin
     emailStatus: {
       type: String,
-      enum: ["READY", "SPAM"],
-      default: "READY",
+      enum: ["deliverable", "undeliverable", "unknown", "READY", "SPAM"],
+      default: "deliverable",
+    },
+    emailReason: {
+      type: String,
+      default: "",
     },
     emailQuality: {
       type: String,
-      enum: [
-        "WORK_BUSINESS_EMAIL",
-        "PERSONAL_EMAIL",
-        "DISPOSABLE_TEMP_EMAIL",
-        "FAKE_DOMAIN_NO_MX",
-        "INVALID_SYNTAX",
-      ],
       default: "PERSONAL_EMAIL",
     },
     emailScore: {

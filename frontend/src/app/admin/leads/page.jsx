@@ -25,9 +25,51 @@ import {
   Package,
   Filter,
   FileText,
-  Clock
+  Clock,
+  ExternalLink
 } from "lucide-react";
 import { apiRequest } from "@/config/api";
+
+// Helper to determine clean product URL for quotes & leads
+const getProductLink = (lead) => {
+  if (!lead) return null;
+  if (lead.productUrl) return lead.productUrl;
+  if (lead.productSlug) return `/products/${lead.productSlug}`;
+  
+  // If productName is present
+  if (lead.productName) {
+    const slug = lead.productName
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+    return slug ? `/products/${slug}` : null;
+  }
+
+  // If sourcePage contains product name after " - "
+  if (lead.sourcePage && lead.sourcePage.includes(" - ")) {
+    const parts = lead.sourcePage.split(" - ");
+    const name = parts.slice(1).join(" - ").trim();
+    if (name) {
+      const slug = name
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "");
+      return slug ? `/products/${slug}` : null;
+    }
+  }
+
+  return null;
+};
 
 // Date Formatter Utilities
 const formatDateShort = (dateStr) => {
@@ -715,20 +757,26 @@ export default function AdminLeadsPage() {
                         </td>
 
                         {/* Email + Health/Spam Indicator */}
+                        {/* Email Column */}
                         <td className="py-3.5 px-4">
                           <div className="flex flex-col gap-1">
                             <span className="text-gray-900 font-mono text-[11px]">
                               {lead.email}
                             </span>
-                            {lead.emailStatus === "SPAM" ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded w-fit">
-                                <ShieldAlert className="w-3 h-3 text-rose-600" />
-                                Spam / Fake Mail
+                            {lead.emailStatus === "undeliverable" || lead.emailStatus === "SPAM" ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded w-fit" title={lead.emailReason || "Undeliverable / Fake Mailbox"}>
+                                <ShieldAlert className="w-3 h-3 text-rose-600 shrink-0" />
+                                Undeliverable / Fake
+                              </span>
+                            ) : lead.emailStatus === "unknown" ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded w-fit" title={lead.emailReason || "Unverified / Catch-All / Dummy Pattern"}>
+                                <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
+                                {lead.emailQuality === "SUSPICIOUS_DUMMY_PATTERN" ? "Suspicious / Test" : "Unverified / Catch-All"}
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded w-fit">
-                                <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                                Ready / Verified
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded w-fit" title={lead.emailReason || "Verified Active Mailbox"}>
+                                <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
+                                Deliverable / Real
                               </span>
                             )}
                           </div>
@@ -736,9 +784,22 @@ export default function AdminLeadsPage() {
 
                         {/* Page Source Pill */}
                         <td className="py-3.5 px-4">
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60 inline-block max-w-[180px] truncate">
-                            {lead.sourcePage || "Contact Us Page"}
-                          </span>
+                          {getProductLink(lead) ? (
+                            <a
+                              href={getProductLink(lead)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 hover:bg-blue-100 text-blue-700 hover:text-blue-900 border border-blue-200/60 inline-flex items-center gap-1.5 max-w-[200px] truncate transition-all group cursor-pointer shadow-2xs hover:shadow-xs"
+                              title="Click to view product page in new tab"
+                            >
+                              <span className="truncate">{lead.sourcePage || "Contact Us Page"}</span>
+                              <ExternalLink className="w-3 h-3 text-blue-500 group-hover:text-blue-800 shrink-0" />
+                            </a>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60 inline-block max-w-[180px] truncate">
+                              {lead.sourcePage || "Contact Us Page"}
+                            </span>
+                          )}
                         </td>
 
                         {/* Service / Product */}
@@ -930,16 +991,26 @@ export default function AdminLeadsPage() {
                 <span className="font-mono text-gray-900 font-bold text-[13px] block break-all">
                   {selectedLeadModal.email}
                 </span>
-                <div>
-                  {selectedLeadModal.emailStatus === "SPAM" ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
+                <div className="flex flex-col gap-1 mt-1">
+                  {selectedLeadModal.emailStatus === "undeliverable" || selectedLeadModal.emailStatus === "SPAM" ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded w-fit">
                       <ShieldAlert className="w-3 h-3 text-rose-600" />
-                      Spam / Fake Mail
+                      Undeliverable / Fake (Score: {selectedLeadModal.emailScore || 0}%)
+                    </span>
+                  ) : selectedLeadModal.emailStatus === "unknown" ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded w-fit">
+                      <AlertTriangle className="w-3 h-3 text-amber-600" />
+                      {selectedLeadModal.emailQuality === "SUSPICIOUS_DUMMY_PATTERN" ? "Suspicious / Test Pattern" : "Unverified / Catch-All"} (Score: {selectedLeadModal.emailScore || 40}%)
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded w-fit">
                       <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                      Ready / Verified (Score: {selectedLeadModal.emailScore || 85}%)
+                      Deliverable / Real (Score: {selectedLeadModal.emailScore || 95}%)
+                    </span>
+                  )}
+                  {selectedLeadModal.emailReason && (
+                    <span className="text-[11px] text-gray-500 font-medium italic block">
+                      ℹ️ {selectedLeadModal.emailReason}
                     </span>
                   )}
                 </div>
@@ -975,14 +1046,27 @@ export default function AdminLeadsPage() {
                 </span>
               </div>
 
-              {/* Page Source Origin */}
+              {/* Page Source Origin (Clickable Link) */}
               <div className="space-y-1">
                 <span className="text-gray-400 font-semibold flex items-center gap-1">
                   <FileText className="w-3.5 h-3.5 text-gray-400" /> Page Source
                 </span>
-                <span className="text-blue-700 font-bold block">
-                  {selectedLeadModal.sourcePage || "Contact Us Page"}
-                </span>
+                {getProductLink(selectedLeadModal) ? (
+                  <a
+                    href={getProductLink(selectedLeadModal)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 hover:underline font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer group"
+                    title="Open product page in new tab"
+                  >
+                    <span>{selectedLeadModal.sourcePage || "Contact Us Page"}</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+                  </a>
+                ) : (
+                  <span className="text-blue-700 font-bold block">
+                    {selectedLeadModal.sourcePage || "Contact Us Page"}
+                  </span>
+                )}
               </div>
 
               {/* Service Selected / Inquiry Option */}
@@ -995,15 +1079,28 @@ export default function AdminLeadsPage() {
                 </span>
               </div>
 
-              {/* Product Name (if available) */}
+              {/* Product Name (if available - Clickable Link) */}
               {selectedLeadModal.productName && (
                 <div className="space-y-1 sm:col-span-2">
                   <span className="text-gray-400 font-semibold flex items-center gap-1">
                     <Package className="w-3.5 h-3.5 text-gold-dark" /> Target Product
                   </span>
-                  <span className="text-gray-900 font-bold block">
-                    {selectedLeadModal.productName}
-                  </span>
+                  {getProductLink(selectedLeadModal) ? (
+                    <a
+                      href={getProductLink(selectedLeadModal)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gold-dark hover:text-amber-700 hover:underline font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer group text-sm"
+                      title="Open product page in new tab"
+                    >
+                      <span>{selectedLeadModal.productName}</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-gold-dark group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+                    </a>
+                  ) : (
+                    <span className="text-gray-900 font-bold block">
+                      {selectedLeadModal.productName}
+                    </span>
+                  )}
                 </div>
               )}
             </div>

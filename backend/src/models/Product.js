@@ -129,7 +129,6 @@ const productSchema = new mongoose.Schema({
 });
 
 // Helper virtual / indexing for fast search
-productSchema.index({ slug: 1 });
 productSchema.index({ "en.title": "text", "ar.title": "text", code: "text", casNumber: "text" });
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);

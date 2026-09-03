@@ -18,6 +18,8 @@ export const createLead = async (req, res, next) => {
       message,
       sourcePage,
       productName,
+      productSlug,
+      productUrl,
       agreedToTerms,
     } = req.body;
 
@@ -72,8 +74,11 @@ export const createLead = async (req, res, next) => {
       message: message.trim(),
       sourcePage: sourcePage ? sourcePage.trim() : "Contact Page",
       productName: productName ? productName.trim() : undefined,
+      productSlug: productSlug ? productSlug.trim() : undefined,
+      productUrl: productUrl ? productUrl.trim() : undefined,
       agreedToTerms: agreedToTerms !== undefined ? Boolean(agreedToTerms) : true,
-      emailStatus: verification.emailStatus, // 'READY' vs 'SPAM'
+      emailStatus: verification.emailStatus, // 'deliverable' | 'undeliverable' | 'unknown'
+      emailReason: verification.emailReason || "",
       emailQuality: verification.emailQuality,
       emailScore: verification.score,
     });

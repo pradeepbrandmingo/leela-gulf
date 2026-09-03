@@ -16,6 +16,8 @@ import { apiRequest } from "@/config/api";
 export default function LeadEnquiryForm({
   sourcePage = "Contact Us Page",
   productName = "",
+  productSlug = "",
+  productUrl = "",
   showHeading = true,
   isModal = false,
   className = "",
@@ -185,36 +187,35 @@ export default function LeadEnquiryForm({
         : "Last Name must contain at least 2 letters (no numbers or symbols)";
     }
 
-    // Email Validation (RFC Format)
+    // Email Address Validation
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!formData.email.trim()) {
-      newErrors.email = isRTL ? "البريد الإلكتروني مطلوب" : "Email Id is required";
+      newErrors.email = isRTL ? "البريد الإلكتروني مطلوب" : "Email Address is required";
     } else if (!emailRegex.test(formData.email.trim())) {
       newErrors.email = isRTL
-        ? "يرجى إدخال بريد إلكتروني صحيح"
+        ? "يرجى إدخال بريد إلكتروني صالح"
         : "Please enter a valid email address (e.g. name@company.com)";
     }
 
-    // International Phone Number Validation
-    const rawDigits = (phoneNumberValue || "").replace(/[^0-9]/g, "");
-    if (!phoneNumberValue || !isValidPhoneNumber(phoneNumberValue) || rawDigits.length < 7) {
+    // Phone Number Strict International Validation
+    if (!phoneNumberValue || phoneNumberValue.trim() === "") {
+      newErrors.phone = isRTL ? "رقم الهاتف مطلوب" : "Phone Number is required";
+    } else if (!isValidPhoneNumber(phoneNumberValue)) {
       newErrors.phone = isRTL
-        ? "يرجى إدخال رقم هاتف صحيح مع الرمز الدولي"
-        : "Please enter a valid international phone number with country code";
+        ? "يرجى إدخال رقم هاتف دولي صحيح مع رمز الدولة"
+        : "Please enter a valid international phone number";
     }
 
-    // Additional Information Textarea Validation
+    // Message Validation (Min 10 chars)
     if (!formData.message.trim()) {
-      newErrors.message = isRTL
-        ? "يرجى تقديم معلومات إضافية"
-        : "Additional information is required";
+      newErrors.message = isRTL ? "الرسالة مطلوبة" : "Message / requirements are required";
     } else if (formData.message.trim().length < 10) {
       newErrors.message = isRTL
-        ? "يرجى إدخال 10 أحرف على الأقل"
-        : "Please enter at least 10 characters so we can assist you better";
+        ? "الرسالة يجب أن تحتوي على 10 أحرف على الأقل"
+        : "Message must be at least 10 characters long";
     }
 
-    // Terms Checkbox Validation
+    // Terms and Conditions Checkbox
     if (!formData.agreedToTerms) {
       newErrors.agreedToTerms = isRTL
         ? "يجب الموافقة على الشروط والأحكام"
@@ -244,6 +245,8 @@ export default function LeadEnquiryForm({
     const leadPayload = {
       sourcePage,
       productName: productName || undefined,
+      productSlug: productSlug || undefined,
+      productUrl: productUrl || undefined,
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
       email: formData.email.trim(),
