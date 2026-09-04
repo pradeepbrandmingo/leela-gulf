@@ -1251,19 +1251,19 @@ export default function AdminVisitorsPage() {
           ═════════════════════════════════════════════════════════════════ */}
       {showAllCountriesModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-5 animate-fadeIn">
-          <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-3xl lg:max-w-4xl w-full shadow-2xl space-y-4 border border-gray-100 max-h-[90vh] flex flex-col">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 max-w-3xl lg:max-w-4xl w-full shadow-2xl space-y-3 sm:space-y-3.5 border border-gray-100 max-h-[88vh] flex flex-col">
 
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3.5 border-b border-gray-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark shrink-0 shadow-2xs">
-                  <Globe className="w-5 h-5" />
+            <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark shrink-0 shadow-2xs">
+                  <Globe className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
+                  <h3 className="font-heading font-extrabold text-base sm:text-lg text-gray-900 tracking-tight">
                     All Country Traffic Distribution
                   </h3>
-                  <p className="text-xs text-gray-500 font-subheading">
+                  <p className="text-[11px] sm:text-xs text-gray-500 font-subheading">
                     Tracking worldwide visitor geolocation in real-time
                   </p>
                 </div>
@@ -1273,7 +1273,7 @@ export default function AdminVisitorsPage() {
                   setShowAllCountriesModal(false);
                   setCountrySearchQuery("");
                 }}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1281,18 +1281,18 @@ export default function AdminVisitorsPage() {
 
             {/* Quick Search Bar */}
             <div className="relative">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={countrySearchQuery}
                 onChange={(e) => setCountrySearchQuery(e.target.value)}
                 placeholder="Search country or code (e.g. UAE, India, US)..."
-                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-10 pr-4 py-2 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
+                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-9 sm:pl-10 pr-4 py-1.5 sm:py-2 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
               />
             </div>
 
             {/* Countries List (Compact High-Density Rows) */}
-            <div className="overflow-y-auto flex-1 space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
+            <div className="overflow-y-auto flex-1 space-y-1 sm:space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
               {allCountriesData
                 .filter(
                   (c) =>
@@ -1302,12 +1302,12 @@ export default function AdminVisitorsPage() {
                 .map((c, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 sm:p-3 rounded-xl bg-gray-50/70 hover:bg-[#fdfaf0]/80 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-3 sm:gap-4 transition-all duration-150"
+                    className="py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-lg sm:rounded-xl bg-gray-50/70 hover:bg-[#fdfaf0]/80 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-3 sm:gap-4 transition-all duration-150"
                   >
                     {/* Country Info & Rank */}
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <span
-                        className={`w-6 h-6 rounded-lg flex items-center justify-center font-heading text-[11px] font-bold shrink-0 ${
+                        className={`w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg flex items-center justify-center font-heading text-[10.5px] sm:text-[11px] font-bold shrink-0 ${
                           idx === 0
                             ? "bg-amber-100 text-gold-dark font-extrabold"
                             : idx === 1
@@ -1319,22 +1319,22 @@ export default function AdminVisitorsPage() {
                       >
                         {idx + 1}
                       </span>
-                      <CountryFlag code={c.code} name={c.country} className="w-5 h-3.5 sm:w-6 sm:h-4 rounded-xs shrink-0 shadow-2xs" />
+                      <CountryFlag code={c.code} name={c.country} className="w-5 h-3.5 sm:w-5.5 sm:h-3.5 rounded-xs shrink-0 shadow-2xs" />
                       <div className="min-w-0">
-                        <p className="font-heading font-bold text-xs sm:text-[13.5px] text-gray-900 truncate leading-snug">
+                        <p className="font-heading font-bold text-xs sm:text-[13px] text-gray-900 truncate leading-snug">
                           {c.country}
                         </p>
-                        <span className="inline-block px-1.5 py-0.2 bg-gray-200/70 text-gray-600 rounded text-[9.5px] font-mono font-semibold uppercase mt-0.5">
+                        <span className="inline-block px-1.5 py-0.2 bg-gray-200/70 text-gray-600 rounded text-[9px] font-mono font-semibold uppercase">
                           ISO: {c.code}
                         </span>
                       </div>
                     </div>
 
                     {/* Visitors Count, Percentage & Progress Bar */}
-                    <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-right">
+                    <div className="flex items-center gap-3 sm:gap-5 shrink-0 text-right">
                       {/* Mini Visual Progress Bar */}
-                      <div className="hidden sm:flex flex-col items-end gap-1 w-20 sm:w-28">
-                        <div className="w-full bg-gray-200/80 rounded-full h-1.5 overflow-hidden">
+                      <div className="hidden sm:flex flex-col items-end gap-0.5 w-16 sm:w-24">
+                        <div className="w-full bg-gray-200/80 rounded-full h-1 sm:h-1.5 overflow-hidden">
                           <div
                             className="bg-gold-main h-full rounded-full transition-all duration-500"
                             style={{ width: c.pct }}
@@ -1342,12 +1342,12 @@ export default function AdminVisitorsPage() {
                         </div>
                       </div>
 
-                      <div className="min-w-[80px] sm:min-w-[90px] text-right">
-                        <p className="font-heading font-bold text-xs sm:text-sm text-gray-900 leading-tight">
+                      <div className="min-w-[72px] sm:min-w-[82px] text-right">
+                        <p className="font-heading font-bold text-xs sm:text-[13px] text-gray-900 leading-tight">
                           {c.count} <span className="text-[10px] font-normal text-gray-500">visitors</span>
                         </p>
-                        <p className="text-xs font-bold text-gold-dark mt-0.5">
-                          {c.pct} <span className="text-[10px] font-normal text-gray-400">share</span>
+                        <p className="text-[11px] sm:text-xs font-bold text-gold-dark leading-tight mt-0.5">
+                          {c.pct} <span className="text-[9.5px] font-normal text-gray-400">share</span>
                         </p>
                       </div>
                     </div>
@@ -1356,7 +1356,7 @@ export default function AdminVisitorsPage() {
             </div>
 
             {/* Modal Bottom Footer */}
-            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+            <div className="pt-2.5 sm:pt-3 border-t border-gray-100 flex items-center justify-between">
               <span className="text-xs font-subheading text-gray-500">
                 Showing <span className="font-bold text-gray-800">{allCountriesData.length} countries</span> tracked worldwide
               </span>
@@ -1365,7 +1365,7 @@ export default function AdminVisitorsPage() {
                   setShowAllCountriesModal(false);
                   setCountrySearchQuery("");
                 }}
-                className="px-5 py-2 rounded-xl bg-gray-900 hover:bg-black text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer"
+                className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-xl bg-gray-900 hover:bg-black text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer"
               >
                 Close
               </button>
@@ -1380,19 +1380,19 @@ export default function AdminVisitorsPage() {
           ═════════════════════════════════════════════════════════════════ */}
       {showAllPagesModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-5 animate-fadeIn">
-          <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-3xl lg:max-w-4xl w-full shadow-2xl space-y-4 border border-gray-100 max-h-[90vh] flex flex-col">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 max-w-3xl lg:max-w-4xl w-full shadow-2xl space-y-3 sm:space-y-3.5 border border-gray-100 max-h-[88vh] flex flex-col">
 
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3.5 border-b border-gray-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark shrink-0 shadow-2xs">
-                  <FileText className="w-5 h-5" />
+            <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark shrink-0 shadow-2xs">
+                  <FileText className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
+                  <h3 className="font-heading font-extrabold text-base sm:text-lg text-gray-900 tracking-tight">
                     All Top Pages Performance
                   </h3>
-                  <p className="text-xs text-gray-500 font-subheading">
+                  <p className="text-[11px] sm:text-xs text-gray-500 font-subheading">
                     Detailed page views and traffic distribution across website
                   </p>
                 </div>
@@ -1402,7 +1402,7 @@ export default function AdminVisitorsPage() {
                   setShowAllPagesModal(false);
                   setPageSearchQuery("");
                 }}
-                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1410,18 +1410,18 @@ export default function AdminVisitorsPage() {
 
             {/* Quick Search Bar */}
             <div className="relative">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={pageSearchQuery}
                 onChange={(e) => setPageSearchQuery(e.target.value)}
                 placeholder="Search page name or URL path (e.g. Products, About, Contact)..."
-                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-10 pr-4 py-2 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
+                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-9 sm:pl-10 pr-4 py-1.5 sm:py-2 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
               />
             </div>
 
             {/* Pages List (Compact High-Density Rows) */}
-            <div className="overflow-y-auto flex-1 space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
+            <div className="overflow-y-auto flex-1 space-y-1 sm:space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
               {allPagesData
                 .filter(
                   (p) =>
@@ -1431,12 +1431,12 @@ export default function AdminVisitorsPage() {
                 .map((page, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 sm:p-3 rounded-xl bg-gray-50/70 hover:bg-[#fdfaf0]/80 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-3 sm:gap-4 transition-all duration-150"
+                    className="py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-lg sm:rounded-xl bg-gray-50/70 hover:bg-[#fdfaf0]/80 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-3 sm:gap-4 transition-all duration-150"
                   >
                     {/* Page Label & Route */}
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                       <span
-                        className={`w-6 h-6 rounded-lg flex items-center justify-center font-heading text-[11px] font-bold shrink-0 ${
+                        className={`w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg flex items-center justify-center font-heading text-[10.5px] sm:text-[11px] font-bold shrink-0 ${
                           idx === 0
                             ? "bg-amber-100 text-gold-dark font-extrabold"
                             : idx === 1
@@ -1449,20 +1449,20 @@ export default function AdminVisitorsPage() {
                         {idx + 1}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-heading font-bold text-xs sm:text-[13.5px] text-gray-900 truncate leading-snug">
+                        <p className="font-heading font-bold text-xs sm:text-[13px] text-gray-900 truncate leading-snug">
                           {page.label}
                         </p>
-                        <p className="text-[11px] text-gray-500 font-mono truncate mt-0.5">
+                        <p className="text-[10.5px] text-gray-500 font-mono truncate leading-tight mt-0.5">
                           {page.path}
                         </p>
                       </div>
                     </div>
 
                     {/* Page Views, Share & Progress Bar */}
-                    <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-right">
+                    <div className="flex items-center gap-3 sm:gap-5 shrink-0 text-right">
                       {/* Mini Visual Progress Bar */}
-                      <div className="hidden sm:flex flex-col items-end gap-1 w-20 sm:w-28">
-                        <div className="w-full bg-gray-200/80 rounded-full h-1.5 overflow-hidden">
+                      <div className="hidden sm:flex flex-col items-end gap-0.5 w-16 sm:w-24">
+                        <div className="w-full bg-gray-200/80 rounded-full h-1 sm:h-1.5 overflow-hidden">
                           <div
                             className="bg-gold-main h-full rounded-full transition-all duration-500"
                             style={{ width: page.pct }}
@@ -1470,12 +1470,12 @@ export default function AdminVisitorsPage() {
                         </div>
                       </div>
 
-                      <div className="min-w-[80px] sm:min-w-[90px] text-right">
-                        <p className="font-heading font-bold text-xs sm:text-sm text-gray-900 leading-tight">
+                      <div className="min-w-[72px] sm:min-w-[82px] text-right">
+                        <p className="font-heading font-bold text-xs sm:text-[13px] text-gray-900 leading-tight">
                           {page.views} <span className="text-[10px] font-normal text-gray-500">views</span>
                         </p>
-                        <p className="text-xs font-bold text-gold-dark mt-0.5">
-                          {page.pct} <span className="text-[10px] font-normal text-gray-400">traffic</span>
+                        <p className="text-[11px] sm:text-xs font-bold text-gold-dark leading-tight mt-0.5">
+                          {page.pct} <span className="text-[9.5px] font-normal text-gray-400">traffic</span>
                         </p>
                       </div>
                     </div>
@@ -1484,7 +1484,7 @@ export default function AdminVisitorsPage() {
             </div>
 
             {/* Modal Bottom Footer */}
-            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+            <div className="pt-2.5 sm:pt-3 border-t border-gray-100 flex items-center justify-between">
               <span className="text-xs font-subheading text-gray-500">
                 Showing <span className="font-bold text-gray-800">{allPagesData.length} active pages</span>
               </span>
