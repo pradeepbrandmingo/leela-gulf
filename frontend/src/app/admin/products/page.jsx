@@ -486,7 +486,7 @@ export default function AdminProductsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-base sm:text-lg font-heading font-extrabold text-gray-900 tracking-tight">
+            <h2 className="text-lg sm:text-xl font-heading font-extrabold text-gray-900 tracking-tight">
               All Products
             </h2>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-heading font-extrabold bg-[#fdfaf0] text-gold-dark border border-gold-main/50 shadow-2xs">
@@ -617,8 +617,8 @@ export default function AdminProductsPage() {
         <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50/80 border-b border-gray-200/80 text-[11px] font-bold text-gray-600 uppercase tracking-wider select-none">
-                <th className="py-2.5 px-2.5 w-10 text-center">
+              <tr className="bg-gray-50/90 border-b border-gray-200 text-xs font-heading font-bold text-gray-700 uppercase tracking-wider select-none">
+                <th className="py-3 px-2.5 w-10 text-center">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
@@ -769,13 +769,13 @@ export default function AdminProductsPage() {
                           {/* 1-Line Product Name & Grade with Tooltip and Ellipsis */}
                           <div className="min-w-0 flex-1">
                             <span
-                              className="font-extrabold text-gray-900 block truncate text-xs hover:text-gold-dark transition-colors cursor-pointer"
+                              className="font-heading font-bold text-sm text-gray-900 block truncate leading-snug hover:text-gold-dark transition-colors cursor-pointer"
                               title={product.name}
                               onClick={() => setSelectedProductModal(product)}
                             >
                               {product.name}
                             </span>
-                            <span className="text-[11px] text-gray-400 font-normal truncate block leading-tight" title={product.grade}>
+                            <span className="text-xs text-gray-600 font-normal truncate block leading-normal mt-0.5" title={product.grade}>
                               {product.grade}
                             </span>
                           </div>

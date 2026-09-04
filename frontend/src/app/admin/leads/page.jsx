@@ -703,7 +703,7 @@ export default function AdminLeadsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50/70 border-b border-gray-200/80 text-[11px] font-bold text-gray-600 uppercase tracking-wider">
+                  <tr className="bg-gray-50/90 border-b border-gray-200 text-xs font-heading font-bold text-gray-700 uppercase tracking-wider">
                     <th className="py-3.5 px-4 w-10 text-center">
                       <input
                         type="checkbox"
@@ -754,7 +754,7 @@ export default function AdminLeadsPage() {
                             >
                               {initials}
                             </div>
-                            <span className="font-bold text-gray-900 whitespace-nowrap">
+                            <span className="font-heading font-bold text-sm text-gray-900 whitespace-nowrap">
                               {fullName}
                             </span>
                           </div>

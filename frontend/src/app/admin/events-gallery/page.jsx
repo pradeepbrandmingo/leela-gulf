@@ -426,7 +426,7 @@ export default function AdminEventsPage() {
       <div className="bg-white border border-gray-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <h2 className="font-heading font-bold text-base sm:text-lg text-gray-900">
+            <h2 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900">
               All Events
             </h2>
             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-heading font-bold bg-[#fdfaf0] text-gold-dark border border-gold-main/30">
@@ -553,7 +553,7 @@ export default function AdminEventsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-gray-100 text-gray-400 uppercase font-heading text-[10px] tracking-wider bg-gray-50/60">
+              <tr className="border-b border-gray-200 text-gray-700 uppercase font-heading font-bold text-xs tracking-wider bg-gray-50/70">
                 <th className="py-2.5 px-3.5 w-8">
                   <input
                     type="checkbox"
@@ -624,12 +624,12 @@ export default function AdminEventsPage() {
                             />
                           </div>
                           <div className="min-w-0 max-w-[340px] sm:max-w-lg">
-                            <h3 className="font-heading font-bold text-xs text-gray-900 truncate group-hover:text-gold-dark transition-colors">
+                            <h3 className="font-heading font-bold text-sm text-gray-900 truncate group-hover:text-gold-dark transition-colors leading-snug">
                               {event.title}
                             </h3>
-                            <p className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">
+                            <span className="block text-xs text-gray-600 line-clamp-1 mt-0.5 font-normal leading-normal">
                               {event.description}
-                            </p>
+                            </span>
                           </div>
                         </div>
                       </td>

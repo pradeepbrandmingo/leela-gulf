@@ -17,13 +17,17 @@
     "cloudinary": "^2.11.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "countries-and-timezones": "^3.10.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^7.5.0",
+    "geoip-lite": "^1.4.10",
     "helmet": "^8.3.0",
+    "i18n-iso-countries": "^7.14.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^9.9.3",
-    "multer": "^2.3.0"
+    "multer": "^2.3.0",
+    "ua-parser-js": "^2.0.10"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

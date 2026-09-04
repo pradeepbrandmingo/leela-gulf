@@ -562,7 +562,7 @@ export default function AdminBlogsPage() {
       <div className="bg-white border border-gray-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5 mb-1">
-            <h2 className="text-lg font-heading font-extrabold text-gray-900">
+            <h2 className="text-lg sm:text-xl font-heading font-extrabold text-gray-900">
               All Blogs
             </h2>
             <span className="bg-[#fdfaf0] text-gold-dark text-xs font-heading font-extrabold px-2.5 py-0.5 rounded-full border border-gold-main/30">
@@ -745,7 +745,7 @@ export default function AdminBlogsPage() {
           <table className="w-full text-left border-collapse text-xs">
             {/* Table Header */}
             <thead>
-              <tr className="bg-gray-50/90 border-b border-gray-200 text-[11px] font-heading font-extrabold text-gray-600 uppercase tracking-wider">
+              <tr className="bg-gray-50/90 border-b border-gray-200 text-xs font-heading font-bold text-gray-700 uppercase tracking-wider">
                 <th className="py-3 px-3 w-10 text-center">
                   <input
                     type="checkbox"
@@ -824,13 +824,13 @@ export default function AdminBlogsPage() {
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h3 className="font-heading font-bold text-xs text-gray-900 group-hover:text-gold-dark transition-colors line-clamp-1">
+                            <h3 className="font-heading font-bold text-sm text-gray-900 group-hover:text-gold-dark transition-colors line-clamp-1 leading-snug">
                               {blog.title}
                             </h3>
                             {blog.excerpt && (
-                              <p className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">
+                              <span className="block text-xs text-gray-600 line-clamp-1 mt-0.5 font-normal leading-normal">
                                 {blog.excerpt}
-                              </p>
+                              </span>
                             )}
                           </div>
                         </div>

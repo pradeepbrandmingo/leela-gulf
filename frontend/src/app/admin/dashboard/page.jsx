@@ -250,23 +250,44 @@ export default function AdminDashboardPage() {
   const [dbBlogsTotal, setDbBlogsTotal] = useState(null);
   const [dbBlogsList, setDbBlogsList] = useState([]);
   const [dbEventsTotal, setDbEventsTotal] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [visitorsChartStats, setVisitorsChartStats] = useState(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
 
+  // Map widget timeframe to API range
+  const mapTimeframeToRange = (tf) => {
+    if (tf === "This Week") return "Last 7 days";
+    if (tf === "Today") return "Today";
+    if (tf === "This Month") return "This Month";
+    if (tf === "All Time") return "All Time";
+    return tf || "Last 7 days";
+  };
+
+  // Main Dashboard Stats Loader
   useEffect(() => {
+    let isCancelled = false;
+
     async function loadDashboardData() {
-      setIsLoadingStats(true);
       try {
         const leadParams = ["limit=5"];
         if (dateBounds.start) leadParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
         if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
         const leadQuery = `?${leadParams.join("&")}`;
 
-        const [leadsRes, productsRes, blogsRes, eventsRes] = await Promise.allSettled([
+        let analyticsQuery = `?range=${encodeURIComponent(selectedFilterOption)}`;
+        if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
+          analyticsQuery += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
+        }
+
+        const [leadsRes, productsRes, blogsRes, eventsRes, analyticsRes] = await Promise.allSettled([
           apiRequest(`/leads${leadQuery}`, { method: "GET" }),
           apiRequest(`/products?limit=1`, { method: "GET" }),
           apiRequest(`/blogs?limit=5`, { method: "GET" }),
           apiRequest(`/events?limit=1`, { method: "GET" }),
+          apiRequest(`/analytics/stats${analyticsQuery}`, { method: "GET" }),
         ]);
+
+        if (isCancelled) return;
 
         if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
           setDbLeadsTotal(leadsRes.value.total ?? 0);
@@ -302,38 +323,160 @@ export default function AdminDashboardPage() {
         } else {
           setDbEventsTotal(0);
         }
-      } catch (err) {
-        console.warn("Could not fetch dashboard live stats:", err);
-      } finally {
-        setIsLoadingStats(false);
-      }
-    }
-    loadDashboardData();
-  }, [dateBounds]);
 
-  // Dynamic Visitors Estimation according to active date filter
-  const dynamicVisitorsCount = useMemo(() => {
-    switch (selectedFilterOption) {
-      case "Today":
-        return "384";
-      case "Yesterday":
-        return "412";
-      case "Last 7 days":
-        return "3,215";
-      case "Last 30 days":
-        return "9,642";
-      case "This Month":
-        return "7,420";
-      case "Last Month":
-        return "8,910";
-      case "Custom": {
-        const days = Math.max(1, Math.round((customEndDate - customStartDate) / (1000 * 60 * 60 * 24)));
-        return (days * 350).toLocaleString();
+        if (analyticsRes.status === "fulfilled" && analyticsRes.value?.success) {
+          setAnalyticsData(analyticsRes.value);
+        }
+      } catch (err) {
+        if (!isCancelled) {
+          console.warn("Could not fetch dashboard live stats:", err);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsLoadingStats(false);
+        }
       }
-      default:
-        return "28,450";
     }
-  }, [selectedFilterOption, customStartDate, customEndDate]);
+
+    loadDashboardData();
+
+    // Auto-refresh polling every 30s
+    const timer = setInterval(() => {
+      loadDashboardData();
+    }, 30000);
+
+    return () => {
+      isCancelled = true;
+      clearInterval(timer);
+    };
+  }, [dateBounds, selectedFilterOption, customStartDate, customEndDate]);
+
+  // Load specific Visitors Overview chart data when timeframe dropdown changes
+  useEffect(() => {
+    let isCancelled = false;
+    const loadVisitorsChartData = async () => {
+      try {
+        const apiRange = mapTimeframeToRange(visitorsTimeframe);
+        const res = await apiRequest(`/analytics/stats?range=${encodeURIComponent(apiRange)}`, {
+          method: "GET",
+        });
+        if (!isCancelled && res?.success) {
+          setVisitorsChartStats(res);
+        }
+      } catch (err) {
+        if (!isCancelled) {
+          console.warn("Visitors chart stats notice:", err?.message);
+        }
+      }
+    };
+
+    loadVisitorsChartData();
+    return () => {
+      isCancelled = true;
+    };
+  }, [visitorsTimeframe]);
+
+  // Dynamic Total Visitors Value from Live Backend
+  const liveTotalVisitors = useMemo(() => {
+    if (analyticsData?.kpiSummary?.totalVisitors?.value !== undefined) {
+      return analyticsData.kpiSummary.totalVisitors.value;
+    }
+    return isLoadingStats ? "..." : "0";
+  }, [analyticsData, isLoadingStats]);
+
+  // Dynamic Countries Count from Live Backend
+  const liveCountriesCount = useMemo(() => {
+    if (analyticsData?.allCountries && Array.isArray(analyticsData.allCountries)) {
+      return String(analyticsData.allCountries.length);
+    }
+    if (analyticsData?.top5Countries && Array.isArray(analyticsData.top5Countries)) {
+      return String(analyticsData.top5Countries.length);
+    }
+    return isLoadingStats ? "..." : "0";
+  }, [analyticsData, isLoadingStats]);
+
+  // Dynamic Visitors Overview SVG Path & Points Calculation
+  const visitorsChartConfig = useMemo(() => {
+    const activeStats = visitorsChartStats || analyticsData;
+    const rawPoints =
+      activeStats?.chartData && activeStats.chartData.length > 0
+        ? activeStats.chartData
+        : [
+            { label: "Mon", current: 0 },
+            { label: "Tue", current: 0 },
+            { label: "Wed", current: 0 },
+            { label: "Thu", current: 0 },
+            { label: "Fri", current: 0 },
+            { label: "Sat", current: 0 },
+            { label: "Sun", current: 0 },
+          ];
+
+    const maxVal = Math.max(10, ...rawPoints.map((p) => Number(p.current || 0)));
+    const step = Math.ceil(maxVal / 4);
+    const yLabels = [
+      `${step * 4 >= 1000 ? `${(step * 4 / 1000).toFixed(1)}K` : step * 4}`,
+      `${step * 3 >= 1000 ? `${(step * 3 / 1000).toFixed(1)}K` : step * 3}`,
+      `${step * 2 >= 1000 ? `${(step * 2 / 1000).toFixed(1)}K` : step * 2}`,
+      `${step >= 1000 ? `${(step / 1000).toFixed(1)}K` : step}`,
+      "0",
+    ];
+
+    const svgWidth = 500;
+    const count = rawPoints.length;
+
+    const points = rawPoints.map((p, idx) => {
+      const cx = count <= 1 ? svgWidth / 2 : Math.round((idx / (count - 1)) * svgWidth);
+      const cy = Math.round(130 - ((Number(p.current || 0) / maxVal) * 115));
+      return {
+        label: p.label,
+        current: Number(p.current || 0),
+        cx,
+        cy,
+      };
+    });
+
+    let pathD = "";
+    if (points.length === 1) {
+      pathD = `M 0,${points[0].cy} L 500,${points[0].cy}`;
+    } else if (points.length > 1) {
+      pathD = `M ${points[0].cx},${points[0].cy}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const p0 = points[i];
+        const p1 = points[i + 1];
+        const cpX1 = p0.cx + (p1.cx - p0.cx) * 0.45;
+        const cpY1 = p0.cy;
+        const cpX2 = p0.cx + (p1.cx - p0.cx) * 0.55;
+        const cpY2 = p1.cy;
+        pathD += ` C ${cpX1.toFixed(1)},${cpY1.toFixed(1)} ${cpX2.toFixed(1)},${cpY2.toFixed(1)} ${p1.cx},${p1.cy}`;
+      }
+    }
+
+    const areaD = `${pathD} L ${points[points.length - 1].cx},135 L ${points[0].cx},135 Z`;
+
+    const totalPeriod = activeStats?.kpiSummary?.totalVisitors?.value ?? "0";
+    const rawTotalPeriod = activeStats?.kpiSummary?.totalVisitors?.raw ?? 0;
+    const newVisitorsRaw = activeStats?.kpiSummary?.newVisitors?.raw ?? 0;
+    const newVisitorsFormatted = activeStats?.kpiSummary?.newVisitors?.value ?? "0";
+    const newVisitorsPct =
+      rawTotalPeriod > 0
+        ? `${((newVisitorsRaw / rawTotalPeriod) * 100).toFixed(1)}%`
+        : "0.0%";
+    const trend = activeStats?.kpiSummary?.totalVisitors?.trend ?? "0.0%";
+    const isPositive = activeStats?.kpiSummary?.totalVisitors?.isPositive !== false;
+
+    return {
+      points,
+      pathD,
+      areaD,
+      yLabels,
+      totalPeriod,
+      newVisitorsFormatted,
+      newVisitorsPct,
+      trend,
+      isPositive,
+      xLabels: rawPoints.map((p) => p.label),
+    };
+  }, [visitorsChartStats, analyticsData]);
 
   // Dynamic Lead Source Breakdown
   const leadSourceStats = useMemo(() => {
@@ -439,14 +582,14 @@ export default function AdminDashboardPage() {
     },
     {
       title: "Total Visitors",
-      value: dynamicVisitorsCount,
+      value: liveTotalVisitors,
       linkText: "View analytics",
       href: "/admin/visitors",
       icon: Eye,
     },
     {
       title: "Countries",
-      value: "32",
+      value: liveCountriesCount,
       linkText: "View analytics",
       href: "/admin/visitors",
       icon: Globe,
@@ -460,9 +603,9 @@ export default function AdminDashboardPage() {
     },
   ];
 
-  // Dynamic Recent Leads Table Data (Combines MongoDB live leads with fallback display)
+  // Dynamic Recent Leads Table Data (From MongoDB live leads)
   const recentLeads = useMemo(() => {
-    if (dbLeadsList.length > 0) {
+    if (dbLeadsList && dbLeadsList.length > 0) {
       return dbLeadsList.slice(0, 5).map((l) => ({
         name: `${l.firstName || ""} ${l.lastName || ""}`.trim() || l.email,
         source: l.sourcePage || "Contact Page",
@@ -471,43 +614,7 @@ export default function AdminDashboardPage() {
         emailStatus: l.emailStatus,
       }));
     }
-    return [
-      {
-        name: "Mohammed Ahmed",
-        source: "Product Page",
-        target: "Sodium Lauryl Ether Sulphate",
-        date: getRelativeDateStr(0),
-        emailStatus: "READY",
-      },
-      {
-        name: "Priya Sharma",
-        source: "Contact Page",
-        target: "Contact Us",
-        date: getRelativeDateStr(0),
-        emailStatus: "READY",
-      },
-      {
-        name: "Daniel Joseph",
-        source: "Product Page",
-        target: "Caustic Soda Flakes",
-        date: getRelativeDateStr(1),
-        emailStatus: "READY",
-      },
-      {
-        name: "Fatima Al Mansoori",
-        source: "Blog Page",
-        target: "Sustainability in Chemicals",
-        date: getRelativeDateStr(1),
-        emailStatus: "READY",
-      },
-      {
-        name: "Rohan Verma",
-        source: "Product Page",
-        target: "Linear Alkyl Benzene",
-        date: getRelativeDateStr(2),
-        emailStatus: "READY",
-      },
-    ];
+    return [];
   }, [dbLeadsList]);
 
   // Dynamic Recent Blogs Table Data (from Live MongoDB)
@@ -807,13 +914,11 @@ export default function AdminDashboardPage() {
 
           {/* Visitors Area Chart Container matching Screenshot 1 */}
           <div className="flex gap-3 pt-2">
-            {/* Y-Axis Labels Column (4K to 0) */}
+            {/* Dynamic Y-Axis Labels Column */}
             <div className="flex flex-col justify-between text-[11px] font-subheading font-medium text-gray-400 pb-6 shrink-0 h-44">
-              <span>4K</span>
-              <span>3K</span>
-              <span>2K</span>
-              <span>1K</span>
-              <span>0</span>
+              {visitorsChartConfig.yLabels.map((lbl, idx) => (
+                <span key={idx}>{lbl}</span>
+              ))}
             </div>
 
             {/* SVG Plot Area */}
@@ -831,42 +936,50 @@ export default function AdminDashboardPage() {
                     </linearGradient>
                   </defs>
 
-                  {/* Horizontal Dashed Grid Lines (4K, 3K, 2K, 1K, 0) */}
+                  {/* Horizontal Dashed Grid Lines (4 steps) */}
                   <line x1="0" y1="5" x2="500" y2="5" stroke="#f3f4f6" strokeDasharray="3 3" />
                   <line x1="0" y1="37.5" x2="500" y2="37.5" stroke="#f3f4f6" strokeDasharray="3 3" />
                   <line x1="0" y1="70" x2="500" y2="70" stroke="#f3f4f6" strokeDasharray="3 3" />
                   <line x1="0" y1="102.5" x2="500" y2="102.5" stroke="#f3f4f6" strokeDasharray="3 3" />
                   <line x1="0" y1="135" x2="500" y2="135" stroke="#e5e7eb" />
 
-                  {/* Area Fill Gradient matching Screenshot 1 */}
-                  <path
-                    d="M 0,93 L 83,75 L 166,84 L 250,51 L 333,69 L 416,36 L 500,57 L 500,135 L 0,135 Z"
-                    fill="url(#visitorGradient)"
-                  />
+                  {/* Dynamic Area Fill Gradient */}
+                  {visitorsChartConfig.areaD && (
+                    <path
+                      d={visitorsChartConfig.areaD}
+                      fill="url(#visitorGradient)"
+                    />
+                  )}
 
-                  {/* Golden Vertex Line matching Screenshot 1 */}
-                  <path
-                    d="M 0,93 L 83,75 L 166,84 L 250,51 L 333,69 L 416,36 L 500,57"
-                    fill="none"
-                    stroke="#c19f16"
-                    strokeWidth="2.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+                  {/* Dynamic Golden Vertex Line */}
+                  {visitorsChartConfig.pathD && (
+                    <path
+                      d={visitorsChartConfig.pathD}
+                      fill="none"
+                      stroke="#c19f16"
+                      strokeWidth="2.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  )}
 
-                  {/* Vertex Data Point Circles */}
-                  <circle cx="0" cy="93" r="4" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="83" cy="75" r="4" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="166" cy="84" r="4" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="250" cy="51" r="4" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="333" cy="69" r="4" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="416" cy="36" r="4.5" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="500" cy="57" r="4" fill="#c19f16" stroke="#ffffff" strokeWidth="2" />
+                  {/* Dynamic Vertex Data Point Circles */}
+                  {visitorsChartConfig.points.map((pt, idx) => (
+                    <circle
+                      key={idx}
+                      cx={pt.cx}
+                      cy={pt.cy}
+                      r="4"
+                      fill="#c19f16"
+                      stroke="#ffffff"
+                      strokeWidth="2"
+                    />
+                  ))}
                 </svg>
 
                 {/* Dynamic X-Axis Date Labels */}
                 <div className="flex justify-between items-center text-[11px] font-subheading text-gray-500 pt-2 border-t border-gray-100">
-                  {chartXLabels.map((lbl, idx) => (
+                  {visitorsChartConfig.xLabels.map((lbl, idx) => (
                     <span key={idx}>{lbl}</span>
                   ))}
                 </div>
@@ -874,23 +987,25 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Bottom 4 Key Metrics Bar */}
+          {/* Bottom 4 Key Metrics Bar (Live Dynamic Data) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-gray-100 text-center">
             <div className="sm:border-r border-gray-100 pr-2">
-              <p className="font-heading font-extrabold text-base text-gray-900">9,642</p>
+              <p className="font-heading font-extrabold text-base text-gray-900">{liveTotalVisitors}</p>
               <p className="text-[11px] text-gray-500">Total Visitors</p>
             </div>
             <div className="sm:border-r border-gray-100 pr-2">
-              <p className="font-heading font-extrabold text-base text-gray-900">3,215</p>
+              <p className="font-heading font-extrabold text-base text-gray-900">{visitorsChartConfig.totalPeriod}</p>
               <p className="text-[11px] text-gray-500">{visitorsTimeframe}</p>
             </div>
             <div className="sm:border-r border-gray-100 pr-2">
-              <p className="font-heading font-extrabold text-base text-emerald-600">+12.5%</p>
+              <p className={`font-heading font-extrabold text-base ${visitorsChartConfig.isPositive ? "text-emerald-600" : "text-rose-600"}`}>
+                {visitorsChartConfig.trend}
+              </p>
               <p className="text-[11px] text-gray-500">vs Last Period</p>
             </div>
             <div>
-              <p className="font-heading font-extrabold text-base text-gray-900">68.4%</p>
-              <p className="text-[11px] text-gray-500">New Visitors</p>
+              <p className="font-heading font-extrabold text-base text-gray-900">{visitorsChartConfig.newVisitorsFormatted}</p>
+              <p className="text-[11px] text-gray-500">New Visitors ({visitorsChartConfig.newVisitorsPct})</p>
             </div>
           </div>
         </div>
@@ -1077,7 +1192,7 @@ export default function AdminDashboardPage() {
         {/* Left Table: Recent Leads */}
         <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-start space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading font-bold text-base text-gray-900">
+            <h2 className="font-heading font-bold text-base sm:text-lg text-gray-900">
               Recent Leads
             </h2>
             <Link
@@ -1092,28 +1207,42 @@ export default function AdminDashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-subheading">
               <thead>
-                <tr className="border-b border-gray-100 text-gray-400 uppercase font-heading text-[10px] tracking-wider">
-                  <th className="pb-3 font-semibold">Name</th>
-                  <th className="pb-3 font-semibold">Source</th>
-                  <th className="pb-3 font-semibold">Page / Product</th>
-                  <th className="pb-3 font-semibold">Date</th>
-                  <th className="pb-3 font-semibold text-right"></th>
+                <tr className="border-b border-gray-200 text-gray-700 uppercase font-heading font-bold text-xs tracking-wider">
+                  <th className="pb-3 font-bold">Name</th>
+                  <th className="pb-3 font-bold">Source</th>
+                  <th className="pb-3 font-bold">Page / Product</th>
+                  <th className="pb-3 font-bold">Date</th>
+                  <th className="pb-3 font-bold text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
-                {recentLeads.map((lead, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                    <td className="py-3 font-semibold text-gray-900">{lead.name}</td>
-                    <td className="py-3 text-gray-600">{lead.source}</td>
-                    <td className="py-3 text-gray-700">{lead.target}</td>
-                    <td className="py-3 text-gray-500 whitespace-nowrap">{lead.date}</td>
-                    <td className="py-3 text-right">
-                      <button className="text-gray-400 hover:text-gray-700 p-1 cursor-pointer">
-                        <MoreVertical className="w-3.5 h-3.5" />
-                      </button>
+                {isLoadingStats ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center text-gray-400 font-subheading text-xs">
+                      Loading recent leads...
                     </td>
                   </tr>
-                ))}
+                ) : recentLeads.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-6 text-center text-gray-400 font-subheading text-xs">
+                      No leads received yet.
+                    </td>
+                  </tr>
+                ) : (
+                  recentLeads.map((lead, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
+                      <td className="py-3 font-heading font-bold text-sm text-gray-900">{lead.name}</td>
+                      <td className="py-3 text-xs text-gray-600">{lead.source}</td>
+                      <td className="py-3 text-xs text-gray-700">{lead.target}</td>
+                      <td className="py-3 text-xs text-gray-500 whitespace-nowrap">{lead.date}</td>
+                      <td className="py-3 text-right">
+                        <button className="text-gray-400 hover:text-gray-700 p-1 cursor-pointer">
+                          <MoreVertical className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -1122,7 +1251,7 @@ export default function AdminDashboardPage() {
         {/* Right Table: Recent Blogs */}
         <div className="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-start space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading font-bold text-base text-gray-900">
+            <h2 className="font-heading font-bold text-base sm:text-lg text-gray-900">
               Recent Blogs
             </h2>
             <Link
@@ -1137,11 +1266,11 @@ export default function AdminDashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-subheading">
               <thead>
-                <tr className="border-b border-gray-100 text-gray-400 uppercase font-heading text-[10px] tracking-wider">
-                  <th className="pb-3 font-semibold">Title</th>
-                  <th className="pb-3 font-semibold">Status</th>
-                  <th className="pb-3 font-semibold">Date</th>
-                  <th className="pb-3 font-semibold text-right"></th>
+                <tr className="border-b border-gray-200 text-gray-700 uppercase font-heading font-bold text-xs tracking-wider">
+                  <th className="pb-3 font-bold">Title</th>
+                  <th className="pb-3 font-bold">Status</th>
+                  <th className="pb-3 font-bold">Date</th>
+                  <th className="pb-3 font-bold text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
@@ -1163,10 +1292,10 @@ export default function AdminDashboardPage() {
                 ) : (
                   recentBlogs.map((blog, idx) => (
                     <tr key={blog._id || idx} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="py-3 font-medium text-gray-900 max-w-[220px] truncate">
+                      <td className="py-3 max-w-[220px] truncate">
                         <Link
                           href={`/admin/blogs/edit/${blog._id}`}
-                          className="hover:text-gold-dark transition-colors font-bold"
+                          className="font-heading font-bold text-sm text-gray-900 hover:text-gold-dark transition-colors truncate block"
                         >
                           {blog.title}
                         </Link>

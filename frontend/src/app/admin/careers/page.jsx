@@ -584,7 +584,7 @@ export default function AdminCareersPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50/70 text-[11px] font-heading font-bold text-gray-600 uppercase tracking-wider">
+                  <tr className="border-b border-gray-200 bg-gray-50/70 text-xs font-heading font-bold text-gray-700 uppercase tracking-wider">
                     <th className="p-3 pl-4 w-10">
                       <input
                         type="checkbox"
@@ -604,7 +604,7 @@ export default function AdminCareersPage() {
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-gray-100 text-xs sm:text-sm font-subheading">
+                <tbody className="divide-y divide-gray-100 text-xs font-subheading">
                   {isLoading ? (
                     <tr>
                       <td colSpan={6} className="text-center py-16">
@@ -649,19 +649,19 @@ export default function AdminCareersPage() {
                                 <Briefcase className="w-4 h-4" />
                               </div>
                               <div className="min-w-0">
-                                <h4 className="font-heading font-bold text-sm text-gray-900 truncate">
+                                <h4 className="font-heading font-bold text-sm text-gray-900 truncate leading-snug">
                                   {job.title}
                                 </h4>
-                                <p className="text-[11.5px] text-gray-400 truncate max-w-xs">
+                                <span className="block text-xs text-gray-600 font-normal truncate max-w-xs mt-0.5 leading-normal">
                                   {job.overview}
-                                </p>
+                                </span>
                               </div>
                             </div>
                           </td>
 
                           {/* Department */}
                           <td className="p-3">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-heading font-bold bg-gray-100 text-gray-800">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-700">
                               {job.department}
                             </span>
                           </td>
@@ -984,7 +984,7 @@ export default function AdminCareersPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50/70 text-[11px] font-heading font-bold text-gray-600 uppercase tracking-wider">
+                  <tr className="border-b border-gray-200 bg-gray-50/70 text-xs font-heading font-bold text-gray-700 uppercase tracking-wider">
                     <th className="p-3 pl-4">Candidate Name & Contact</th>
                     <th className="p-3">Post Applied For</th>
                     <th className="p-3">Qualifications & Experience</th>
@@ -994,7 +994,7 @@ export default function AdminCareersPage() {
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-gray-100 text-xs sm:text-sm font-subheading">
+                <tbody className="divide-y divide-gray-100 text-xs font-subheading">
                   {paginatedApps.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="text-center py-16 text-gray-400">
@@ -1012,10 +1012,10 @@ export default function AdminCareersPage() {
                           {/* Candidate Name, Email, Phone, Location */}
                           <td className="p-3 pl-4">
                             <div>
-                              <h4 className="font-heading font-bold text-sm text-gray-900">
+                              <h4 className="font-heading font-bold text-sm text-gray-900 leading-snug">
                                 {app.firstName} {app.lastName}
                               </h4>
-                              <div className="flex flex-wrap items-center gap-2.5 text-[11.5px] text-gray-500 mt-1">
+                              <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-600 mt-1">
                                 <span className="flex items-center gap-1">
                                   <Mail className="w-3 h-3 text-gray-400" />
                                   <span>{app.email}</span>
