@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
+  RefreshCw,
   X,
   ExternalLink,
   AlertTriangle,
@@ -81,6 +82,7 @@ export default function AdminCareersPage() {
   const [pdfPreviewTarget, setPdfPreviewTarget] = useState(null); // { name: string, resumeUrl: string, candidate: string }
   const [deleteTarget, setDeleteTarget] = useState(null); // { type: 'job' | 'app', id: string, name: string }
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Dropdowns
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
@@ -111,13 +113,14 @@ export default function AdminCareersPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch Live Jobs and Applications from API
-  const loadData = async () => {
-    setIsLoading(true);
+  // Fetch Live Jobs and Applications from API (Silent Background + Manual Trigger)
+  const loadData = useCallback(async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    const startTime = Date.now();
     try {
       const [jobsRes, appsRes] = await Promise.all([
-        apiRequest("/careers/admin/jobs", { method: "GET" }).catch(() => null),
-        apiRequest("/careers/applications", { method: "GET" }).catch(() => null),
+        apiRequest(`/careers/admin/jobs?_t=${Date.now()}`, { method: "GET" }).catch(() => null),
+        apiRequest(`/careers/applications?_t=${Date.now()}`, { method: "GET" }).catch(() => null),
       ]);
 
       if (jobsRes?.success && Array.isArray(jobsRes.data)) {
@@ -133,16 +136,47 @@ export default function AdminCareersPage() {
       }
     } catch (err) {
       console.warn("Careers API fetch error:", err);
-      setJobsList([]);
-      setApplicationsList([]);
     } finally {
       setIsLoading(false);
+      if (isManual) {
+        const elapsed = Date.now() - startTime;
+        const remainingDelay = Math.max(0, 600 - elapsed);
+        setTimeout(() => {
+          setIsRefreshing(false);
+        }, remainingDelay);
+      }
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    let isCancelled = false;
+
+    loadData(false);
+
+    // Auto-refresh polling every 8s when visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        loadData(false);
+      }
+    }, 8000);
+
+    // Instant Sync on Tab Focus / Return to Window
+    const handleFocus = () => {
+      if (document.visibilityState === "visible") {
+        loadData(false);
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleFocus);
+
+    return () => {
+      isCancelled = true;
+      clearInterval(interval);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleFocus);
+    };
+  }, [loadData]);
 
   // ── JOBS FILTERING & PAGINATION ──
   const departmentsList = useMemo(() => {
@@ -387,8 +421,28 @@ export default function AdminCareersPage() {
           </p>
         </div>
 
-        {/* Right Action: + Post New Job Button */}
-        <div className="flex items-center gap-3">
+        {/* Right Action: Live Sync + Refresh + Post New Job Button */}
+        <div className="flex items-center gap-2.5">
+          {/* Live Sync Pulse Indicator */}
+          <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-heading font-semibold shadow-2xs select-none">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Live Sync</span>
+          </div>
+
+          {/* Real-time Refresh Button */}
+          <button
+            type="button"
+            onClick={() => loadData(true)}
+            disabled={isRefreshing}
+            title="Refresh live career data"
+            className="p-2.5 bg-white border border-gray-200 hover:border-gold-main/50 rounded-xl text-gray-700 hover:text-gold-dark shadow-xs transition-all cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-gold-dark" : ""}`} />
+          </button>
+
           <Link
             href="/admin/careers/add"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gold-main hover:bg-gold-light text-black text-xs sm:text-sm font-heading font-bold shadow-md hover:shadow-lg transition-all cursor-pointer shrink-0"

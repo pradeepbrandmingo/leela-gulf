@@ -159,9 +159,9 @@ export default function ProductDetailHero({
                   target={p.tdsUrl ? "_blank" : undefined}
                   rel={p.tdsUrl ? "noopener noreferrer" : undefined}
                   download={!p.tdsUrl ? "Technical-Data-Sheet-TDS.pdf" : undefined}
-                  className="btn-gold-outline-hover px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide transition-all inline-flex items-center gap-2 cursor-pointer shadow-xs"
+                  className="group bg-white hover:bg-[#fdfaf0] border border-gold-main/60 hover:border-gold-main text-gray-900 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide shadow-xs hover:shadow-md active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer"
                 >
-                  <Download className="w-4 h-4 text-[#8e7608] group-hover:text-black transition-colors" />
+                  <Download className="w-4 h-4 text-gold-dark group-hover:scale-110 transition-transform" />
                   <span>
                     {isRTL ? "صحيفة البيانات الفنية (TDS)" : "Technical Data Sheet (TDS)"}
                   </span>

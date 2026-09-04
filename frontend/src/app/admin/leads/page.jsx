@@ -6,6 +6,7 @@ import {
   Users,
   Search,
   RotateCcw,
+  RefreshCw,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -289,6 +290,7 @@ export default function AdminLeadsPage() {
   const [leadsData, setLeadsData] = useState([]);
   const [totalLeadsCount, setTotalLeadsCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   // Lead Action Modals
@@ -298,12 +300,12 @@ export default function AdminLeadsPage() {
   // Selected Checkboxes State
   const [selectedLeadIds, setSelectedLeadIds] = useState([]);
 
-  // Fetch Live Leads from Backend API
-  const fetchLeads = useCallback(async () => {
-    setIsLoading(true);
-    setErrorMsg("");
+  // Fetch Live Leads from Backend API (Silent Background + Manual Trigger)
+  const fetchLeads = useCallback(async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    const startTime = Date.now();
     try {
-      let endpoint = `/leads?limit=500`;
+      let endpoint = `/leads?limit=500&_t=${Date.now()}`;
 
       if (searchQuery.trim()) {
         endpoint += `&search=${encodeURIComponent(searchQuery.trim())}`;
@@ -314,20 +316,56 @@ export default function AdminLeadsPage() {
       if (res && res.success) {
         setLeadsData(res.leads || []);
         setTotalLeadsCount(res.total || (res.leads ? res.leads.length : 0));
+        setErrorMsg("");
       } else {
         setLeadsData([]);
         setTotalLeadsCount(0);
       }
     } catch (err) {
       console.error("Failed to fetch leads:", err);
-      setErrorMsg("Failed to load leads from database. Please check connection.");
+      if (isManual) {
+        setErrorMsg("Failed to load leads from database. Please check connection.");
+      }
     } finally {
       setIsLoading(false);
+      if (isManual) {
+        const elapsed = Date.now() - startTime;
+        const remainingDelay = Math.max(0, 600 - elapsed);
+        setTimeout(() => {
+          setIsRefreshing(false);
+        }, remainingDelay);
+      }
     }
   }, [searchQuery]);
 
   useEffect(() => {
-    fetchLeads();
+    let isCancelled = false;
+
+    fetchLeads(false);
+
+    // Auto-refresh polling every 8s when visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        fetchLeads(false);
+      }
+    }, 8000);
+
+    // Instant Sync on Tab Focus / Return to Window
+    const handleFocus = () => {
+      if (document.visibilityState === "visible") {
+        fetchLeads(false);
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleFocus);
+
+    return () => {
+      isCancelled = true;
+      clearInterval(interval);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleFocus);
+    };
   }, [fetchLeads]);
 
   // Handle Main Date Filter Selection
@@ -552,6 +590,25 @@ export default function AdminLeadsPage() {
               </div>
             )}
           </div>
+
+          {/* Live Sync Pulse Indicator */}
+          <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-heading font-semibold shadow-2xs select-none">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Live Sync</span>
+          </div>
+
+          {/* Real-time Refresh Button */}
+          <button
+            onClick={() => fetchLeads(true)}
+            disabled={isRefreshing}
+            title="Refresh live leads"
+            className="p-2 bg-white border border-gray-200 hover:border-gold-main/50 rounded-xl text-gray-700 hover:text-gold-dark shadow-xs transition-all cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-gold-dark" : ""}`} />
+          </button>
         </div>
       </div>
 

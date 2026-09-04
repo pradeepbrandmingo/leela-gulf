@@ -81,13 +81,13 @@ export default function AdminSidebar({ adminUser, isOpen, onClose }) {
     <aside
       className={`fixed lg:sticky top-0 left-0 z-50 h-screen bg-white text-gray-900 border-r border-gray-200/90 flex flex-col justify-between shrink-0 transition-all duration-300 ease-in-out transform ${
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      } ${isCollapsed ? "lg:w-20" : "lg:w-64"} w-64`}
+      } ${isCollapsed ? "lg:w-20" : "lg:w-56"} w-56`}
     >
       {/* ── TOP: LOGO & TOGGLE COLLAPSE BUTTON ── */}
       <div className="flex flex-col flex-1 overflow-y-auto min-h-0">
         <div
-          className={`py-5 border-b border-gray-100 flex items-center shrink-0 transition-all duration-300 ${
-            isCollapsed ? "px-3 justify-center" : "px-6 justify-between"
+          className={`py-4.5 border-b border-gray-100 flex items-center shrink-0 transition-all duration-300 ${
+            isCollapsed ? "px-3 justify-center" : "px-4 justify-between"
           }`}
         >
           {/* Logo (Expanded vs Collapsed) */}
@@ -100,9 +100,9 @@ export default function AdminSidebar({ adminUser, isOpen, onClose }) {
               <Image
                 src="/logos/logowhite.png"
                 alt="Leela Gulf FZC"
-                width={200}
-                height={60}
-                className="h-11 sm:h-12 w-auto object-contain mix-blend-multiply contrast-105"
+                width={180}
+                height={55}
+                className="h-10 sm:h-11 w-auto object-contain mix-blend-multiply contrast-105"
                 priority
               />
             )}
@@ -147,18 +147,17 @@ export default function AdminSidebar({ adminUser, isOpen, onClose }) {
                 href={item.href}
                 onClick={onClose}
                 title={isCollapsed ? item.name : undefined}
-                className={`relative flex items-center rounded-xl font-heading text-xs sm:text-sm font-bold transition-all duration-200 ${
+                className={`relative flex items-center rounded-xl font-heading text-xs sm:text-sm font-bold outline-hidden focus:outline-hidden focus:ring-0 focus-visible:outline-hidden select-none transition-colors duration-150 border ${
                   isCollapsed ? "justify-center px-0 py-2.5" : "gap-3 px-3.5 py-2.5"
                 } ${
                   isActive
-                    ? "bg-[#fdfaf0] text-gold-dark border border-gold-main/40 shadow-xs"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50 font-semibold"
+                    ? "bg-[#fdfaf0] text-gold-dark border-gold-main/40 shadow-xs"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 font-semibold border-transparent"
                 }`}
               >
                 <Icon
-                  className={`w-4 h-4 shrink-0 transition-colors ${
-                    isActive ? "text-gold-dark" : "text-gray-400 group-hover:text-gray-700"
-                  }`}
+                  className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-gold-dark" : "text-gray-400 group-hover:text-gray-700"
+                    }`}
                 />
                 {!isCollapsed && <span>{item.name}</span>}
               </Link>
@@ -185,9 +184,8 @@ export default function AdminSidebar({ adminUser, isOpen, onClose }) {
         {/* Admin Info Card */}
         <div
           onClick={() => setShowProfileMenu(!showProfileMenu)}
-          className={`flex items-center rounded-2xl bg-gray-50/80 border border-gray-200/80 hover:border-gold-main/40 cursor-pointer transition-all select-none shadow-xs ${
-            isCollapsed ? "justify-center p-2.5" : "justify-between p-3"
-          }`}
+          className={`flex items-center rounded-2xl bg-gray-50/80 border border-gray-200/80 hover:border-gold-main/40 cursor-pointer transition-all select-none shadow-xs ${isCollapsed ? "justify-center p-2.5" : "justify-between p-3"
+            }`}
           title={isCollapsed ? adminUser?.name || "Admin" : undefined}
         >
           <div className="flex items-center gap-3 overflow-hidden">

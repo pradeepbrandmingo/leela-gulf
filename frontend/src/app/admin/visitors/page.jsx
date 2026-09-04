@@ -156,12 +156,19 @@ export default function AdminVisitorsPage() {
   // Live API Fetcher
   const fetchLiveAnalytics = useCallback(async (isManual = false) => {
     if (isManual) setIsRefreshing(true);
+    const startTime = Date.now();
     try {
-      let url = `${API_BASE_URL}/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}`;
+      let url = `${API_BASE_URL}/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
       if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
         url += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
       }
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch(url, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+        },
+      });
       const data = await res.json();
       if (data && data.success) {
         setApiData(data);
@@ -172,7 +179,13 @@ export default function AdminVisitorsPage() {
     } catch (err) {
       console.warn("Using offline analytics defaults:", err?.message);
     } finally {
-      if (isManual) setIsRefreshing(false);
+      if (isManual) {
+        const elapsed = Date.now() - startTime;
+        const remainingDelay = Math.max(0, 600 - elapsed);
+        setTimeout(() => {
+          setIsRefreshing(false);
+        }, remainingDelay);
+      }
     }
   }, [selectedFilterOption, customStartDate, customEndDate]);
 
@@ -181,11 +194,17 @@ export default function AdminVisitorsPage() {
 
     const loadData = async () => {
       try {
-        let url = `${API_BASE_URL}/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}`;
+        let url = `${API_BASE_URL}/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
         if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
           url += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
         }
-        const res = await fetch(url, { cache: "no-store" });
+        const res = await fetch(url, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+          },
+        });
         const data = await res.json();
         if (!isCancelled && data && data.success) {
           setApiData(data);
@@ -202,14 +221,28 @@ export default function AdminVisitorsPage() {
 
     loadData();
 
-    // Live Real-Time Auto Refresh every 30 seconds
+    // Live Real-Time Auto Refresh every 8 seconds (Smart Polling)
     const interval = setInterval(() => {
-      loadData();
-    }, 30000);
+      if (document.visibilityState === "visible") {
+        loadData();
+      }
+    }, 8000);
+
+    // Instant Sync on Tab Focus / Return to Window
+    const handleFocus = () => {
+      if (document.visibilityState === "visible") {
+        loadData();
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleFocus);
 
     return () => {
       isCancelled = true;
       clearInterval(interval);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleFocus);
     };
   }, [selectedFilterOption, customStartDate, customEndDate]);
 
@@ -550,6 +583,15 @@ export default function AdminVisitorsPage() {
             </div>
           )}
 
+          {/* Live Sync Pulse Indicator */}
+          <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-heading font-semibold shadow-2xs select-none">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Live Sync</span>
+          </div>
+
           {/* Real-time Refresh Button */}
           <button
             onClick={() => fetchLiveAnalytics(true)}
@@ -682,32 +724,32 @@ export default function AdminVisitorsPage() {
         {/* LEFT: Visitors Overview (7 Cols on large screens) */}
         <div className="lg:col-span-7 bg-white border border-gray-200/90 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4">
           
-          {/* Header Row: Clean Single Line Layout with Prominent Bold Heading */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+          {/* Header Row: Responsive Layout with wrap support */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="min-w-0">
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight whitespace-nowrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="font-heading font-extrabold text-base sm:text-lg lg:text-xl text-gray-900 tracking-tight">
                   Visitors Overview
                 </h2>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-amber-50 text-gold-dark border border-gold-main/20 text-[10px] font-heading font-extrabold whitespace-nowrap shrink-0">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-amber-50 text-gold-dark border border-gold-main/20 text-[10px] font-heading font-extrabold shrink-0">
                   Comparison Mode
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-gray-400 font-subheading mt-0.5 whitespace-nowrap">
+              <p className="text-[11px] sm:text-xs text-gray-400 font-subheading mt-0.5 truncate">
                 {comparisonChartData.currentLabel} vs {comparisonChartData.prevLabel} traffic analysis
               </p>
             </div>
 
-            {/* Timeframe selector & Chart Legend on ONE single line */}
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0 whitespace-nowrap">
-              <div className="flex items-center gap-2.5 sm:gap-3 text-xs font-subheading font-medium whitespace-nowrap">
-                <div className="flex items-center gap-1.5 whitespace-nowrap shrink-0">
-                  <span className="w-3 h-0.5 bg-[#c19f16] rounded-full shrink-0" />
-                  <span className="text-gray-800 font-bold whitespace-nowrap">{comparisonChartData.currentLabel}</span>
+            {/* Timeframe selector & Chart Legend */}
+            <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 flex-wrap">
+              <div className="flex items-center gap-2 sm:gap-3 text-xs font-subheading font-medium">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="w-2.5 h-0.5 bg-[#c19f16] rounded-full shrink-0" />
+                  <span className="text-gray-800 font-bold text-[11px] sm:text-xs">{comparisonChartData.currentLabel}</span>
                 </div>
-                <div className="flex items-center gap-1.5 whitespace-nowrap shrink-0">
-                  <span className="w-3 h-0.5 border-b border-dashed border-gray-400 shrink-0" />
-                  <span className="text-gray-400 whitespace-nowrap">{comparisonChartData.prevLabel}</span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="w-2.5 h-0.5 border-b border-dashed border-gray-400 shrink-0" />
+                  <span className="text-gray-400 text-[11px] sm:text-xs">{comparisonChartData.prevLabel}</span>
                 </div>
               </div>
 
@@ -715,14 +757,14 @@ export default function AdminVisitorsPage() {
               <div className="relative shrink-0">
                 <div
                   onClick={() => setShowChartModeDropdown(!showChartModeDropdown)}
-                  className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-gold-main/40 rounded-xl px-2.5 py-1 text-xs font-heading font-semibold text-gray-700 cursor-pointer select-none transition-colors whitespace-nowrap"
+                  className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-gold-main/40 rounded-xl px-2.5 py-1 text-xs font-heading font-semibold text-gray-700 cursor-pointer select-none transition-colors"
                 >
-                  <span className="whitespace-nowrap">{chartViewMode}</span>
+                  <span>{chartViewMode}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                 </div>
 
                 {showChartModeDropdown && (
-                  <div className="absolute top-full right-0 mt-1 w-52 bg-white border border-gray-200 rounded-xl p-1 shadow-2xl z-30 animate-fadeIn space-y-0.5">
+                  <div className="absolute top-full right-0 mt-1 w-48 sm:w-52 bg-white border border-gray-200 rounded-xl p-1 shadow-2xl z-30 animate-fadeIn space-y-0.5">
                     {chartModeOptions.map((opt) => (
                       <div
                         key={opt.value}
@@ -753,17 +795,17 @@ export default function AdminVisitorsPage() {
           </div>
 
           {/* SVG Line & Area Chart Area */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-2 sm:gap-3 pt-2">
             {/* Y-Axis Labels Column */}
-            <div className="flex flex-col justify-between text-[11px] font-subheading font-medium text-gray-400 pb-7 shrink-0 h-52">
+            <div className="flex flex-col justify-between text-[10.5px] sm:text-[11px] font-subheading font-medium text-gray-400 pb-7 shrink-0 h-48 sm:h-52">
               {comparisonChartData.yLabels.map((lbl, idx) => (
                 <span key={idx} className="whitespace-nowrap">{lbl}</span>
               ))}
             </div>
 
             {/* SVG Plot */}
-            <div className="flex-1 flex flex-col justify-between">
-              <div className="relative w-full h-52">
+            <div className="flex-1 flex flex-col justify-between min-w-0">
+              <div className="relative w-full h-48 sm:h-52">
                 <svg
                   className="w-full h-full overflow-visible"
                   viewBox="0 0 500 150"
@@ -864,7 +906,7 @@ export default function AdminVisitorsPage() {
                       +{(
                         ((comparisonChartData.points[hoveredPointIndex].current -
                           comparisonChartData.points[hoveredPointIndex].prev) /
-                          comparisonChartData.points[hoveredPointIndex].prev) *
+                          Math.max(1, comparisonChartData.points[hoveredPointIndex].prev)) *
                         100
                       ).toFixed(1)}
                       % Growth
@@ -873,7 +915,7 @@ export default function AdminVisitorsPage() {
                 )}
 
                 {/* X-Axis Date Labels */}
-                <div className="flex justify-between items-center text-[11px] font-subheading text-gray-500 pt-2 border-t border-gray-100">
+                <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-subheading text-gray-500 pt-2 border-t border-gray-100">
                   {comparisonChartData.points.map((pt, idx) => (
                     <span key={idx} className={`whitespace-nowrap ${hoveredPointIndex === idx ? "font-bold text-gray-900" : ""}`}>
                       {pt.label}
@@ -884,31 +926,35 @@ export default function AdminVisitorsPage() {
             </div>
           </div>
 
-          {/* Bottom 4 Key Comparison Metrics Bar inside Card */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-gray-100 text-center">
-            <div className="sm:border-r border-gray-100 pr-2">
-              <p className="font-heading font-extrabold text-base text-gray-900 whitespace-nowrap">
+          {/* Bottom 4 Key Comparison Metrics Bar inside Card: Responsive Mini-Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 pt-3 border-t border-gray-100">
+            <div className="bg-gray-50/80 rounded-xl p-2.5 text-center border border-gray-100/90 min-w-0">
+              <p className="text-[11px] font-medium text-gray-500 truncate" title={comparisonChartData.currentLabel}>
+                {comparisonChartData.currentLabel}
+              </p>
+              <p className="font-heading font-bold text-base sm:text-lg text-gray-900 mt-0.5 truncate">
                 {comparisonChartData.currentTotal}
               </p>
-              <p className="text-[11px] text-gray-500 whitespace-nowrap">{comparisonChartData.currentLabel}</p>
             </div>
-            <div className="sm:border-r border-gray-100 pr-2">
-              <p className="font-heading font-extrabold text-base text-gray-500 whitespace-nowrap">
+            <div className="bg-gray-50/80 rounded-xl p-2.5 text-center border border-gray-100/90 min-w-0">
+              <p className="text-[11px] font-medium text-gray-500 truncate" title={comparisonChartData.prevLabel}>
+                {comparisonChartData.prevLabel}
+              </p>
+              <p className="font-heading font-bold text-base sm:text-lg text-gray-500 mt-0.5 truncate">
                 {comparisonChartData.prevTotal}
               </p>
-              <p className="text-[11px] text-gray-400 whitespace-nowrap">{comparisonChartData.prevLabel}</p>
             </div>
-            <div className="sm:border-r border-gray-100 pr-2">
-              <p className="font-heading font-extrabold text-base text-emerald-600 whitespace-nowrap">
+            <div className="bg-gray-50/80 rounded-xl p-2.5 text-center border border-gray-100/90 min-w-0">
+              <p className="text-[11px] font-medium text-gray-500 truncate">vs Previous</p>
+              <p className="font-heading font-bold text-base sm:text-lg text-emerald-600 mt-0.5 truncate">
                 {comparisonChartData.growthPct}
               </p>
-              <p className="text-[11px] text-gray-500 whitespace-nowrap">vs Previous</p>
             </div>
-            <div>
-              <p className="font-heading font-extrabold text-base text-gray-900 whitespace-nowrap">
+            <div className="bg-gray-50/80 rounded-xl p-2.5 text-center border border-gray-100/90 min-w-0">
+              <p className="text-[11px] font-medium text-gray-500 truncate">Daily Avg</p>
+              <p className="font-heading font-bold text-base sm:text-lg text-gray-900 mt-0.5 truncate">
                 {comparisonChartData.avgMetric}
               </p>
-              <p className="text-[11px] text-gray-500 whitespace-nowrap">Average</p>
             </div>
           </div>
         </div>
@@ -916,7 +962,7 @@ export default function AdminVisitorsPage() {
         {/* RIGHT: Visitors by Source (5 Cols on large screens) */}
         <div className="lg:col-span-5 bg-white border border-gray-200/90 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight whitespace-nowrap">
+            <h2 className="font-heading font-extrabold text-base sm:text-lg lg:text-xl text-gray-900 tracking-tight">
               Visitors by Source
             </h2>
 
@@ -927,9 +973,9 @@ export default function AdminVisitorsPage() {
                   setShowSourceDropdown(!showSourceDropdown);
                   setShowDeviceDropdown(false);
                 }}
-                className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-gold-main/40 rounded-xl px-2.5 py-1 text-xs font-heading font-semibold text-gray-700 cursor-pointer select-none transition-colors whitespace-nowrap"
+                className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-gold-main/40 rounded-xl px-2.5 py-1 text-xs font-heading font-semibold text-gray-700 cursor-pointer select-none transition-colors"
               >
-                <span className="whitespace-nowrap">{sourceTimeframe}</span>
+                <span>{sourceTimeframe}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
               </div>
 
@@ -946,7 +992,7 @@ export default function AdminVisitorsPage() {
                         sourceTimeframe === opt ? "bg-[#fdfaf0] text-gold-dark" : "text-gray-700 hover:bg-gray-50"
                       }`}
                     >
-                      <span className="whitespace-nowrap">{opt}</span>
+                      <span>{opt}</span>
                       {sourceTimeframe === opt && <Check className="w-3.5 h-3.5 text-gold-dark shrink-0" />}
                     </div>
                   ))}
@@ -956,10 +1002,10 @@ export default function AdminVisitorsPage() {
           </div>
 
           {/* Donut Chart & Legend */}
-          <div className="flex-1 flex flex-col sm:flex-row items-center justify-between gap-6 py-2">
+          <div className="flex-1 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 sm:gap-5 py-2">
 
             {/* SVG Donut Chart */}
-            <div className="relative w-44 h-44 sm:w-48 sm:h-48 shrink-0 flex items-center justify-center">
+            <div className="relative w-36 h-36 sm:w-40 sm:h-40 xl:w-44 xl:h-44 shrink-0 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90 overflow-visible" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="40" fill="none" stroke="#f3f4f6" strokeWidth="13" />
                 {trafficSources.map((src, idx) => (
@@ -988,15 +1034,15 @@ export default function AdminVisitorsPage() {
             </div>
 
             {/* Donut Legend */}
-            <div className="space-y-2.5 w-full text-xs font-subheading">
+            <div className="space-y-2 w-full min-w-0 text-xs font-subheading flex-1">
               {trafficSources.map((src, idx) => (
-                <div key={idx} className="flex items-center justify-between gap-2 whitespace-nowrap">
-                  <div className="flex items-center gap-2 whitespace-nowrap shrink-0">
+                <div key={idx} className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: src.color }} />
-                    <span className="text-gray-700 font-medium whitespace-nowrap">{src.name}</span>
+                    <span className="text-gray-700 font-medium truncate text-xs">{src.name}</span>
                   </div>
-                  <span className="font-bold text-gray-900 whitespace-nowrap shrink-0">
-                    {src.count} <span className="text-gray-400 font-normal">({src.pct})</span>
+                  <span className="font-bold text-gray-900 shrink-0 text-right text-xs">
+                    {src.count} <span className="text-gray-400 font-normal text-[11px]">({src.pct})</span>
                   </span>
                 </div>
               ))}
@@ -1013,7 +1059,7 @@ export default function AdminVisitorsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
         {/* 1. TOP PAGES TABLE (4 Cols) */}
-        <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-extrabold text-base sm:text-lg text-gray-900 tracking-tight">
               Top Pages
@@ -1032,7 +1078,7 @@ export default function AdminVisitorsPage() {
                 <tr className="border-b border-gray-200 text-gray-700 uppercase font-heading font-bold text-xs tracking-wider">
                   <th className="pb-2.5 font-bold">Page</th>
                   <th className="pb-2.5 font-bold text-right">Views</th>
-                  <th className="pb-2.5 font-bold text-right">% of Total</th>
+                  <th className="pb-2.5 font-bold text-right">%</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 text-gray-800">
@@ -1045,11 +1091,11 @@ export default function AdminVisitorsPage() {
                 ) : (
                   topPagesData.map((page, idx) => (
                     <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="py-2.5 max-w-[140px] truncate font-medium text-gray-900" title={page.path}>
+                      <td className="py-2.5 max-w-[120px] sm:max-w-[140px] truncate font-medium text-gray-900 text-xs" title={page.path}>
                         {page.path}
                       </td>
-                      <td className="py-2.5 font-bold text-right text-gray-900">{page.views}</td>
-                      <td className="py-2.5 text-right text-gray-500 font-medium">{page.pct}</td>
+                      <td className="py-2.5 font-bold text-right text-gray-900 text-xs whitespace-nowrap">{page.views}</td>
+                      <td className="py-2.5 text-right text-gray-500 font-medium text-xs whitespace-nowrap">{page.pct}</td>
                     </tr>
                   ))
                 )}
@@ -1059,7 +1105,7 @@ export default function AdminVisitorsPage() {
         </div>
 
         {/* 2. VISITORS BY COUNTRY (4 Cols) */}
-        <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-extrabold text-base sm:text-lg text-gray-900 tracking-tight">
               Visitors by Country
@@ -1091,12 +1137,12 @@ export default function AdminVisitorsPage() {
                 ) : (
                   countryVisitorsData.map((c, idx) => (
                     <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="py-2.5 flex items-center gap-2.5 font-medium text-gray-900">
-                        <CountryFlag code={c.code} name={c.country} className="w-5 h-3.5" />
-                        <span className="truncate max-w-[120px] font-semibold">{c.country}</span>
+                      <td className="py-2.5 flex items-center gap-2 font-medium text-gray-900 min-w-0">
+                        <CountryFlag code={c.code} name={c.country} className="w-4 h-3 shrink-0 rounded-xs" />
+                        <span className="truncate max-w-[90px] sm:max-w-[110px] md:max-w-[130px] font-semibold text-xs">{c.country}</span>
                       </td>
-                      <td className="py-2.5 font-bold text-right text-gray-900">{c.count}</td>
-                      <td className="py-2.5 text-right text-gray-500 font-medium">{c.pct}</td>
+                      <td className="py-2.5 font-bold text-right text-gray-900 text-xs whitespace-nowrap">{c.count}</td>
+                      <td className="py-2.5 text-right text-gray-500 font-medium text-xs whitespace-nowrap">{c.pct}</td>
                     </tr>
                   ))
                 )}
@@ -1106,7 +1152,7 @@ export default function AdminVisitorsPage() {
         </div>
 
         {/* 3. DEVICES BREAKDOWN (4 Cols) */}
-        <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-extrabold text-base sm:text-lg text-gray-900 tracking-tight">
               Devices
@@ -1147,11 +1193,11 @@ export default function AdminVisitorsPage() {
             </div>
           </div>
 
-          {/* Donut & Legend */}
-          <div className="flex-1 flex flex-col sm:flex-row items-center justify-between gap-4 py-1">
+          {/* Donut & Legend: Clean Responsive Vertical Stack */}
+          <div className="flex-1 flex flex-col items-center justify-center gap-3 py-1">
 
             {/* SVG Donut */}
-            <div className="relative w-36 h-36 shrink-0 flex items-center justify-center">
+            <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90 overflow-visible" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="40" fill="none" stroke="#f3f4f6" strokeWidth="14" />
                 {devicesData.map((dev, idx) => (
@@ -1171,29 +1217,26 @@ export default function AdminVisitorsPage() {
               </svg>
 
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                <span className="font-heading font-extrabold text-xl text-gray-900 leading-tight">
+                <span className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 leading-tight">
                   {deviceTotalFormatted}
                 </span>
                 <span className="text-[10px] text-gray-400 font-subheading font-medium">Total</span>
               </div>
             </div>
 
-            {/* Legend */}
-            <div className="space-y-2.5 w-full text-xs font-subheading">
-              {devicesData.map((dev, idx) => {
-                const Icon = dev.icon;
-                return (
-                  <div key={idx} className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: dev.color }} />
-                      <span className="text-gray-700 font-medium">{dev.name}</span>
-                    </div>
-                    <span className="font-bold text-gray-900">
-                      {dev.count} <span className="text-gray-400 font-normal">({dev.pct})</span>
-                    </span>
+            {/* Full-width Legend List */}
+            <div className="w-full space-y-1.5 pt-2 border-t border-gray-100 text-xs font-subheading">
+              {devicesData.map((dev, idx) => (
+                <div key={idx} className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: dev.color }} />
+                    <span className="text-gray-700 font-medium truncate text-xs">{dev.name}</span>
                   </div>
-                );
-              })}
+                  <span className="font-bold text-gray-900 shrink-0 text-right text-xs">
+                    {dev.count} <span className="text-gray-400 font-normal text-[11px]">({dev.pct})</span>
+                  </span>
+                </div>
+              ))}
             </div>
 
           </div>
@@ -1204,20 +1247,20 @@ export default function AdminVisitorsPage() {
 
 
       {/* ═════════════════════════════════════════════════════════════════
-          6. ALL COUNTRIES MODAL (Ultra-Clean, High-Res Flags, No Scrollbar)
+          6. ALL COUNTRIES MODAL (Ultra-Clean, High-Density, Spacious Modal)
           ═════════════════════════════════════════════════════════════════ */}
       {showAllCountriesModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full shadow-2xl space-y-5 border border-gray-100 max-h-[88vh] flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-5 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-3xl lg:max-w-4xl w-full shadow-2xl space-y-4 border border-gray-100 max-h-[90vh] flex flex-col">
 
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+            <div className="flex items-center justify-between pb-3.5 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark shrink-0 shadow-2xs">
                   <Globe className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-lg text-gray-900 tracking-tight">
+                  <h3 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                     All Country Traffic Distribution
                   </h3>
                   <p className="text-xs text-gray-500 font-subheading">
@@ -1230,7 +1273,7 @@ export default function AdminVisitorsPage() {
                   setShowAllCountriesModal(false);
                   setCountrySearchQuery("");
                 }}
-                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1244,12 +1287,12 @@ export default function AdminVisitorsPage() {
                 value={countrySearchQuery}
                 onChange={(e) => setCountrySearchQuery(e.target.value)}
                 placeholder="Search country or code (e.g. UAE, India, US)..."
-                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
+                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-10 pr-4 py-2 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
               />
             </div>
 
-            {/* Countries List (Hidden Scrollbar + Smooth Scroll) */}
-            <div className="overflow-y-auto flex-1 space-y-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
+            {/* Countries List (Compact High-Density Rows) */}
+            <div className="overflow-y-auto flex-1 space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
               {allCountriesData
                 .filter(
                   (c) =>
@@ -1259,10 +1302,10 @@ export default function AdminVisitorsPage() {
                 .map((c, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-2xl bg-gray-50/60 hover:bg-[#fdfaf0]/70 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-4 transition-all duration-150"
+                    className="p-2.5 sm:p-3 rounded-xl bg-gray-50/70 hover:bg-[#fdfaf0]/80 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-3 sm:gap-4 transition-all duration-150"
                   >
                     {/* Country Info & Rank */}
-                    <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={`w-6 h-6 rounded-lg flex items-center justify-center font-heading text-[11px] font-bold shrink-0 ${
                           idx === 0
@@ -1276,21 +1319,21 @@ export default function AdminVisitorsPage() {
                       >
                         {idx + 1}
                       </span>
-                      <CountryFlag code={c.code} name={c.country} className="w-6 h-4.5 rounded-xs" />
+                      <CountryFlag code={c.code} name={c.country} className="w-5 h-3.5 sm:w-6 sm:h-4 rounded-xs shrink-0 shadow-2xs" />
                       <div className="min-w-0">
-                        <p className="font-heading font-bold text-xs sm:text-sm text-gray-900 truncate">
+                        <p className="font-heading font-bold text-xs sm:text-[13.5px] text-gray-900 truncate leading-snug">
                           {c.country}
                         </p>
-                        <span className="inline-block px-1.5 py-0.5 bg-gray-200/70 text-gray-600 rounded text-[9px] font-mono font-semibold uppercase mt-0.5">
+                        <span className="inline-block px-1.5 py-0.2 bg-gray-200/70 text-gray-600 rounded text-[9.5px] font-mono font-semibold uppercase mt-0.5">
                           ISO: {c.code}
                         </span>
                       </div>
                     </div>
 
                     {/* Visitors Count, Percentage & Progress Bar */}
-                    <div className="flex items-center gap-5 shrink-0 text-right">
+                    <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-right">
                       {/* Mini Visual Progress Bar */}
-                      <div className="hidden sm:flex flex-col items-end gap-1 w-24">
+                      <div className="hidden sm:flex flex-col items-end gap-1 w-20 sm:w-28">
                         <div className="w-full bg-gray-200/80 rounded-full h-1.5 overflow-hidden">
                           <div
                             className="bg-gold-main h-full rounded-full transition-all duration-500"
@@ -1299,12 +1342,12 @@ export default function AdminVisitorsPage() {
                         </div>
                       </div>
 
-                      <div className="min-w-[85px]">
-                        <p className="font-heading font-extrabold text-xs sm:text-sm text-gray-900">
-                          {c.count} <span className="text-[10px] font-medium text-gray-500">visitors</span>
+                      <div className="min-w-[80px] sm:min-w-[90px] text-right">
+                        <p className="font-heading font-bold text-xs sm:text-sm text-gray-900 leading-tight">
+                          {c.count} <span className="text-[10px] font-normal text-gray-500">visitors</span>
                         </p>
-                        <p className="text-xs font-bold text-gold-dark">
-                          {c.pct} <span className="text-[10px] font-medium text-gray-400">share</span>
+                        <p className="text-xs font-bold text-gold-dark mt-0.5">
+                          {c.pct} <span className="text-[10px] font-normal text-gray-400">share</span>
                         </p>
                       </div>
                     </div>
@@ -1313,7 +1356,7 @@ export default function AdminVisitorsPage() {
             </div>
 
             {/* Modal Bottom Footer */}
-            <div className="pt-3.5 border-t border-gray-100 flex items-center justify-between">
+            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
               <span className="text-xs font-subheading text-gray-500">
                 Showing <span className="font-bold text-gray-800">{allCountriesData.length} countries</span> tracked worldwide
               </span>
@@ -1322,7 +1365,7 @@ export default function AdminVisitorsPage() {
                   setShowAllCountriesModal(false);
                   setCountrySearchQuery("");
                 }}
-                className="px-6 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-gray-900 hover:bg-black text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer"
               >
                 Close
               </button>
@@ -1333,20 +1376,20 @@ export default function AdminVisitorsPage() {
       )}
 
       {/* ═════════════════════════════════════════════════════════════════
-          7. ALL TOP PAGES MODAL (Ultra-Clean, Route URLs, No Scrollbar)
+          7. ALL TOP PAGES MODAL (Ultra-Clean, High-Density, Spacious Modal)
           ═════════════════════════════════════════════════════════════════ */}
       {showAllPagesModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full shadow-2xl space-y-5 border border-gray-100 max-h-[88vh] flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-5 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-5 sm:p-6 max-w-3xl lg:max-w-4xl w-full shadow-2xl space-y-4 border border-gray-100 max-h-[90vh] flex flex-col">
 
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+            <div className="flex items-center justify-between pb-3.5 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-[#fdfaf0] border border-gold-main/30 flex items-center justify-center text-gold-dark shrink-0 shadow-2xs">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-lg text-gray-900 tracking-tight">
+                  <h3 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                     All Top Pages Performance
                   </h3>
                   <p className="text-xs text-gray-500 font-subheading">
@@ -1359,7 +1402,7 @@ export default function AdminVisitorsPage() {
                   setShowAllPagesModal(false);
                   setPageSearchQuery("");
                 }}
-                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1373,12 +1416,12 @@ export default function AdminVisitorsPage() {
                 value={pageSearchQuery}
                 onChange={(e) => setPageSearchQuery(e.target.value)}
                 placeholder="Search page name or URL path (e.g. Products, About, Contact)..."
-                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
+                className="w-full bg-gray-50/80 border border-gray-200 rounded-xl pl-10 pr-4 py-2 text-xs font-subheading font-medium text-gray-900 placeholder:text-gray-400 focus:outline-hidden focus:border-gold-main focus:bg-white transition-all"
               />
             </div>
 
-            {/* Pages List (Hidden Scrollbar + Smooth Scroll) */}
-            <div className="overflow-y-auto flex-1 space-y-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
+            {/* Pages List (Compact High-Density Rows) */}
+            <div className="overflow-y-auto flex-1 space-y-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5">
               {allPagesData
                 .filter(
                   (p) =>
@@ -1388,10 +1431,10 @@ export default function AdminVisitorsPage() {
                 .map((page, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-2xl bg-gray-50/60 hover:bg-[#fdfaf0]/70 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-4 transition-all duration-150"
+                    className="p-2.5 sm:p-3 rounded-xl bg-gray-50/70 hover:bg-[#fdfaf0]/80 border border-gray-100 hover:border-gold-main/30 flex items-center justify-between gap-3 sm:gap-4 transition-all duration-150"
                   >
                     {/* Page Label & Route */}
-                    <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={`w-6 h-6 rounded-lg flex items-center justify-center font-heading text-[11px] font-bold shrink-0 ${
                           idx === 0
@@ -1406,7 +1449,7 @@ export default function AdminVisitorsPage() {
                         {idx + 1}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-heading font-bold text-xs sm:text-sm text-gray-900 truncate">
+                        <p className="font-heading font-bold text-xs sm:text-[13.5px] text-gray-900 truncate leading-snug">
                           {page.label}
                         </p>
                         <p className="text-[11px] text-gray-500 font-mono truncate mt-0.5">
@@ -1416,9 +1459,9 @@ export default function AdminVisitorsPage() {
                     </div>
 
                     {/* Page Views, Share & Progress Bar */}
-                    <div className="flex items-center gap-5 shrink-0 text-right">
+                    <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-right">
                       {/* Mini Visual Progress Bar */}
-                      <div className="hidden sm:flex flex-col items-end gap-1 w-24">
+                      <div className="hidden sm:flex flex-col items-end gap-1 w-20 sm:w-28">
                         <div className="w-full bg-gray-200/80 rounded-full h-1.5 overflow-hidden">
                           <div
                             className="bg-gold-main h-full rounded-full transition-all duration-500"
@@ -1427,12 +1470,12 @@ export default function AdminVisitorsPage() {
                         </div>
                       </div>
 
-                      <div className="min-w-[85px]">
-                        <p className="font-heading font-extrabold text-xs sm:text-sm text-gray-900">
-                          {page.views} <span className="text-[10px] font-medium text-gray-500">views</span>
+                      <div className="min-w-[80px] sm:min-w-[90px] text-right">
+                        <p className="font-heading font-bold text-xs sm:text-sm text-gray-900 leading-tight">
+                          {page.views} <span className="text-[10px] font-normal text-gray-500">views</span>
                         </p>
-                        <p className="text-xs font-bold text-gold-dark">
-                          {page.pct} <span className="text-[10px] font-medium text-gray-400">traffic</span>
+                        <p className="text-xs font-bold text-gold-dark mt-0.5">
+                          {page.pct} <span className="text-[10px] font-normal text-gray-400">traffic</span>
                         </p>
                       </div>
                     </div>
@@ -1441,7 +1484,7 @@ export default function AdminVisitorsPage() {
             </div>
 
             {/* Modal Bottom Footer */}
-            <div className="pt-3.5 border-t border-gray-100 flex items-center justify-between">
+            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
               <span className="text-xs font-subheading text-gray-500">
                 Showing <span className="font-bold text-gray-800">{allPagesData.length} active pages</span>
               </span>
@@ -1450,7 +1493,7 @@ export default function AdminVisitorsPage() {
                   setShowAllPagesModal(false);
                   setPageSearchQuery("");
                 }}
-                className="px-6 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-gray-900 hover:bg-black text-white font-heading font-bold text-xs shadow-md transition-all cursor-pointer"
               >
                 Close
               </button>

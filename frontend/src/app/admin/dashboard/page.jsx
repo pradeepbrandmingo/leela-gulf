@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { apiRequest } from "@/config/api";
 import {
@@ -18,7 +18,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Check,
-  X
+  X,
+  RefreshCw,
 } from "lucide-react";
 
 /**
@@ -253,6 +254,7 @@ export default function AdminDashboardPage() {
   const [analyticsData, setAnalyticsData] = useState(null);
   const [visitorsChartStats, setVisitorsChartStats] = useState(null);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Map widget timeframe to API range
   const mapTimeframeToRange = (tf) => {
@@ -263,93 +265,111 @@ export default function AdminDashboardPage() {
     return tf || "Last 7 days";
   };
 
-  // Main Dashboard Stats Loader
+  // Main Dashboard Stats Loader (Silent Background + Manual Trigger)
+  const fetchDashboardData = useCallback(async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    const startTime = Date.now();
+    try {
+      const leadParams = ["limit=5", `_t=${Date.now()}`];
+      if (dateBounds.start) leadParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
+      if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
+      const leadQuery = `?${leadParams.join("&")}`;
+
+      let analyticsQuery = `?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
+      if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
+        analyticsQuery += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
+      }
+
+      const [leadsRes, productsRes, blogsRes, eventsRes, analyticsRes] = await Promise.allSettled([
+        apiRequest(`/leads${leadQuery}`, { method: "GET" }),
+        apiRequest(`/products?limit=1&_t=${Date.now()}`, { method: "GET" }),
+        apiRequest(`/blogs?limit=5&_t=${Date.now()}`, { method: "GET" }),
+        apiRequest(`/events?limit=1&_t=${Date.now()}`, { method: "GET" }),
+        apiRequest(`/analytics/stats${analyticsQuery}`, { method: "GET" }),
+      ]);
+
+      if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
+        setDbLeadsTotal(leadsRes.value.total ?? 0);
+        setDbLeadsList(leadsRes.value.leads || []);
+      }
+
+      if (productsRes.status === "fulfilled" && productsRes.value?.success) {
+        const count =
+          productsRes.value.pagination?.total ??
+          (Array.isArray(productsRes.value.data) ? productsRes.value.data.length : 0);
+        setDbProductsTotal(count);
+      } else {
+        setDbProductsTotal(0);
+      }
+
+      if (blogsRes.status === "fulfilled" && blogsRes.value?.success) {
+        const bCount =
+          blogsRes.value.pagination?.total ??
+          (Array.isArray(blogsRes.value.data) ? blogsRes.value.data.length : 0);
+        setDbBlogsTotal(bCount);
+        setDbBlogsList(Array.isArray(blogsRes.value.data) ? blogsRes.value.data : []);
+      } else {
+        setDbBlogsTotal(0);
+        setDbBlogsList([]);
+      }
+
+      if (eventsRes.status === "fulfilled" && eventsRes.value?.success) {
+        const eCount =
+          eventsRes.value.total ??
+          eventsRes.value.count ??
+          (Array.isArray(eventsRes.value.data) ? eventsRes.value.data.length : 0);
+        setDbEventsTotal(eCount);
+      } else {
+        setDbEventsTotal(0);
+      }
+
+      if (analyticsRes.status === "fulfilled" && analyticsRes.value?.success) {
+        setAnalyticsData(analyticsRes.value);
+      }
+    } catch (err) {
+      console.warn("Could not fetch dashboard live stats:", err);
+    } finally {
+      setIsLoadingStats(false);
+      if (isManual) {
+        const elapsed = Date.now() - startTime;
+        const remainingDelay = Math.max(0, 600 - elapsed);
+        setTimeout(() => {
+          setIsRefreshing(false);
+        }, remainingDelay);
+      }
+    }
+  }, [dateBounds, selectedFilterOption, customStartDate, customEndDate]);
+
+  // Main Dashboard Stats Loader Effect (Auto 8s polling + Tab Focus)
   useEffect(() => {
     let isCancelled = false;
 
-    async function loadDashboardData() {
-      try {
-        const leadParams = ["limit=5"];
-        if (dateBounds.start) leadParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
-        if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
-        const leadQuery = `?${leadParams.join("&")}`;
+    fetchDashboardData(false);
 
-        let analyticsQuery = `?range=${encodeURIComponent(selectedFilterOption)}`;
-        if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
-          analyticsQuery += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
-        }
-
-        const [leadsRes, productsRes, blogsRes, eventsRes, analyticsRes] = await Promise.allSettled([
-          apiRequest(`/leads${leadQuery}`, { method: "GET" }),
-          apiRequest(`/products?limit=1`, { method: "GET" }),
-          apiRequest(`/blogs?limit=5`, { method: "GET" }),
-          apiRequest(`/events?limit=1`, { method: "GET" }),
-          apiRequest(`/analytics/stats${analyticsQuery}`, { method: "GET" }),
-        ]);
-
-        if (isCancelled) return;
-
-        if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
-          setDbLeadsTotal(leadsRes.value.total ?? 0);
-          setDbLeadsList(leadsRes.value.leads || []);
-        }
-
-        if (productsRes.status === "fulfilled" && productsRes.value?.success) {
-          const count =
-            productsRes.value.pagination?.total ??
-            (Array.isArray(productsRes.value.data) ? productsRes.value.data.length : 0);
-          setDbProductsTotal(count);
-        } else {
-          setDbProductsTotal(0);
-        }
-
-        if (blogsRes.status === "fulfilled" && blogsRes.value?.success) {
-          const bCount =
-            blogsRes.value.pagination?.total ??
-            (Array.isArray(blogsRes.value.data) ? blogsRes.value.data.length : 0);
-          setDbBlogsTotal(bCount);
-          setDbBlogsList(Array.isArray(blogsRes.value.data) ? blogsRes.value.data : []);
-        } else {
-          setDbBlogsTotal(0);
-          setDbBlogsList([]);
-        }
-
-        if (eventsRes.status === "fulfilled" && eventsRes.value?.success) {
-          const eCount =
-            eventsRes.value.total ??
-            eventsRes.value.count ??
-            (Array.isArray(eventsRes.value.data) ? eventsRes.value.data.length : 0);
-          setDbEventsTotal(eCount);
-        } else {
-          setDbEventsTotal(0);
-        }
-
-        if (analyticsRes.status === "fulfilled" && analyticsRes.value?.success) {
-          setAnalyticsData(analyticsRes.value);
-        }
-      } catch (err) {
-        if (!isCancelled) {
-          console.warn("Could not fetch dashboard live stats:", err);
-        }
-      } finally {
-        if (!isCancelled) {
-          setIsLoadingStats(false);
-        }
-      }
-    }
-
-    loadDashboardData();
-
-    // Auto-refresh polling every 30s
+    // Auto-refresh polling every 8s when visible
     const timer = setInterval(() => {
-      loadDashboardData();
-    }, 30000);
+      if (document.visibilityState === "visible") {
+        fetchDashboardData(false);
+      }
+    }, 8000);
+
+    // Instant Sync on Tab Focus / Return to Window
+    const handleFocus = () => {
+      if (document.visibilityState === "visible") {
+        fetchDashboardData(false);
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleFocus);
 
     return () => {
       isCancelled = true;
       clearInterval(timer);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleFocus);
     };
-  }, [dateBounds, selectedFilterOption, customStartDate, customEndDate]);
+  }, [fetchDashboardData]);
 
   // Load specific Visitors Overview chart data when timeframe dropdown changes
   useEffect(() => {
@@ -682,6 +702,24 @@ export default function AdminDashboardPage() {
               })}
             </div>
           )}
+          {/* Live Sync Pulse Indicator */}
+          <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-heading font-semibold shadow-2xs select-none">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Live Sync</span>
+          </div>
+
+          {/* Real-time Manual Refresh Button */}
+          <button
+            onClick={() => fetchDashboardData(true)}
+            disabled={isRefreshing}
+            title="Refresh live dashboard metrics"
+            className="p-2 bg-white border border-gray-200 hover:border-gold-main/50 rounded-xl text-gray-700 hover:text-gold-dark shadow-xs transition-all cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-gold-dark" : ""}`} />
+          </button>
         </div>
       </div>
 
