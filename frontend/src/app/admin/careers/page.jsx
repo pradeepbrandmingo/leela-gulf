@@ -385,6 +385,63 @@ export default function AdminCareersPage() {
     }
   };
 
+  // Select All Applications Handlers
+  const handleSelectAllApps = (e) => {
+    if (e.target.checked) {
+      setSelectedAppIds(paginatedApps.map((a) => a._id || a.id));
+    } else {
+      setSelectedAppIds([]);
+    }
+  };
+
+  const handleToggleApp = (id) => {
+    setSelectedAppIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  // Bulk Delete Jobs
+  const handleBulkDeleteJobs = async () => {
+    if (selectedJobIds.length === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedJobIds.length} selected job opening(s)?`)) return;
+
+    setIsDeleting(true);
+    try {
+      await Promise.allSettled(
+        selectedJobIds.map((id) => apiRequest(`/careers/jobs/${id}`, { method: "DELETE" }))
+      );
+      setJobsList((prev) => prev.filter((j) => !selectedJobIds.includes(j._id || j.id)));
+      setSelectedJobIds([]);
+    } catch (err) {
+      console.error("Bulk delete jobs error:", err);
+      setJobsList((prev) => prev.filter((j) => !selectedJobIds.includes(j._id || j.id)));
+      setSelectedJobIds([]);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Bulk Delete Applications
+  const handleBulkDeleteApps = async () => {
+    if (selectedAppIds.length === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedAppIds.length} selected candidate application(s)?`)) return;
+
+    setIsDeleting(true);
+    try {
+      await Promise.allSettled(
+        selectedAppIds.map((id) => apiRequest(`/careers/applications/${id}`, { method: "DELETE" }))
+      );
+      setApplicationsList((prev) => prev.filter((a) => !selectedAppIds.includes(a._id || a.id)));
+      setSelectedAppIds([]);
+    } catch (err) {
+      console.error("Bulk delete applications error:", err);
+      setApplicationsList((prev) => prev.filter((a) => !selectedAppIds.includes(a._id || a.id)));
+      setSelectedAppIds([]);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   // Delete Confirm
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
@@ -632,6 +689,34 @@ export default function AdminCareersPage() {
 
             </div>
           </div>
+
+          {/* ── BULK ACTION BAR (JOBS) ── */}
+          {selectedJobIds.length > 0 && (
+            <div className="bg-[#11131a] text-white px-4 py-2.5 rounded-xl flex items-center justify-between shadow-lg animate-[fadeIn_0.15s_ease-out]">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-gold-main animate-pulse" />
+                <span className="text-xs font-bold font-heading">
+                  {selectedJobIds.length} job opening(s) selected
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleBulkDeleteJobs}
+                  disabled={isDeleting}
+                  className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete Selected</span>
+                </button>
+                <button
+                  onClick={() => setSelectedJobIds([])}
+                  className="p-1 hover:bg-white/10 rounded text-gray-400 hover:text-white cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* ── JOBS DATA TABLE ── */}
           <div className="bg-white border border-gray-200/90 rounded-2xl shadow-2xs overflow-hidden">
@@ -1033,13 +1118,52 @@ export default function AdminCareersPage() {
             </div>
           </div>
 
+          {/* ── BULK ACTION BAR (APPLICATIONS) ── */}
+          {selectedAppIds.length > 0 && (
+            <div className="bg-[#11131a] text-white px-4 py-2.5 rounded-xl flex items-center justify-between shadow-lg animate-[fadeIn_0.15s_ease-out]">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-gold-main animate-pulse" />
+                <span className="text-xs font-bold font-heading">
+                  {selectedAppIds.length} candidate application(s) selected
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleBulkDeleteApps}
+                  disabled={isDeleting}
+                  className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete Selected</span>
+                </button>
+                <button
+                  onClick={() => setSelectedAppIds([])}
+                  className="p-1 hover:bg-white/10 rounded text-gray-400 hover:text-white cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* ── APPLICATIONS DATA TABLE (No Status Column) ── */}
           <div className="bg-white border border-gray-200/90 rounded-2xl shadow-2xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50/70 text-xs font-heading font-bold text-gray-700 uppercase tracking-wider">
-                    <th className="p-3 pl-4">Candidate Name & Contact</th>
+                    <th className="p-3 pl-4 w-10">
+                      <input
+                        type="checkbox"
+                        checked={
+                          paginatedApps.length > 0 &&
+                          selectedAppIds.length === paginatedApps.length
+                        }
+                        onChange={handleSelectAllApps}
+                        className="rounded-sm border-gray-300 text-gold-main focus:ring-gold-main cursor-pointer"
+                      />
+                    </th>
+                    <th className="p-3">Candidate Name & Contact</th>
                     <th className="p-3">Post Applied For</th>
                     <th className="p-3">Qualifications & Experience</th>
                     <th className="p-3">Resume PDF</th>
@@ -1051,7 +1175,7 @@ export default function AdminCareersPage() {
                 <tbody className="divide-y divide-gray-100 text-xs font-subheading">
                   {paginatedApps.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="text-center py-16 text-gray-400">
+                      <td colSpan={7} className="text-center py-16 text-gray-400">
                         <Users className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                         <p className="font-heading font-bold text-sm text-gray-700">No Candidate Applications Found</p>
                         <p className="text-xs text-gray-400 mt-0.5">Adjust your search or filters to see matching candidates.</p>
@@ -1062,9 +1186,18 @@ export default function AdminCareersPage() {
                       const id = app._id || app.id;
                       return (
                         <tr key={id} className="hover:bg-gray-50/80 transition-colors">
+                          {/* Checkbox */}
+                          <td className="p-3 pl-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedAppIds.includes(id)}
+                              onChange={() => handleToggleApp(id)}
+                              className="rounded-sm border-gray-300 text-gold-main focus:ring-gold-main cursor-pointer"
+                            />
+                          </td>
                           
                           {/* Candidate Name, Email, Phone, Location */}
-                          <td className="p-3 pl-4">
+                          <td className="p-3">
                             <div>
                               <h4 className="font-heading font-bold text-sm text-gray-900 leading-snug">
                                 {app.firstName} {app.lastName}

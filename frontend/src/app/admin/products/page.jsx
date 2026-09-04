@@ -407,6 +407,30 @@ export default function AdminProductsPage() {
     );
   };
 
+  // Bulk Delete Products Handler
+  const handleBulkDelete = async () => {
+    if (selectedProductIds.length === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedProductIds.length} selected product(s)?`)) return;
+
+    setIsDeleting(true);
+    try {
+      await Promise.allSettled(
+        selectedProductIds.map((id) => apiRequest(`/products/${id}`, { method: "DELETE" }))
+      );
+      setProductsList((prev) => prev.filter((p) => !selectedProductIds.includes(p._id)));
+      const count = selectedProductIds.length;
+      setSelectedProductIds([]);
+      setToastMsg(`${count} product(s) deleted successfully!`);
+      setTimeout(() => setToastMsg(""), 3500);
+    } catch (err) {
+      console.error("Bulk delete error:", err);
+      setProductsList((prev) => prev.filter((p) => !selectedProductIds.includes(p._id)));
+      setSelectedProductIds([]);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-5 pb-10">
       {/* ─────────────────────────────────────────────────────────────────────────────
@@ -609,6 +633,34 @@ export default function AdminProductsPage() {
           <span>Clear Filters</span>
         </button>
       </div>
+
+      {/* ── BULK ACTION BAR ── */}
+      {selectedProductIds.length > 0 && (
+        <div className="bg-[#11131a] text-white px-4 py-2.5 rounded-xl flex items-center justify-between shadow-lg animate-[fadeIn_0.15s_ease-out]">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-gold-main animate-pulse" />
+            <span className="text-xs font-bold font-heading">
+              {selectedProductIds.length} product(s) selected
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleBulkDelete}
+              disabled={isDeleting}
+              className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete Selected</span>
+            </button>
+            <button
+              onClick={() => setSelectedProductIds([])}
+              className="p-1 hover:bg-white/10 rounded text-gray-400 hover:text-white cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ─────────────────────────────────────────────────────────────────────────────
           4. PRODUCTION ULTRA-COMPACT HIGH-DENSITY PRODUCTS TABLE

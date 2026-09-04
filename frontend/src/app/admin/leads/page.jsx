@@ -291,6 +291,7 @@ export default function AdminLeadsPage() {
   const [totalLeadsCount, setTotalLeadsCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   // Lead Action Modals
@@ -432,6 +433,28 @@ export default function AdminLeadsPage() {
     setSelectedLeadIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  };
+
+  // Bulk Delete Leads Handler
+  const handleBulkDelete = async () => {
+    if (selectedLeadIds.length === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedLeadIds.length} selected lead(s)?`)) return;
+
+    setIsDeleting(true);
+    try {
+      await Promise.allSettled(
+        selectedLeadIds.map((id) => apiRequest(`/leads/${id}`, { method: "DELETE" }))
+      );
+      setLeadsData((prev) => prev.filter((item) => !selectedLeadIds.includes(item._id)));
+      setTotalLeadsCount((prev) => Math.max(0, prev - selectedLeadIds.length));
+      setSelectedLeadIds([]);
+    } catch (err) {
+      console.error("Bulk delete leads error:", err);
+      setLeadsData((prev) => prev.filter((item) => !selectedLeadIds.includes(item._id)));
+      setSelectedLeadIds([]);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Dynamic Page Sources extracted from actual database leads
@@ -738,6 +761,34 @@ export default function AdminLeadsPage() {
             <span>Clear Filters</span>
           </button>
         </div>
+
+        {/* ── BULK ACTION BAR ── */}
+        {selectedLeadIds.length > 0 && (
+          <div className="bg-[#11131a] text-white px-4 py-2.5 rounded-xl flex items-center justify-between shadow-lg animate-[fadeIn_0.15s_ease-out]">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gold-main animate-pulse" />
+              <span className="text-xs font-bold font-heading">
+                {selectedLeadIds.length} lead(s) selected
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleBulkDelete}
+                disabled={isDeleting}
+                className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Selected</span>
+              </button>
+              <button
+                onClick={() => setSelectedLeadIds([])}
+                className="p-1 hover:bg-white/10 rounded text-gray-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ─────────────────────────────────────────────────────────────────────────────
             4. CLEAN HIGH-DENSITY LEADS TABLE
