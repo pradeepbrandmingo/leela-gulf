@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { useEffect, useRef, useState } from "react";
 
@@ -95,12 +96,19 @@ export default function CareersHero({ onScrollToRoles }) {
             >
               {/* Top Breadcrumb Badge */}
               <div
-                className={`flex items-center gap-2 mb-1.5 sm:mb-4 transition-all duration-700 delay-200 ease-out ${
+                className={`flex items-center gap-1.5 mb-1.5 sm:mb-4 transition-all duration-700 delay-200 ease-out font-heading font-bold text-[9px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase drop-shadow ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
-                <span className="font-heading font-bold text-[9px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] text-gold-light uppercase drop-shadow">
-                  {isRTL ? "الرئيسية / الوظائف" : "HOME / CAREERS"}
+                <Link
+                  href="/"
+                  className="text-gold-light hover:text-white hover:underline transition-colors cursor-pointer"
+                >
+                  {isRTL ? "الرئيسية" : "HOME"}
+                </Link>
+                <span className="text-gold-main/60">/</span>
+                <span className="text-gold-light">
+                  {isRTL ? "الوظائف" : "CAREERS"}
                 </span>
               </div>
 

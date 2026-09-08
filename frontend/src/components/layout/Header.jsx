@@ -55,6 +55,11 @@ export default function Header() {
       href: "/knowledge-center",
       hasDot: true,
     },
+    {
+      name: isRTL ? "المواد الصيدلانية الفعالة" : "Active Pharmaceutical Ingredients",
+      href: "/active-pharmaceutical-ingredients",
+      hasDot: false,
+    },
     { name: isRTL ? "الوظائف" : "Careers", href: "/careers", hasDot: false },
     { name: isRTL ? "الفعاليات" : "Events", href: "/events", hasDot: false },
     { name: isRTL ? "اتصل بنا" : "Contact", href: "/contact", hasDot: false },
@@ -118,7 +123,7 @@ export default function Header() {
           {/* Slide-over Card Container */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[320px] sm:max-w-[360px] h-auto max-h-[90vh] bg-[var(--color-primary)] border border-[#393C3F]/70 rounded-tl-[36px] rounded-bl-3xl p-6 md:p-8 shadow-2xl flex flex-col justify-between animate-section-reveal relative overflow-y-auto"
+            className="w-full max-w-[320px] sm:max-w-[360px] h-auto max-h-[90vh] bg-[var(--color-primary)] border border-[#393C3F]/70 rounded-tl-[36px] rounded-bl-3xl p-6 md:p-8 shadow-2xl flex flex-col justify-between animate-section-reveal relative overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {/* Close Icon Top Right */}
             <button

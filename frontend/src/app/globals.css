@@ -72,6 +72,23 @@
 }
 
 /* --------------------------------------------------------------------------
+   RESPONSIVE TYPOGRAPHY SCALING (Mobile & Tablet Safe Fallbacks)
+   Ensures body and content never overpower headings on mobile screens
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  :root {
+    --heading-font-size: 32px;
+    --heading-line-height: 36px;
+    --subheading-font-size: 20px;
+    --subheading-line-height: 24px;
+    --body-font-size: 14px;
+    --body-line-height: 22px;
+    --caption-font-size: 12px;
+    --caption-line-height: 18px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    Local Font-Face Setup for Modulus Pro (Full OpenType Support)
    -------------------------------------------------------------------------- */
 @font-face {
@@ -550,6 +567,24 @@ p,
 
 @utility font-subheading {
   font-family: var(--font-family-subheading);
+}
+
+@utility text-card-title {
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  color: #ffffff;
+}
+
+@utility text-card-body {
+  font-family: var(--font-family-subheading);
+  font-weight: 400;
+  color: #9ca3af;
+  line-height: 1.5;
+}
+
+@utility text-card-badge {
+  font-family: monospace;
+  letter-spacing: 0.025em;
 }
 
 /* ==========================================================================

@@ -6,13 +6,11 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * KnowledgeCenterHero - Direction-Aware Hero Banner for Knowledge Center / Blog Page:
- * - Matches CareersHero exact dimensions, aspect ratio, and responsive scaling.
- * - LTR (English): Text & Dark Backdrop on LEFT (left-0), photo visible on RIGHT.
- * - RTL (Arabic): Text & Dark Backdrop on RIGHT (right-0), photo visible on LEFT.
- * - 100% Global Theme Colors & Running Gold Tokens.
+ * ApiHero - Hero Component for Active Pharmaceutical Ingredients Page
+ * - Standardized Responsive Layout & Hierarchy matching global Hero design standards.
+ * - 100% Global Typography & Gold Tokens from globals.css.
  */
-export default function KnowledgeCenterHero() {
+export default function ApiHero() {
   const { isRTL } = useLanguage();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -41,7 +39,7 @@ export default function KnowledgeCenterHero() {
       className="relative w-full bg-[var(--color-primary)] pt-16 sm:pt-24 md:pt-28 pb-4 sm:pb-12 overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-3 sm:px-6 md:px-10 lg:px-16 xl:px-20 relative z-10">
-        {/* Subtle Ambient Gold Glow for Depth */}
+        {/* Subtle Ambient Gold Glow */}
         <div className="absolute -top-16 -left-16 w-96 h-96 bg-gold-main/[0.07] rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -bottom-16 -right-16 w-96 h-96 bg-gold-main/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
@@ -54,13 +52,13 @@ export default function KnowledgeCenterHero() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          {/* Aspect Ratio Container */}
-          <div className="relative w-full aspect-[1.7/1] sm:aspect-[2.4/1] md:aspect-[2.6/1] lg:aspect-[2.9/1] min-h-[280px] sm:min-h-[420px] md:min-h-[460px]">
+          {/* Responsive Height & Aspect Ratio Container */}
+          <div className="relative w-full min-h-[380px] sm:min-h-[420px] md:min-h-[460px] sm:aspect-[2.4/1] md:aspect-[2.6/1] lg:aspect-[2.9/1]">
 
-            {/* Background Image (Direction-Aware Object Position) */}
+            {/* Background Molecular / Lab Image */}
             <Image
-              src="/images/careers/careers.avif"
-              alt="Chemical Industry Insights & Innovations"
+              src="/images/Active Pharmaceutical Ingredients/Active Pharmaceutical Ingredients herosection.jpg"
+              alt="Active Pharmaceutical Ingredients - Leela Gulf"
               fill
               className={`object-cover opacity-90 sm:opacity-100 ${
                 isRTL ? "object-left sm:object-left" : "object-right sm:object-right"
@@ -75,29 +73,28 @@ export default function KnowledgeCenterHero() {
                 ═══════════════════════════════════════════ */}
             {isRTL ? (
               /* ARABIC (RTL): Dark Overlay starts from RIGHT and fades to LEFT */
-              <div className="absolute top-0 bottom-0 right-0 left-auto w-full sm:w-[85%] md:w-[80%] lg:w-[70%] bg-gradient-to-l from-[var(--color-card-dark)] via-[var(--color-card-dark)]/90 via-45% to-transparent z-0" />
+              <div className="absolute inset-0 bg-gradient-to-l from-[var(--color-card-dark)] via-[var(--color-card-dark)]/95 sm:via-[var(--color-card-dark)]/90 via-60% sm:via-45% to-transparent z-0" />
             ) : (
               /* ENGLISH (LTR): Dark Overlay starts from LEFT and fades to RIGHT */
-              <div className="absolute top-0 bottom-0 left-0 right-auto w-full sm:w-[85%] md:w-[80%] lg:w-[70%] bg-gradient-to-r from-[var(--color-card-dark)] via-[var(--color-card-dark)]/90 via-45% to-transparent z-0" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-card-dark)] via-[var(--color-card-dark)]/95 sm:via-[var(--color-card-dark)]/90 via-60% sm:via-45% to-transparent z-0" />
             )}
 
             {/* Mobile Top/Bottom Shadow */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-card-dark)]/80 via-transparent to-[var(--color-card-dark)]/30 sm:hidden z-0" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-card-dark)]/90 via-transparent to-[var(--color-card-dark)]/40 sm:hidden z-0" />
 
             {/* ═══════════════════════════════════════════
                 TEXT CONTENT OVERLAY CONTAINER
-                Matches Reference Screenshot 100%
                 ═══════════════════════════════════════════ */}
             <div
-              className={`absolute top-0 bottom-0 flex flex-col justify-center z-10 ${
+              className={`absolute inset-0 flex flex-col justify-center z-10 py-7 sm:py-0 ${
                 isRTL
-                  ? "right-0 left-auto w-full sm:w-[75%] md:w-[70%] lg:w-[62%] pr-5 sm:pr-10 md:pr-14 lg:pr-16 pl-4 text-right items-start"
-                  : "left-0 right-auto w-full sm:w-[75%] md:w-[70%] lg:w-[62%] pl-5 sm:pl-10 md:pl-14 lg:pl-16 pr-4 text-left items-start"
+                  ? "right-0 left-auto w-full sm:w-[80%] md:w-[75%] lg:w-[65%] pr-5 sm:pr-10 md:pr-14 lg:pr-16 pl-5 text-right items-start"
+                  : "left-0 right-auto w-full sm:w-[80%] md:w-[75%] lg:w-[65%] pl-5 sm:pl-10 md:pl-14 lg:pl-16 pr-5 text-left items-start"
               }`}
             >
               {/* Top Breadcrumb Badge */}
               <div
-                className={`flex items-center gap-1.5 mb-1.5 sm:mb-4 transition-all duration-700 delay-200 ease-out font-heading font-bold text-[9px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase drop-shadow ${
+                className={`flex items-center gap-1.5 mb-2 sm:mb-4 transition-all duration-700 delay-200 ease-out font-heading font-bold text-[9.5px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase drop-shadow ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
@@ -109,34 +106,43 @@ export default function KnowledgeCenterHero() {
                 </Link>
                 <span className="text-gold-main/60">/</span>
                 <span className="text-gold-light">
-                  {isRTL ? "مركز المعرفة" : "KNOWLEDGE CENTER"}
+                  {isRTL ? "المواد الصيدلانية الفعالة" : "ACTIVE PHARMACEUTICAL INGREDIENTS"}
                 </span>
               </div>
 
-              {/* Main Bold Heading (Matches Screenshot 100%) */}
+              {/* Main Heading (100% Global Typography & Sizing) */}
               <h1
-                className={`font-heading font-bold text-base sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.1rem] text-white leading-[1.18] sm:leading-[1.16] tracking-tight max-w-full sm:max-w-2xl md:max-w-3xl mb-2 sm:mb-5 transition-all duration-700 delay-400 ease-out drop-shadow-md ${
+                className={`font-heading font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.1rem] text-white leading-[1.2] sm:leading-[1.16] tracking-tight max-w-full sm:max-w-2xl md:max-w-3xl mb-2.5 sm:mb-5 transition-all duration-700 delay-400 ease-out drop-shadow-md ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
                 {isRTL ? (
                   <>
-                    <span className="block">استكشف أحدث</span>
+                    <span className="block">المواد الصيدلانية</span>
                     <span className="block">
-                      <span className="text-gradient-gold-animated">الرؤى والابتكارات</span>
+                      <span className="text-gradient-gold-animated">الفعالة (APIs)</span>
                     </span>
-                    <span className="block">في الصناعة الكيميائية</span>
                   </>
                 ) : (
                   <>
-                    <span className="block">Explore the Latest</span>
+                    <span className="block">ACTIVE PHARMACEUTICAL</span>
                     <span className="block">
-                      <span className="text-gradient-gold-animated">Insights & Innovations</span>
+                      <span className="text-gradient-gold-animated">INGREDIENTS</span>
                     </span>
-                    <span className="block">in the Chemical Industry</span>
                   </>
                 )}
               </h1>
+
+              {/* Description Subtitle */}
+              <p
+                className={`text-gray-300 font-subheading text-xs sm:text-sm md:text-base leading-relaxed sm:leading-relaxed max-w-full sm:max-w-xl md:max-w-2xl mb-3 sm:mb-6 transition-all duration-700 delay-500 ease-out ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+              >
+                {isRTL
+                  ? "اكتشف مجموعتنا الشاملة من المكونات الصيدلانية الفعالة عالية الجودة (APIs). يتم تصنيعها وفقًا لمعايير تنظيمية صارمة لضمان النقاء الفائق والاتساق والفعالية لتركيبات الرعاية الصحية العالمية."
+                  : "Discover our comprehensive range of high-quality Active Pharmaceutical Ingredients (APIs). Manufactured under stringent regulatory standards, we ensure uncompromising purity, consistency, and efficacy for global healthcare formulations."}
+              </p>
 
               {/* Gold Accent Dash */}
               <div className="w-8 sm:w-14 h-[2.5px] sm:h-[3px] bg-gradient-gold-animated rounded-full" />
