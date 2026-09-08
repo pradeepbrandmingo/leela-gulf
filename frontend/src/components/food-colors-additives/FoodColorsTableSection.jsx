@@ -277,17 +277,17 @@ export default function FoodColorsTableSection() {
                     className="group hover:bg-[#151822]/80 transition-colors duration-150"
                   >
                     {/* 1. SUPRA */}
-                    <td className="py-4 px-6">
+                    <td className="py-3.5 px-6">
                       {row.supra ? (
-                        <div className="flex items-center gap-3">
-                          {/* Rounded Square / Squircle Color Swatch */}
+                        <div className="flex items-center gap-3.5">
+                          {/* Rectangular Box Swatch */}
                           <span
-                            className="w-4 h-4 rounded-md shrink-0 shadow-sm ring-1 ring-white/10"
+                            className="w-10 h-6 sm:w-11 sm:h-6.5 rounded-sm shrink-0 shadow-md ring-1 ring-white/20 group-hover:scale-105 group-hover:ring-white/40 transition-all duration-200"
                             style={{
                               background: row.supra.gradient || row.supra.color,
                             }}
                           />
-                          <span className="text-white group-hover:text-gold-light transition-colors tracking-wide text-xs sm:text-[13.5px]">
+                          <span className="text-white group-hover:text-gold-light transition-colors tracking-wide text-xs sm:text-[13.5px] font-heading font-semibold">
                             {isRTL ? row.supra.arName : row.supra.name}
                           </span>
                         </div>
@@ -297,17 +297,17 @@ export default function FoodColorsTableSection() {
                     </td>
 
                     {/* 2. LAKE COLORS */}
-                    <td className="py-4 px-6">
+                    <td className="py-3.5 px-6">
                       {row.lake ? (
-                        <div className="flex items-center gap-3">
-                          {/* Rounded Square / Squircle Color Swatch */}
+                        <div className="flex items-center gap-3.5">
+                          {/* Rectangular Box Swatch */}
                           <span
-                            className="w-4 h-4 rounded-md shrink-0 shadow-sm ring-1 ring-white/10"
+                            className="w-10 h-6 sm:w-11 sm:h-6.5 rounded-sm shrink-0 shadow-md ring-1 ring-white/20 group-hover:scale-105 group-hover:ring-white/40 transition-all duration-200"
                             style={{
                               background: row.lake.gradient || row.lake.color,
                             }}
                           />
-                          <span className="text-white group-hover:text-gold-light transition-colors tracking-wide text-xs sm:text-[13.5px]">
+                          <span className="text-white group-hover:text-gold-light transition-colors tracking-wide text-xs sm:text-[13.5px] font-heading font-semibold">
                             {isRTL ? row.lake.arName : row.lake.name}
                           </span>
                         </div>
@@ -317,17 +317,17 @@ export default function FoodColorsTableSection() {
                     </td>
 
                     {/* 3. BLENDED */}
-                    <td className="py-4 px-6">
+                    <td className="py-3.5 px-6">
                       {row.blended ? (
-                        <div className="flex items-center gap-3">
-                          {/* Rounded Square / Squircle Color Swatch */}
+                        <div className="flex items-center gap-3.5">
+                          {/* Rectangular Box Swatch */}
                           <span
-                            className="w-4 h-4 rounded-md shrink-0 shadow-sm ring-1 ring-white/10"
+                            className="w-10 h-6 sm:w-11 sm:h-6.5 rounded-sm shrink-0 shadow-md ring-1 ring-white/20 group-hover:scale-105 group-hover:ring-white/40 transition-all duration-200"
                             style={{
                               background: row.blended.gradient || row.blended.color,
                             }}
                           />
-                          <span className="text-white group-hover:text-gold-light transition-colors tracking-wide text-xs sm:text-[13.5px]">
+                          <span className="text-white group-hover:text-gold-light transition-colors tracking-wide text-xs sm:text-[13.5px] font-heading font-semibold">
                             {isRTL ? row.blended.arName : row.blended.name}
                           </span>
                         </div>
@@ -354,10 +354,11 @@ export default function FoodColorsTableSection() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveMobileTab(tab.id)}
-                  className={`py-1.5 px-2 rounded-lg text-xs font-heading font-bold transition-all text-center ${activeMobileTab === tab.id
+                  className={`py-1.5 px-2 rounded-lg text-xs font-heading font-bold transition-all text-center ${
+                    activeMobileTab === tab.id
                       ? "bg-gradient-gold-animated text-black shadow-sm"
                       : "text-gray-400 hover:text-white"
-                    }`}
+                  }`}
                 >
                   {tab.label}
                 </button>
@@ -367,12 +368,12 @@ export default function FoodColorsTableSection() {
             {/* Mobile Cards List */}
             <div className="divide-y divide-[#1e212c]">
               {FOOD_COLORS_TABLE_DATA.map((row, idx) => (
-                <div key={idx} className="py-3 space-y-2">
+                <div key={idx} className="py-3 space-y-2.5">
                   {(activeMobileTab === "all" || activeMobileTab === "supra") && row.supra && (
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <span
-                          className="w-3.5 h-3.5 rounded-md shrink-0 shadow-sm ring-1 ring-white/10"
+                          className="w-9 h-5.5 rounded-sm shrink-0 shadow-md ring-1 ring-white/20"
                           style={{ background: row.supra.gradient || row.supra.color }}
                         />
                         <span className="font-heading font-bold text-xs sm:text-sm text-white">
@@ -387,9 +388,9 @@ export default function FoodColorsTableSection() {
 
                   {(activeMobileTab === "all" || activeMobileTab === "lake") && row.lake && (
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <span
-                          className="w-3.5 h-3.5 rounded-md shrink-0 shadow-sm ring-1 ring-white/10"
+                          className="w-9 h-5.5 rounded-sm shrink-0 shadow-md ring-1 ring-white/20"
                           style={{ background: row.lake.gradient || row.lake.color }}
                         />
                         <span className="font-heading font-bold text-xs sm:text-sm text-white">
@@ -404,9 +405,9 @@ export default function FoodColorsTableSection() {
 
                   {(activeMobileTab === "all") && row.blended && (
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <span
-                          className="w-3.5 h-3.5 rounded-md shrink-0 shadow-sm ring-1 ring-white/10"
+                          className="w-9 h-5.5 rounded-sm shrink-0 shadow-md ring-1 ring-white/20"
                           style={{ background: row.blended.gradient || row.blended.color }}
                         />
                         <span className="font-heading font-bold text-xs sm:text-sm text-white">

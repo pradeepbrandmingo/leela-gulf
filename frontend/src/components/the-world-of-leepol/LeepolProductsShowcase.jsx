@@ -43,113 +43,211 @@ export const LEEPOL_TABS_DATA = [
       {
         product: "Leepol® ET-1",
         application: "Thickeners",
-        arApplication: "مثخنات عالية الكفاءة",
+        arApplication: "مثخنات",
         description: "Transparent Gel",
-        arDescription: "جل شفاف ونقي",
+        arDescription: "جل شفاف",
+        appRowSpan: 1,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® ET-2",
         application: "Thickeners",
-        arApplication: "مثخنات عالية الكفاءة",
+        arApplication: "مثخنات",
         description: "Transparent Gel",
-        arDescription: "جل شفاف ونقي",
+        arDescription: "جل شفاف",
+        appRowSpan: 1,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 940",
-        application: "Rheology Modifier / Thickeners / Suspending-Agent / Stabilizer / Topical Application",
+        application: "Rheology Modifier Thickeners Suspending-Agent Stabilizer Topical Application",
         arApplication: "معدل لزوجة / مثخن / عامل تعليق / مثبت / استخدام موضعي",
         description: "Transparent Gel",
-        arDescription: "جل شفاف عالي اللزوجة",
+        arDescription: "جل شفاف",
+        appRowSpan: 6,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 980",
-        application: "Rheology Modifier / Thickeners / Suspending-Agent / Stabilizer / Topical Application",
+        application: "Rheology Modifier Thickeners Suspending-Agent Stabilizer Topical Application",
         arApplication: "معدل لزوجة / مثخن / عامل تعليق / مثبت / استخدام موضعي",
         description: "Benzene Free",
-        arDescription: "خالٍ تماماً من البنزين (Benzene-Free)",
+        arDescription: "خالٍ من البنزين",
+        appRowSpan: 0,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 934",
-        application: "Rheology Modifier / Thickeners / Suspending-Agent / Stabilizer / Topical Application",
+        application: "Rheology Modifier Thickeners Suspending-Agent Stabilizer Topical Application",
         arApplication: "معدل لزوجة / مثخن / عامل تعليق / مثبت / استخدام موضعي",
         description: "Opaque Gel",
-        arDescription: "جل معتم متماسك",
+        arDescription: "جل معتم",
+        appRowSpan: 0,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 974",
-        application: "Rheology Modifier / Thickeners / Suspending-Agent / Stabilizer / Topical Application",
+        application: "Rheology Modifier Thickeners Suspending-Agent Stabilizer Topical Application",
         arApplication: "معدل لزوجة / مثخن / عامل تعليق / مثبت / استخدام موضعي",
         description: "Benzene Free",
-        arDescription: "خالٍ تماماً من البنزين (Benzene-Free)",
+        arDescription: "خالٍ من البنزين",
+        appRowSpan: 0,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 941",
-        application: "Rheology Modifier / Thickeners / Suspending-Agent / Stabilizer / Topical Application",
+        application: "Rheology Modifier Thickeners Suspending-Agent Stabilizer Topical Application",
         arApplication: "معدل لزوجة / مثخن / عامل تعليق / مثبت / استخدام موضعي",
         description: "Low Viscous Clear Gel",
-        arDescription: "جل شفاف منخفض اللزوجة",
+        arDescription: "جل نقي منخفض اللزوجة",
+        appRowSpan: 0,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 971",
-        application: "Rheology Modifier / Thickeners / Suspending-Agent / Stabilizer / Topical Application",
+        application: "Rheology Modifier Thickeners Suspending-Agent Stabilizer Topical Application",
         arApplication: "معدل لزوجة / مثخن / عامل تعليق / مثبت / استخدام موضعي",
         description: "Benzene Free",
-        arDescription: "خالٍ تماماً من البنزين (Benzene-Free)",
+        arDescription: "خالٍ من البنزين",
+        appRowSpan: 0,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 934P",
-        application: "Oral Care Application / Controlled Release",
-        arApplication: "العناية بالفم / تحرير دوائي متحكم به",
+        application: "Oral Care Application Controlled Release",
+        arApplication: "تطبيقات العناية بالفم / تحرير متحكم به",
         description: "Special Grades for Internal Use in Pharmaceutical Formulation",
-        arDescription: "درجة خاصة للاستخدام الداخلي في المستحضرات الدوائية",
+        arDescription: "درجات خاصة للاستخدام الداخلي في التركيبات الصيدلانية",
+        appRowSpan: 3,
+        descRowSpan: 3,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 974P",
-        application: "Oral Care Application / Controlled Release",
-        arApplication: "العناية بالفم / تحرير دوائي متحكم به",
+        application: "Oral Care Application Controlled Release",
+        arApplication: "تطبيقات العناية بالفم / تحرير متحكم به",
         description: "Special Grades for Internal Use in Pharmaceutical Formulation",
-        arDescription: "درجة خاصة للاستخدام الداخلي في المستحضرات الدوائية",
+        arDescription: "درجات خاصة للاستخدام الداخلي في التركيبات الصيدلانية",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 971P",
-        application: "Oral Care Application / Controlled Release",
-        arApplication: "العناية بالفم / تحرير دوائي متحكم به",
+        application: "Oral Care Application Controlled Release",
+        arApplication: "تطبيقات العناية بالفم / تحرير متحكم به",
         description: "Special Grades for Internal Use in Pharmaceutical Formulation",
-        arDescription: "درجة خاصة للاستخدام الداخلي في المستحضرات الدوائية",
+        arDescription: "درجات خاصة للاستخدام الداخلي في التركيبات الصيدلانية",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 956",
-        application: "Efficient Rheology Modifier / Capable Of Providing High Viscosity Gel / Hand Sanitizer Hydroalcoholic Gel",
-        arApplication: "معدل لزوجة عالي الكفاءة / يوفر جل عالي الكثافة / معقمات اليدين الكحولية",
+        application: "Efficient rheology Modifier Capable Of Providing High Viscosity Gel, Hand Sanitizer, Hydroalcoholic Gel",
+        arApplication: "معدل لزوجة فعال يوفر جل عالي اللزوجة، معقم اليدين، جل كحولي مائي",
         description: "Cross-Linked Polyacrylate Acid",
-        arDescription: "حمض بولي أكريلات متقاطع الروابط",
+        arDescription: "حمض بولي أكريلات متصالب",
+        appRowSpan: 1,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 990",
-        application: "Viscosity Enhancer / Gelling Agent / Suspending Agent / Moisturising Capability",
-        arApplication: "محسن لزوجة / عامل هلامي / عامل تعليق / قدرة ترطيب فائقة",
+        application: "Viscosity Enhancer, Gelling Agent, Suspending Agent, Moisturizing Capability",
+        arApplication: "محسن لزوجة، عامل هلامي، عامل تعليق، قدرة ترطيب",
         description: "Cross-Linked Polyacrylate Polymer",
-        arDescription: "بوليمر بولي أكريلات متقاطع الروابط",
+        arDescription: "بوليمر بولي أكريلات متصالب",
+        appRowSpan: 1,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
       {
         product: "Leepol® 996",
-        application: "Excellent Thickening / Suspending Performance",
-        arApplication: "تثخين وتعليق ممتاز عالي الأداء",
+        application: "Excellent Thickening Suspending Performance",
+        arApplication: "أداء تثخين وتعليق ممتاز",
         description: "Cross-Linked Polyacrylate Polymer",
-        arDescription: "بوليمر بولي أكريلات متقاطع الروابط",
+        arDescription: "بوليمر بولي أكريلات متصالب",
+        appRowSpan: 1,
+        descRowSpan: 1,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® 912G",
+        application: "Free flowing Granular form for direct compression in pharmaceutical industry.",
+        arApplication: "شكل حبيبي حر التدفق للضغط المباشر في الصناعة الدوائية.",
+        description: "Cross-Linked Water Soluble Polymer of Acrylic Acid",
+        arDescription: "بوليمر حمض الأكريليك القابل للذوبان في الماء المتصالب",
+        appRowSpan: 2,
+        descRowSpan: 2,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® 971G",
+        application: "Free flowing Granular form for direct compression in pharmaceutical industry.",
+        arApplication: "شكل حبيبي حر التدفق للضغط المباشر في الصناعة الدوائية.",
+        description: "Cross-Linked Water Soluble Polymer of Acrylic Acid",
+        arDescription: "بوليمر حمض الأكريليك القابل للذوبان في الماء المتصالب",
+        appRowSpan: 0,
+        descRowSpan: 0,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® Ultrez 10",
+        application: "Easy to disperse self wetting rheology modifier with Short flow High Viscosity Performance with best in class electrolyte tolerance and clarity",
+        arApplication: "معدل لزوجة ذاتي الترطيب سهل التشتيت مع أداء لزوجة عالية وتحمل ممتاز للشوارد ونقاء فائق",
+        description: "Cross-Linked Water Soluble Polymer of Acrylic Acid",
+        arDescription: "بوليمر حمض الأكريليك القابل للذوبان في الماء المتصالب",
+        appRowSpan: 4,
+        descRowSpan: 4,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® Ultrez 20",
+        application: "Easy to disperse self wetting rheology modifier with Short flow High Viscosity Performance with best in class electrolyte tolerance and clarity",
+        arApplication: "معدل لزوجة ذاتي الترطيب سهل التشتيت مع أداء لزوجة عالية وتحمل ممتاز للشوارد ونقاء فائق",
+        description: "Cross-Linked Water Soluble Polymer of Acrylic Acid",
+        arDescription: "بوليمر حمض الأكريليك القابل للذوبان في الماء المتصالب",
+        appRowSpan: 0,
+        descRowSpan: 0,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® Ultrez 21",
+        application: "Easy to disperse self wetting rheology modifier with Short flow High Viscosity Performance with best in class electrolyte tolerance and clarity",
+        arApplication: "معدل لزوجة ذاتي الترطيب سهل التشتيت مع أداء لزوجة عالية وتحمل ممتاز للشوارد ونقاء فائق",
+        description: "Cross-Linked Water Soluble Polymer of Acrylic Acid",
+        arDescription: "بوليمر حمض الأكريليك القابل للذوبان في الماء المتصالب",
+        appRowSpan: 0,
+        descRowSpan: 0,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® Ultrez 2020",
+        application: "Easy to disperse self wetting rheology modifier with Short flow High Viscosity Performance with best in class electrolyte tolerance and clarity",
+        arApplication: "معدل لزوجة ذاتي الترطيب سهل التشتيت مع أداء لزوجة عالية وتحمل ممتاز للشوارد ونقاء فائق",
+        description: "Cross-Linked Water Soluble Polymer of Acrylic Acid",
+        arDescription: "بوليمر حمض الأكريليك القابل للذوبان في الماء المتصالب",
+        appRowSpan: 0,
+        descRowSpan: 0,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® Acrym-N-50",
+        application: "Pre neutralized anionic rheology modifier",
+        arApplication: "معدل لزوجة أنيوني متعادل مسبقاً",
+        description: "Acrylates co polymer & mineral oil & polysorbate 80",
+        arDescription: "بوليمر أكريلات مشترك وزيت معدني وبوليسوربات 80",
+        appRowSpan: 1,
+        descRowSpan: 1,
         tdsUrl: "#",
       },
     ],
@@ -506,67 +604,84 @@ export default function LeepolProductsShowcase() {
           <div className="bg-[var(--color-card-dark)]/95 backdrop-blur-md border border-gold-main/30 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden">
 
             {/* Scrollable viewport (Vertical + Mobile Horizontal) */}
-            <div className="max-h-[380px] sm:max-h-[420px] overflow-x-auto overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#32384a_#12141d] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-[#12141d] [&::-webkit-scrollbar-thumb]:bg-[#32384a] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gold-main/50">
+            <div className="max-h-[460px] sm:max-h-[520px] overflow-x-auto overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#32384a_#12141d] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-[#12141d] [&::-webkit-scrollbar-thumb]:bg-[#32384a] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gold-main/50 p-2 sm:p-3">
 
-              <table className="w-full min-w-[580px] sm:min-w-full text-left rtl:text-right border-collapse">
+              <table className="w-full min-w-[680px] sm:min-w-full text-center border-separate border-spacing-x-2 border-spacing-y-2">
 
                 {/* Sticky header */}
-                <thead className="sticky top-0 z-20 bg-[#14161f] shadow-md">
-                  <tr className="border-b border-[#252834]">
-                    <th className="py-3 px-4 sm:px-5 font-heading font-bold text-[11px] tracking-wider uppercase text-gold-light w-[22%] border-r border-[#252834] rtl:border-r-0 rtl:border-l">
+                <thead className="sticky top-0 z-20 shadow-md">
+                  <tr>
+                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[22%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
                       {isRTL ? "المنتج (PRODUCTS)" : "PRODUCTS"}
                     </th>
-                    <th className="py-3 px-4 sm:px-5 font-heading font-bold text-[11px] tracking-wider uppercase text-gold-light w-[38%] border-r border-[#252834] rtl:border-r-0 rtl:border-l">
+                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[36%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
                       {isRTL ? "مجال التطبيق (APPLICATION)" : "APPLICATION"}
                     </th>
-                    <th className="py-3 px-4 sm:px-5 font-heading font-bold text-[11px] tracking-wider uppercase text-gold-light w-[24%] border-r border-[#252834] rtl:border-r-0 rtl:border-l">
+                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[28%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
                       {isRTL ? "الوصف والمواصفة (DESCRIPTION)" : "DESCRIPTION"}
                     </th>
-                    <th className="py-3 px-4 sm:px-5 font-heading font-bold text-[11px] tracking-wider uppercase text-gold-light w-[16%] text-center">
+                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[14%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
                       {isRTL ? "الإجراءات (ACTIONS)" : "ACTIONS"}
                     </th>
                   </tr>
                 </thead>
 
-                {/* Body */}
-                <tbody className="divide-y divide-[#202434] font-subheading text-xs">
-                  {currentTab.tableProducts.map((row, idx) => (
-                    <tr key={idx} className="group hover:bg-[#151822]/80 transition-colors duration-150">
+                {/* Body with Grouped Rounded Boxes */}
+                <tbody className="font-subheading text-xs">
+                  {currentTab.tableProducts.map((row, idx) => {
+                    const appSpan = row.appRowSpan !== undefined ? row.appRowSpan : 1;
+                    const descSpan = row.descRowSpan !== undefined ? row.descRowSpan : 1;
 
-                      {/* Product name */}
-                      <td className="py-3 px-4 sm:px-5 border-r border-[#202434] rtl:border-r-0 rtl:border-l">
-                        <span className="font-heading font-bold text-[13px] text-white group-hover:text-gold-light transition-colors">
-                          {row.product}
-                        </span>
-                      </td>
+                    return (
+                      <tr key={idx} className="group">
 
-                      {/* Application */}
-                      <td className="py-3 px-4 sm:px-5 border-r border-[#202434] rtl:border-r-0 rtl:border-l text-gray-300 text-[11px] sm:text-xs leading-relaxed">
-                        <span className="inline-block px-2 py-0.5 rounded-md bg-[#141620] border border-[#232736] text-gray-300">
-                          {isRTL ? row.arApplication : row.application}
-                        </span>
-                      </td>
+                        {/* 1. Product Name Box */}
+                        <td className="align-middle p-0">
+                          <div className="h-full min-h-[56px] w-full flex items-center justify-center p-3 rounded-xl sm:rounded-2xl bg-[#131622] border border-[#232838] group-hover:border-gold-main/40 transition-all text-center">
+                            <span className="font-heading font-bold text-[12.5px] sm:text-[13.5px] text-white group-hover:text-gold-light transition-colors">
+                              {row.product}
+                            </span>
+                          </div>
+                        </td>
 
-                      {/* Description */}
-                      <td className="py-3 px-4 sm:px-5 border-r border-[#202434] rtl:border-r-0 rtl:border-l">
-                        <span className="inline-block px-2 py-0.5 rounded-md bg-gold-main/10 border border-gold-main/20 text-gold-light font-heading font-semibold text-[11px] leading-snug">
-                          {isRTL ? row.arDescription : row.description}
-                        </span>
-                      </td>
+                        {/* 2. Application Box (spans vertically when appSpan > 0) */}
+                        {appSpan > 0 && (
+                          <td rowSpan={appSpan} className="align-middle p-0">
+                            <div className="h-full min-h-[56px] w-full flex items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#10121b] border border-[#202534] hover:border-gold-main/30 transition-all text-center">
+                              <span className="font-subheading text-gray-300 text-[11px] sm:text-xs leading-relaxed max-w-xs mx-auto">
+                                {isRTL ? row.arApplication : row.application}
+                              </span>
+                            </div>
+                          </td>
+                        )}
 
-                      {/* Actions */}
-                      <td className="py-3 px-4 sm:px-5 text-center">
-                        <button
-                          type="button"
-                          onClick={() => handleOpenQuote(row)}
-                          className="inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-md bg-gradient-gold-animated text-black text-[10px] font-heading font-bold shadow-sm hover:brightness-110 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
-                        >
-                          <span>{isRTL ? "طلب سعر" : "QUOTE"}</span>
-                        </button>
-                      </td>
+                        {/* 3. Description Box (spans vertically when descSpan > 0) */}
+                        {descSpan > 0 && (
+                          <td rowSpan={descSpan} className="align-middle p-0">
+                            <div className="h-full min-h-[56px] w-full flex items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#131622] border border-[#232838] hover:border-gold-main/30 transition-all text-center">
+                              <span className="font-subheading font-medium text-gold-light text-[11px] sm:text-xs leading-relaxed max-w-xs mx-auto">
+                                {isRTL ? row.arDescription : row.description}
+                              </span>
+                            </div>
+                          </td>
+                        )}
 
-                    </tr>
-                  ))}
+                        {/* 4. Action Box (QUOTE) */}
+                        <td className="align-middle p-0 text-center">
+                          <div className="h-full min-h-[56px] w-full flex items-center justify-center p-2 rounded-xl sm:rounded-2xl bg-[#131622] border border-[#232838] group-hover:border-gold-main/40 transition-all">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenQuote(row)}
+                              className="inline-flex items-center justify-center px-3 py-1.5 rounded-md bg-gradient-gold-animated text-black text-[10px] font-heading font-bold shadow-sm hover:brightness-110 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                            >
+                              <span>{isRTL ? "طلب سعر" : "QUOTE"}</span>
+                            </button>
+                          </div>
+                        </td>
+
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
 
