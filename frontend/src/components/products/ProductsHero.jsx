@@ -36,7 +36,7 @@ export default function ProductsHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-[var(--color-primary)] pt-22 sm:pt-24 md:pt-28 pb-10 sm:pb-14 md:pb-16 overflow-hidden"
+      className="relative w-full bg-[var(--color-primary)] pt-24 sm:pt-28 md:pt-32 pb-0 sm:pb-2 md:pb-4 overflow-hidden"
     >
       {/* No ambient background glow — clean flat design */}
 

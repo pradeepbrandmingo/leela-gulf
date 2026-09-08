@@ -6,11 +6,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * ApiHero - Hero Component for Active Pharmaceutical Ingredients Page
- * - Standardized Responsive Layout & Hierarchy matching global Hero design standards.
+ * FoodColorsHero - Hero Component for Food Colors & Additives Page
+ * - Standardized Responsive Layout & Hierarchy matching global Hero design standards (ApiHero, CareersHero, KnowledgeCenterHero).
  * - 100% Global Typography & Gold Tokens from globals.css.
+ * - Direction-aware smooth theme overlay with high-contrast luxury text presentation.
  */
-export default function ApiHero() {
+export default function FoodColorsHero() {
   const { isRTL } = useLanguage();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -52,13 +53,13 @@ export default function ApiHero() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          {/* Responsive Height & Aspect Ratio Container */}
+          {/* Responsive Height & Aspect Ratio Container (Exact match to ApiHero / CareersHero) */}
           <div className="relative w-full min-h-[380px] sm:min-h-[420px] md:min-h-[460px] sm:aspect-[2.4/1] md:aspect-[2.6/1] lg:aspect-[2.9/1]">
 
-            {/* Background Molecular / Lab Image */}
+            {/* Background Colorful Smoke / Food Colors Image */}
             <Image
-              src="/images/Active Pharmaceutical Ingredients/Active Pharmaceutical Ingredients herosection.jpg"
-              alt="Active Pharmaceutical Ingredients - Leela Gulf"
+              src="/images/Food Colors & Additives/Food Colors & Additives hero img.avif"
+              alt="Food Colors and Additives - Leela Gulf"
               fill
               className={`object-cover opacity-90 sm:opacity-100 ${
                 isRTL ? "object-left sm:object-left" : "object-right sm:object-right"
@@ -72,10 +73,10 @@ export default function ApiHero() {
                 100% Global Theme Token: var(--color-card-dark)
                 ═══════════════════════════════════════════ */}
             {isRTL ? (
-              /* ARABIC (RTL): Dark Overlay starts from RIGHT and fades to LEFT */
+              /* ARABIC (RTL): Dark Overlay starts from RIGHT and fades smoothly to LEFT */
               <div className="absolute inset-0 bg-gradient-to-l from-[var(--color-card-dark)] via-[var(--color-card-dark)]/95 sm:via-[var(--color-card-dark)]/90 via-60% sm:via-45% to-transparent z-0" />
             ) : (
-              /* ENGLISH (LTR): Dark Overlay starts from LEFT and fades to RIGHT */
+              /* ENGLISH (LTR): Dark Overlay starts from LEFT and fades smoothly to RIGHT */
               <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-card-dark)] via-[var(--color-card-dark)]/95 sm:via-[var(--color-card-dark)]/90 via-60% sm:via-45% to-transparent z-0" />
             )}
 
@@ -88,11 +89,11 @@ export default function ApiHero() {
             <div
               className={`absolute inset-0 flex flex-col justify-center z-10 py-7 sm:py-0 ${
                 isRTL
-                  ? "right-0 left-auto w-full sm:w-[80%] md:w-[75%] lg:w-[65%] pr-5 sm:pr-10 md:pr-14 lg:pr-16 pl-5 text-right items-start"
-                  : "left-0 right-auto w-full sm:w-[80%] md:w-[75%] lg:w-[65%] pl-5 sm:pl-10 md:pl-14 lg:pl-16 pr-5 text-left items-start"
+                  ? "right-0 left-auto w-full sm:w-[88%] md:w-[84%] lg:w-[75%] xl:w-[72%] pr-5 sm:pr-10 md:pr-14 lg:pr-16 pl-5 text-right items-start"
+                  : "left-0 right-auto w-full sm:w-[88%] md:w-[84%] lg:w-[75%] xl:w-[72%] pl-5 sm:pl-10 md:pl-14 lg:pl-16 pr-5 text-left items-start"
               }`}
             >
-              {/* Top Breadcrumb Badge */}
+              {/* Top Breadcrumb Badge with Home Link */}
               <div
                 className={`flex items-center gap-1.5 mb-2 sm:mb-4 transition-all duration-700 delay-200 ease-out font-heading font-bold text-[9.5px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase drop-shadow ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -106,42 +107,49 @@ export default function ApiHero() {
                 </Link>
                 <span className="text-gold-main/60">/</span>
                 <span className="text-gold-light">
-                  {isRTL ? "المواد الصيدلانية الفعالة" : "ACTIVE PHARMACEUTICAL INGREDIENTS"}
+                  {isRTL ? "ملونات ومضافات الأغذية" : "FOOD COLORS & ADDITIVES"}
                 </span>
               </div>
 
-              {/* Main Heading (100% Global Typography & Sizing) */}
+              {/* Main Heading (Exact Global Sizing Matching Careers & API Heroes) */}
               <h1
-                className={`font-heading font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.1rem] text-white leading-[1.2] sm:leading-[1.16] tracking-tight max-w-full sm:max-w-2xl md:max-w-3xl mb-2.5 sm:mb-5 transition-all duration-700 delay-400 ease-out drop-shadow-md ${
+                className={`font-heading font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.1rem] text-white leading-[1.2] sm:leading-[1.16] tracking-tight max-w-full sm:max-w-3xl mb-2.5 sm:mb-5 transition-all duration-700 delay-400 ease-out drop-shadow-md ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
                 {isRTL ? (
                   <>
-                    <span className="block">المواد الصيدلانية</span>
-                    <span className="block">
-                      <span className="text-gradient-gold-animated">الفعالة (APIs)</span>
-                    </span>
+                    <span>ملونات ومضافات </span>
+                    <span className="text-gradient-gold-animated">الأغذية</span>
                   </>
                 ) : (
                   <>
-                    <span className="block">ACTIVE PHARMACEUTICAL</span>
-                    <span className="block">
-                      <span className="text-gradient-gold-animated">INGREDIENTS</span>
-                    </span>
+                    <span>FOOD COLORS & </span>
+                    <span className="text-gradient-gold-animated">ADDITIVES</span>
                   </>
                 )}
               </h1>
 
-              {/* Description Subtitle */}
-              <p
-                className={`text-gray-300 font-subheading text-xs sm:text-sm md:text-base leading-relaxed sm:leading-relaxed max-w-full sm:max-w-xl md:max-w-2xl mb-3 sm:mb-6 transition-all duration-700 delay-500 ease-out ${
+              {/* Headline Subtitle (Enhanced Visual Hierarchy) */}
+              <h2
+                className={`font-heading font-semibold text-sm sm:text-base md:text-lg lg:text-xl text-white leading-snug sm:leading-relaxed max-w-full sm:max-w-2xl mb-2.5 sm:mb-4 transition-all duration-700 delay-450 ease-out ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
               >
                 {isRTL
-                  ? "اكتشف مجموعتنا الشاملة من المكونات الصيدلانية الفعالة عالية الجودة (APIs). يتم تصنيعها وفقًا لمعايير تنظيمية صارمة لضمان النقاء الفائق والاتساق والفعالية لتركيبات الرعاية الصحية العالمية."
-                  : "Discover our comprehensive range of high-quality Active Pharmaceutical Ingredients (APIs). Manufactured under stringent regulatory standards, we ensure uncompromising purity, consistency, and efficacy for global healthcare formulations."}
+                  ? "الارتقاء بالجاذبية البصرية والاستقرار والأداء في قطاع الأغذية والمشروبات."
+                  : "Elevating visual appeal, stability, and performance in the food and beverage industry."}
+              </h2>
+
+              {/* Description Body Paragraph */}
+              <p
+                className={`text-gray-300 font-subheading text-xs sm:text-sm md:text-base leading-relaxed max-w-full sm:max-w-2xl mb-4 sm:mb-6 transition-all duration-700 delay-500 ease-out ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+              >
+                {isRTL
+                  ? "اكتشف مجموعتنا الشاملة من ملونات الأغذية والمضافات والسواغات عالية النقاوة. مصنعة وفق أعلى معايير الجودة العالمية لضمان ثبات اللون وعمر افتراضي أطول وسلامة تامة لمختلف التطبيقات الغذائية والدوائية."
+                  : "Discover our comprehensive range of high-purity food colors, additives, and excipients. Manufactured under stringent global quality standards, our ingredients ensure vibrant consistency, extended shelf-life, and uncompromising safety for a wide spectrum of culinary and pharmaceutical applications."}
               </p>
 
               {/* Gold Accent Dash */}

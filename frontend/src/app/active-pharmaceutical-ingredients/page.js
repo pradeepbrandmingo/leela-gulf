@@ -3,6 +3,7 @@
 import ApiHero from "@/components/active-pharmaceutical-ingredients/ApiHero";
 import ApiTableSection from "@/components/active-pharmaceutical-ingredients/ApiTableSection";
 import ExcipientsTableSection from "@/components/active-pharmaceutical-ingredients/ExcipientsTableSection";
+import GlobalPresenceSection from "@/components/active-pharmaceutical-ingredients/GlobalPresenceSection";
 
 export default function ActivePharmaceuticalIngredientsPage() {
   return (
@@ -15,6 +16,9 @@ export default function ActivePharmaceuticalIngredientsPage() {
 
       {/* ── 3. PHARMACEUTICAL EXCIPIENTS TABLE & QUOTE SECTION ── */}
       <ExcipientsTableSection />
+
+      {/* ── 4. OUR PRESENCE ACROSS THE GLOBE & CERTIFICATIONS SECTION ── */}
+      <GlobalPresenceSection />
     </main>
   );
 }

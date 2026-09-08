@@ -60,6 +60,11 @@ export default function Header() {
       href: "/active-pharmaceutical-ingredients",
       hasDot: false,
     },
+    {
+      name: isRTL ? "ملونات ومضافات الأغذية" : "Food Colors & Additives",
+      href: "/food-colors-and-additives",
+      hasDot: false,
+    },
     { name: isRTL ? "الوظائف" : "Careers", href: "/careers", hasDot: false },
     { name: isRTL ? "الفعاليات" : "Events", href: "/events", hasDot: false },
     { name: isRTL ? "اتصل بنا" : "Contact", href: "/contact", hasDot: false },

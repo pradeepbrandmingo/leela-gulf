@@ -38,7 +38,7 @@ export default function KnowledgeCenterHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-[var(--color-primary)] pt-16 sm:pt-24 md:pt-28 pb-4 sm:pb-12 overflow-hidden"
+      className="relative w-full bg-[var(--color-primary)] pt-24 sm:pt-28 md:pt-32 pb-0 sm:pb-2 md:pb-4 overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-3 sm:px-6 md:px-10 lg:px-16 xl:px-20 relative z-10">
         {/* Subtle Ambient Gold Glow for Depth */}

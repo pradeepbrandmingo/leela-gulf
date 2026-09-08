@@ -206,7 +206,7 @@ export default function ApiTableSection() {
   };
 
   return (
-    <section className="relative w-full bg-[var(--color-primary)] py-8 sm:py-14 md:py-16 overflow-hidden">
+    <section className="relative w-full bg-[var(--color-primary)] py-10 sm:py-14 md:py-16 text-white overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20 relative z-10">
 
         {/* ═══════════════════════════════════════════
@@ -215,16 +215,24 @@ export default function ApiTableSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-[#252834]">
           {/* Title & Subtitle */}
           <div>
-            <h2 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight">
+            <h2 className="font-heading font-medium text-[24px] sm:text-[32px] md:text-[38px] lg:text-[44px] text-white tracking-tight leading-tight">
               {isRTL ? (
                 <>
-                  قائمة المواد الصيدلانية{" "}
-                  <span className="text-gradient-gold-animated">الفعالة</span>
+                  <span className="font-heading text-white font-medium not-italic inline mr-2 rtl:mr-0 rtl:ml-2">
+                    قائمة المواد الصيدلانية
+                  </span>
+                  <span className="font-heading text-gradient-gold-animated font-semibold not-italic inline">
+                    الفعالة
+                  </span>
                 </>
               ) : (
                 <>
-                  Active Pharmaceutical{" "}
-                  <span className="text-gradient-gold-animated">Ingredients</span>
+                  <span className="font-heading text-white font-medium not-italic inline mr-2">
+                    Active Pharmaceutical
+                  </span>
+                  <span className="font-heading text-gradient-gold-animated font-semibold not-italic inline">
+                    Ingredients
+                  </span>
                 </>
               )}
             </h2>
