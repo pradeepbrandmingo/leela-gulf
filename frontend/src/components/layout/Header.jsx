@@ -65,6 +65,11 @@ export default function Header() {
       href: "/food-colors-and-additives",
       hasDot: false,
     },
+    {
+      name: isRTL ? "عالم ليبول" : "The World of Leepol",
+      href: "/the-world-of-leepol",
+      hasDot: false,
+    },
     { name: isRTL ? "الوظائف" : "Careers", href: "/careers", hasDot: false },
     { name: isRTL ? "الفعاليات" : "Events", href: "/events", hasDot: false },
     { name: isRTL ? "اتصل بنا" : "Contact", href: "/contact", hasDot: false },
