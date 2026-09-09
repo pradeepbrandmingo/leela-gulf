@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import LeadEnquiryForm from "@/components/common/LeadEnquiryForm";
-import { X, Layers, ChevronDown } from "lucide-react";
+import { X, Layers, ChevronDown, ArrowLeftRight } from "lucide-react";
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -277,79 +277,87 @@ export const LEEPOL_TABS_DATA = [
     arImageOverlay: "حلول التغليف الدوائي المتقدمة",
     glanceTitle: "Leepol® COAT",
     arGlanceTitle: "ليبول® كوت (COAT)",
-    glanceBadges: ["METHACRYLIC ACID COPOLYMER", "( INCI - Acrylates Copolymer )"],
-    arGlanceBadges: ["بوليمر ميثاكريليك مشترك", "( INCI - بوليمر أكريلات )"],
+    glanceBadges: ["Coating Material", "( INCI - Methylarylic Acid & Ethyl Acrylate Copolymer )"],
+    arGlanceBadges: ["مادة التغليف (Coating Material)", "( INCI - بوليمر حمض الميثاكريليك وإيثيل أكريلات )"],
     tableProducts: [
       {
-        product: "Leepol® Coat L 100",
-        application: "Enteric Coating / Intestinal Release (pH 6.0+)",
-        arApplication: "تغليف معوي / تحرير معوي (pH 6.0+)",
-        description: "Powder form, dissolution above pH 6.0",
-        arDescription: "شكل مسحوق، يذوب عند درجة حموضة أعلى من 6.0",
+        product: "Leepol® Coat S-100",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 8,
+        descRowSpan: 8,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® Coat L 100-55",
-        application: "Enteric Coating / Duodenal Release (pH 5.5+)",
-        arApplication: "تغليف معوي / تحرير في الإثني عشر (pH 5.5+)",
-        description: "Powder form, rapid dissolution above pH 5.5",
-        arDescription: "مسحوق سريع الذوبان عند درجة حموضة أعلى من 5.5",
+        product: "Leepol® Coat L-100",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® Coat L 30D-55",
-        application: "Enteric Coating Aqueous Dispersion (pH 5.5+)",
-        arApplication: "مشتت مائي للتغليف المعوي (pH 5.5+)",
-        description: "30% Aqueous Dispersion for rapid processing",
-        arDescription: "مشتت مائي بتركيز 30% للتطبيق المباشر",
+        product: "Leepol® Coat L-100D",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® Coat S 100",
-        application: "Colon-Targeted Drug Delivery (pH 7.0+)",
-        arApplication: "توصيل دوائي مستهدف للقولون (pH 7.0+)",
-        description: "Powder form, specific dissolution in colon",
-        arDescription: "مسحوق عالي النقاء، ذوبان محدد في القولون",
+        product: "Leepol® Coat L-30D",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® Coat FS 30D",
-        application: "Targeted Ileocolonic Release (pH 7.0+)",
-        arApplication: "تحرير مستهدف للأمعاء الدقيقة والقولون (pH 7.0+)",
-        description: "30% Flexible Aqueous Dispersion",
-        arDescription: "مشتت مائي مرن بتركيز 30%",
+        product: "Leepol® Coat L-30DA",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® Coat E 100",
-        application: "Moisture Protection & Taste Masking",
-        arApplication: "حماية من الرطوبة وحجب الطعم",
-        description: "Soluble in gastric fluid up to pH 5.0",
-        arDescription: "قابل للذوبان في السوائل المعدية حتى pH 5.0",
+        product: "Leepol® Coat E-100",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
+        tdsUrl: "#",
+      },
+      {
+        product: "Leepol® Coat E-12.5",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
         product: "Leepol® Coat EPO",
-        application: "Sublingual & Fast Melt Tablet Coating",
-        arApplication: "تغليف أقراص سريعة الذوبان وتحت اللسان",
-        description: "Ready-to-use fine powder for taste masking",
-        arDescription: "مسحوق ناعم جاهز للاستخدام لحجب الطعم",
-        tdsUrl: "#",
-      },
-      {
-        product: "Leepol® Coat RL 100",
-        application: "Sustained-Release / Time-Controlled Release",
-        arApplication: "تحرير ممتد المفعول / تحرير زمني متحكم به",
-        description: "High permeability polymer for continuous release",
-        arDescription: "بوليمر عالي النفاذية للتحرير المستمر للدواء",
-        tdsUrl: "#",
-      },
-      {
-        product: "Leepol® Coat RS 100",
-        application: "Sustained-Release / Extended Delivery",
-        arApplication: "تحرير ممتد / توصيل دوائي طويل الأمد",
-        description: "Low permeability polymer for extended release profile",
-        arDescription: "بوليمر منخفض النفاذية لجدول إطلاق ممتد",
+        application: "Leepol coat series comprise of Methylarylic acid copolymers which is used in film coating, Enteric coating, sustain release, moisture barrier, taste masking, colon targeted coating,",
+        arApplication: "تتكون سلسلة ليبول كوت من بوليمرات حمض الميثاكريليك المشتركة المستخدمة في التغليف الغشائي، التغليف المعوي، التحرير ممتد المفعول، حاجز الرطوبة، حجب الطعم، والتغليف المستهدف للقولون.",
+        description: "Methylarylic acid copolymers  Solvent System & Aqueous System",
+        arDescription: "بوليمرات حمض الميثاكريليك المشتركة - نظام المذيبات والنظام المائي",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
     ],
@@ -379,47 +387,57 @@ export const LEEPOL_TABS_DATA = [
     arImageOverlay: "المذيبات والمستحلبات النقية",
     glanceTitle: "Leepol® HCO",
     arGlanceTitle: "ليبول® إتش سي أو (HCO)",
-    glanceBadges: ["POLYOXYL HYDROGENATED CASTOR OIL", "( USP/NF / EP / BP / IP )"],
-    arGlanceBadges: ["زيت الخروع المهدرج بولي أوكسيل", "( معايير USP/NF / EP / BP )"],
+    glanceBadges: ["( Polyoxyl 40-Hydrogenated Castor Oil )"],
+    arGlanceBadges: ["( زيت الخروع المهدرج بولي أوكسيل 40 )"],
     tableProducts: [
       {
-        product: "Leepol® HCO-40",
-        application: "Solubilizer for Insoluble APIs / Vitamins / Essential Oils",
-        arApplication: "مذيب للمواد الفعالة غير القابلة للذوبان / الفيتامينات / الزيوت الأساسية",
-        description: "Polyoxyl 40 Hydrogenated Castor Oil, White Paste/Solid",
-        arDescription: "زيت خروع مهدرج بولي أوكسيل 40، معجون أبيض نقي",
+        product: "Leepol® HCO K-140",
+        application: "Leepol® HCO is non ionic solubiliser and emulsifier obtained by reacting hydrogenated castor oil Applicable as Solubilizer, Dissolution Improver, Emulsifier, Moisturizer, Transparency Improver, Volatility retardant, Film Former, Masking Agent, Aerosol Formulations",
+        arApplication: "ليبول® إتش سي أو هو مذيب ومستحلب غير أيوني ناتج عن تفاعل زيت الخروع المهدرج؛ قابل للتطبيق كمذيب، محسن ذوبان، مستحلب، مرطب، محسن شفافية، مؤخر تطاير، مكون أغشية، عامل حجب، وتركيبات رذاذية",
+        description: "Colorless Viscous Liquid, Odourless Viscous Liquid, Nontoxic",
+        arDescription: "سائل لزج عديم اللون، سائل لزج عديم الرائحة، غير سام",
+        appRowSpan: 5,
+        descRowSpan: 3,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® HCO-60",
-        application: "High-Performance Emulsifier & Solubilizer for Clear Solutions",
-        arApplication: "مستحلب عالي الأداء ومذيب للمحاليل الصيدلانية الشفافة",
-        description: "Polyoxyl 60 Hydrogenated Castor Oil, High HLB (~15-17)",
-        arDescription: "زيت خروع مهدرج بولي أوكسيل 60، توازن مائي زيتي مرتفع (HLB ~15-17)",
+        product: "Leepol® HCO POWDER",
+        application: "Leepol® HCO is non ionic solubiliser and emulsifier obtained by reacting hydrogenated castor oil Applicable as Solubilizer, Dissolution Improver, Emulsifier, Moisturizer, Transparency Improver, Volatility retardant, Film Former, Masking Agent, Aerosol Formulations",
+        arApplication: "ليبول® إتش سي أو هو مذيب ومستحلب غير أيوني ناتج عن تفاعل زيت الخروع المهدرج؛ قابل للتطبيق كمذيب، محسن ذوبان، مستحلب، مرطب، محسن شفافية، مؤخر تطاير، مكون أغشية، عامل حجب، وتركيبات رذاذية",
+        description: "Colorless Viscous Liquid, Odourless Viscous Liquid, Nontoxic",
+        arDescription: "سائل لزج عديم اللون، سائل لزج عديم الرائحة، غير سام",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® HCO-35",
-        application: "Injectable & Oral Solubilizer for Poorly Water-Soluble Actives",
-        arApplication: "مذيب للحقن والجرعات الفموية للمواد صعبة الذوبان في الماء",
-        description: "Polyoxyl 35 Castor Oil (Non-ionic surfactant)",
-        arDescription: "زيت خروع بولي أوكسيل 35 (خافض للتوتر السطحي غير أيوني)",
+        product: "Leepol® HCO FLAKE",
+        application: "Leepol® HCO is non ionic solubiliser and emulsifier obtained by reacting hydrogenated castor oil Applicable as Solubilizer, Dissolution Improver, Emulsifier, Moisturizer, Transparency Improver, Volatility retardant, Film Former, Masking Agent, Aerosol Formulations",
+        arApplication: "ليبول® إتش سي أو هو مذيب ومستحلب غير أيوني ناتج عن تفاعل زيت الخروع المهدرج؛ قابل للتطبيق كمذيب، محسن ذوبان، مستحلب، مرطب، محسن شفافية، مؤخر تطاير، مكون أغشية، عامل حجب، وتركيبات رذاذية",
+        description: "Colorless Viscous Liquid, Odourless Viscous Liquid, Nontoxic",
+        arDescription: "سائل لزج عديم اللون، سائل لزج عديم الرائحة، غير سام",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® HCO-40 Ph.",
-        application: "Pharma Grade Solubilizer for Oral Solutions & Topicals",
-        arApplication: "درجة صيدلانية معتمدة للمحاليل الفموية والمستحضرات الموضعية",
-        description: "Conforms to USP/NF, EP, BP standards",
-        arDescription: "مطابق لمواصفات الدستور الدوائي الأمريكي والأوروبي والبريطاني",
+        product: "Leepol® HCO K-150",
+        application: "Leepol® HCO is non ionic solubiliser and emulsifier obtained by reacting hydrogenated castor oil Applicable as Solubilizer, Dissolution Improver, Emulsifier, Moisturizer, Transparency Improver, Volatility retardant, Film Former, Masking Agent, Aerosol Formulations",
+        arApplication: "ليبول® إتش سي أو هو مذيب ومستحلب غير أيوني ناتج عن تفاعل زيت الخروع المهدرج؛ قابل للتطبيق كمذيب، محسن ذوبان، مستحلب، مرطب، محسن شفافية، مؤخر تطاير، مكون أغشية، عامل حجب، وتركيبات رذاذية",
+        description: "White to Pale Yellow, Viscous Liquid, Nontoxic",
+        arDescription: "سائل لزج من الأبيض إلى الأصفر الشاحب، غير سام",
+        appRowSpan: 0,
+        descRowSpan: 2,
         tdsUrl: "#",
       },
       {
-        product: "Leepol® HCO-60 Ph.",
-        application: "High Purity Pharmaceutical Emulsifier for Creams & Gels",
-        arApplication: "مستحلب صيدلاني عالي النقاوة للكريمات والمستحضرات الهلامية",
-        description: "Conforms to USP/NF, EP standards",
-        arDescription: "مطابق للمواصفات الدوائية العالمية المعتمدة",
+        product: "Leepol® HCO K-160",
+        application: "Leepol® HCO is non ionic solubiliser and emulsifier obtained by reacting hydrogenated castor oil Applicable as Solubilizer, Dissolution Improver, Emulsifier, Moisturizer, Transparency Improver, Volatility retardant, Film Former, Masking Agent, Aerosol Formulations",
+        arApplication: "ليبول® إتش سي أو هو مذيب ومستحلب غير أيوني ناتج عن تفاعل زيت الخروع المهدرج؛ قابل للتطبيق كمذيب، محسن ذوبان، مستحلب، مرطب، محسن شفافية، مؤخر تطاير، مكون أغشية، عامل حجب، وتركيبات رذاذية",
+        description: "White to Pale Yellow, Viscous Liquid, Nontoxic",
+        arDescription: "سائل لزج من الأبيض إلى الأصفر الشاحب، غير سام",
+        appRowSpan: 0,
+        descRowSpan: 0,
         tdsUrl: "#",
       },
     ],
@@ -588,45 +606,61 @@ export default function LeepolProductsShowcase() {
               {isRTL ? currentTab.arGlanceTitle : currentTab.glanceTitle}
             </h3>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              {(isRTL ? currentTab.arGlanceBadges : currentTab.glanceBadges).map((badge, bIdx) => (
-                <span
-                  key={bIdx}
-                  className="px-3 py-1 rounded-full bg-gold-main/10 border border-gold-main/30 text-gold-light text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-wider"
-                >
-                  {badge}
-                </span>
-              ))}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                {(isRTL ? currentTab.arGlanceBadges : currentTab.glanceBadges).map((badge, bIdx) => (
+                  <span
+                    key={bIdx}
+                    className="px-3 py-1 rounded-full bg-gold-main/10 border border-gold-main/30 text-gold-light text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-wider"
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </div>
+
+              {/* Tablet Swipe Helper */}
+              <div className="hidden md:flex lg:hidden items-center gap-1.5 text-[10.5px] font-mono text-gold-light/80 bg-gold-main/10 border border-gold-main/25 px-2.5 py-1 rounded-full">
+                <ArrowLeftRight className="w-3 h-3 text-gold-main animate-pulse" />
+                <span>{isRTL ? "اسحب لعرض كامل الجدول" : "Swipe to view full table"}</span>
+              </div>
             </div>
           </div>
 
-          {/* Table Container */}
-          <div className="bg-[var(--color-card-dark)]/95 backdrop-blur-md border border-gold-main/30 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden">
+          {/* Table Container — Premium Glass Card */}
+          <div className="bg-gradient-to-b from-[#11131c] via-[#0d0f17] to-[#0a0b12] border border-gold-main/35 hover:border-gold-main/50 rounded-2xl sm:rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_25px_rgba(230,175,46,0.06)] overflow-hidden transition-all duration-300">
 
-            {/* Scrollable viewport (Vertical + Mobile Horizontal) */}
-            <div className="max-h-[460px] sm:max-h-[520px] overflow-x-auto overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#32384a_#12141d] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-[#12141d] [&::-webkit-scrollbar-thumb]:bg-[#32384a] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gold-main/50 p-2 sm:p-3">
+            {/* ── 1. DESKTOP & TABLET VIEW (md and up): Unified Spanning Table ── */}
+            <div className="hidden md:block max-h-[680px] lg:max-h-[830px] xl:max-h-[835px] overflow-x-auto overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:#32384a_#12141d] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-[#0d0f17] [&::-webkit-scrollbar-thumb]:bg-[#2c3348] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gold-main/60 px-2 sm:px-3.5 pb-2.5 sm:pb-3.5 pt-0">
 
-              <table className="w-full min-w-[680px] sm:min-w-full text-center border-separate border-spacing-x-2 border-spacing-y-2">
+              <table className="w-full min-w-[760px] lg:min-w-full text-center border-separate border-spacing-x-2 border-spacing-y-1.5">
 
-                {/* Sticky header */}
-                <thead className="sticky top-0 z-20 shadow-md">
-                  <tr>
-                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[22%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
-                      {isRTL ? "المنتج (PRODUCTS)" : "PRODUCTS"}
+                {/* 100% Solid Sticky Header — Luxury Dark Bar with Gold Accents */}
+                <thead className="sticky top-0 z-30 bg-[#0d0f17] shadow-lg shadow-black/90">
+                  <tr className="bg-[#0d0f17]">
+                    <th className="sticky top-0 z-30 pt-3 pb-2 px-1 text-center bg-[#0d0f17] w-[20%] xl:w-[18%]">
+                      <div className="py-2.5 px-3 font-heading font-bold text-xs lg:text-[13px] tracking-wider uppercase text-gold-light rounded-xl bg-gradient-to-b from-[#191d2c] to-[#121522] border border-[#2d344b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                        {isRTL ? "المنتج (PRODUCTS)" : "PRODUCTS"}
+                      </div>
                     </th>
-                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[36%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
-                      {isRTL ? "مجال التطبيق (APPLICATION)" : "APPLICATION"}
+                    <th className="sticky top-0 z-30 pt-3 pb-2 px-1 text-center bg-[#0d0f17] w-[38%] xl:w-[40%]">
+                      <div className="py-2.5 px-3 font-heading font-bold text-xs lg:text-[13px] tracking-wider uppercase text-gold-light rounded-xl bg-gradient-to-b from-[#191d2c] to-[#121522] border border-[#2d344b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                        {isRTL ? "مجال التطبيق (APPLICATION)" : "APPLICATION"}
+                      </div>
                     </th>
-                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[28%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
-                      {isRTL ? "الوصف والمواصفة (DESCRIPTION)" : "DESCRIPTION"}
+                    <th className="sticky top-0 z-30 pt-3 pb-2 px-1 text-center bg-[#0d0f17] w-[30%] xl:w-[30%]">
+                      <div className="py-2.5 px-3 font-heading font-bold text-xs lg:text-[13px] tracking-wider uppercase text-gold-light rounded-xl bg-gradient-to-b from-[#191d2c] to-[#121522] border border-[#2d344b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                        {isRTL ? "الوصف والمواصفة (DESCRIPTION)" : "DESCRIPTION"}
+                      </div>
                     </th>
-                    <th className="py-3 px-3 font-heading font-bold text-xs tracking-wider uppercase text-gold-light w-[14%] text-center rounded-xl bg-[#14161f] border border-[#252834]">
-                      {isRTL ? "الإجراءات (ACTIONS)" : "ACTIONS"}
+                    <th className="sticky top-0 z-30 pt-3 pb-2 px-1 text-center bg-[#0d0f17] w-[12%] xl:w-[12%]">
+                      <div className="py-2.5 px-3 font-heading font-bold text-xs lg:text-[13px] tracking-wider uppercase text-gold-light rounded-xl bg-gradient-to-b from-[#191d2c] to-[#121522] border border-[#2d344b] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                        {isRTL ? "الإجراءات (ACTIONS)" : "ACTIONS"}
+                      </div>
                     </th>
                   </tr>
                 </thead>
 
-                {/* Body with Grouped Rounded Boxes */}
+                {/* Body with Elevated Rounded Box Rows */}
                 <tbody className="font-subheading text-xs">
                   {currentTab.tableProducts.map((row, idx) => {
                     const appSpan = row.appRowSpan !== undefined ? row.appRowSpan : 1;
@@ -636,30 +670,45 @@ export default function LeepolProductsShowcase() {
                       <tr key={idx} className="group">
 
                         {/* 1. Product Name Box */}
-                        <td className="align-middle p-0">
-                          <div className="h-full min-h-[56px] w-full flex items-center justify-center p-3 rounded-xl sm:rounded-2xl bg-[#131622] border border-[#232838] group-hover:border-gold-main/40 transition-all text-center">
-                            <span className="font-heading font-bold text-[12.5px] sm:text-[13.5px] text-white group-hover:text-gold-light transition-colors">
+                        <td className="align-middle text-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-b from-[#141725] to-[#0f111c] border border-[#22273c] group-hover:border-gold-main/50 group-hover:shadow-[0_0_16px_rgba(230,175,46,0.1)] transition-all duration-300">
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-gold-main/70 group-hover:bg-gold-light group-hover:scale-125 transition-all shrink-0" />
+                            <span className="font-heading font-bold text-[12.5px] sm:text-[13.5px] text-white group-hover:text-gold-light transition-colors tracking-tight">
                               {row.product}
                             </span>
                           </div>
                         </td>
 
-                        {/* 2. Application Box (spans vertically when appSpan > 0) */}
+                        {/* 2. Application Box (spans vertically when appSpan > 0 — full border block matching SS 4 & 5) */}
                         {appSpan > 0 && (
-                          <td rowSpan={appSpan} className="align-middle p-0">
-                            <div className="h-full min-h-[56px] w-full flex items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#10121b] border border-[#202534] hover:border-gold-main/30 transition-all text-center">
-                              <span className="font-subheading text-gray-300 text-[11px] sm:text-xs leading-relaxed max-w-xs mx-auto">
+                          <td
+                            rowSpan={appSpan}
+                            className={`align-middle text-center p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 ${
+                              appSpan > 1
+                                ? "bg-gradient-to-b from-[#131627] via-[#15192e] to-[#131627] border-2 border-[#2b334e] hover:border-gold-main/50 shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]"
+                                : "bg-gradient-to-b from-[#111320] to-[#0d0f18] border border-[#1f2436] hover:border-gold-main/35"
+                            }`}
+                          >
+                            <div className="flex flex-col items-center justify-center py-2 px-1">
+                              <span className="font-subheading text-gray-300 text-[11px] sm:text-xs leading-relaxed max-w-lg mx-auto">
                                 {isRTL ? row.arApplication : row.application}
                               </span>
                             </div>
                           </td>
                         )}
 
-                        {/* 3. Description Box (spans vertically when descSpan > 0) */}
+                        {/* 3. Description Box (spans vertically when descSpan > 0 — full border block matching SS 4 & 5) */}
                         {descSpan > 0 && (
-                          <td rowSpan={descSpan} className="align-middle p-0">
-                            <div className="h-full min-h-[56px] w-full flex items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#131622] border border-[#232838] hover:border-gold-main/30 transition-all text-center">
-                              <span className="font-subheading font-medium text-gold-light text-[11px] sm:text-xs leading-relaxed max-w-xs mx-auto">
+                          <td
+                            rowSpan={descSpan}
+                            className={`align-middle text-center p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 ${
+                              descSpan > 1
+                                ? "bg-gradient-to-b from-[#14172a] via-[#171b32] to-[#14172a] border-2 border-[#2b334e] hover:border-gold-main/50 shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]"
+                                : "bg-gradient-to-b from-[#131624] to-[#0f111c] border border-[#22273c] hover:border-gold-main/35"
+                            }`}
+                          >
+                            <div className="flex flex-col items-center justify-center py-2 px-1">
+                              <span className="font-subheading font-medium text-gold-light/95 group-hover:text-gold-light text-[11px] sm:text-xs leading-relaxed max-w-md mx-auto">
                                 {isRTL ? row.arDescription : row.description}
                               </span>
                             </div>
@@ -667,16 +716,14 @@ export default function LeepolProductsShowcase() {
                         )}
 
                         {/* 4. Action Box (QUOTE) */}
-                        <td className="align-middle p-0 text-center">
-                          <div className="h-full min-h-[56px] w-full flex items-center justify-center p-2 rounded-xl sm:rounded-2xl bg-[#131622] border border-[#232838] group-hover:border-gold-main/40 transition-all">
-                            <button
-                              type="button"
-                              onClick={() => handleOpenQuote(row)}
-                              className="inline-flex items-center justify-center px-3 py-1.5 rounded-md bg-gradient-gold-animated text-black text-[10px] font-heading font-bold shadow-sm hover:brightness-110 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
-                            >
-                              <span>{isRTL ? "طلب سعر" : "QUOTE"}</span>
-                            </button>
-                          </div>
+                        <td className="align-middle text-center p-2 rounded-xl sm:rounded-2xl bg-gradient-to-b from-[#141725] to-[#0f111c] border border-[#22273c] group-hover:border-gold-main/40 transition-all duration-300">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenQuote(row)}
+                            className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-gradient-gold-animated text-black text-[10.5px] sm:text-[11px] font-heading font-extrabold shadow-[0_2px_8px_rgba(230,175,46,0.3)] hover:shadow-[0_4px_16px_rgba(230,175,46,0.55)] hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap tracking-wider uppercase"
+                          >
+                            <span>{isRTL ? "طلب سعر" : "QUOTE"}</span>
+                          </button>
                         </td>
 
                       </tr>
@@ -687,21 +734,74 @@ export default function LeepolProductsShowcase() {
 
             </div>
 
-            {/* Footer bar */}
-            <div className="py-2.5 px-4 sm:px-5 bg-[#12141c] border-t border-[#252834] flex flex-wrap items-center justify-between text-[11px] font-subheading text-gray-400 gap-2">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold-main" />
+            {/* ── 2. MOBILE VIEW (<768px): High-Density Luxury Cards with Vertical Scrolling ── */}
+            <div className="block md:hidden max-h-[540px] overflow-y-auto overscroll-contain p-3 space-y-3.5 [scrollbar-width:thin] [scrollbar-color:#32384a_#12141d] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-[#2c3348] [&::-webkit-scrollbar-thumb]:rounded-full">
+              {currentTab.tableProducts.map((row, idx) => (
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-2xl bg-gradient-to-b from-[#131624] via-[#10131d] to-[#0d0f17] border border-[#23283c] hover:border-gold-main/50 transition-all duration-300 shadow-lg space-y-3"
+                >
+                  {/* Card Header: Product Name + Instant Quote Button */}
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#1f2438]">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-2 h-2 rounded-full bg-gold-main shrink-0 shadow-[0_0_8px_rgba(230,175,46,0.6)]" />
+                      <h4 className="font-heading font-bold text-sm text-white tracking-tight truncate">
+                        {row.product}
+                      </h4>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleOpenQuote(row)}
+                      className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-lg bg-gradient-gold-animated text-black text-[10.5px] font-heading font-extrabold shadow-[0_2px_8px_rgba(230,175,46,0.3)] active:scale-95 transition-all cursor-pointer whitespace-nowrap uppercase shrink-0"
+                    >
+                      <span>{isRTL ? "طلب سعر" : "QUOTE"}</span>
+                    </button>
+                  </div>
+
+                  {/* Application Information Box */}
+                  <div className="p-2.5 rounded-xl bg-[#0a0b12]/80 border border-[#1d2233]">
+                    <span className="text-[9.5px] font-heading font-bold text-gold-light/90 block uppercase tracking-wider mb-1">
+                      {isRTL ? "مجال التطبيق (APPLICATION)" : "APPLICATION"}
+                    </span>
+                    <p className="font-subheading text-[11.5px] text-gray-300 leading-relaxed">
+                      {isRTL ? row.arApplication : row.application}
+                    </p>
+                  </div>
+
+                  {/* Description Information Box */}
+                  <div className="p-2.5 rounded-xl bg-[#0a0b12]/80 border border-[#1d2233]">
+                    <span className="text-[9.5px] font-heading font-bold text-gold-light/90 block uppercase tracking-wider mb-1">
+                      {isRTL ? "الوصف والمواصفة (DESCRIPTION)" : "DESCRIPTION"}
+                    </span>
+                    <p className="font-subheading font-medium text-[11.5px] text-gold-light leading-relaxed">
+                      {isRTL ? row.arDescription : row.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer bar — Premium Status Counter */}
+            <div className="py-3 px-4 sm:px-6 bg-gradient-to-r from-[#0d0f17] via-[#121520] to-[#0d0f17] border-t border-[#22273d] flex flex-wrap items-center justify-between text-[11px] sm:text-xs font-subheading text-gray-400 gap-3">
+              <span className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-main opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-gold-main"></span>
+                </span>
                 <span>
-                  {isRTL ? "إجمالي المنتجات:" : "Total Products:"}{" "}
-                  <strong className="text-gold-light font-heading font-bold">
+                  {isRTL ? "إجمالي درجات المنتجات:" : "Total Product Grades:"}{" "}
+                  <strong className="text-gold-light font-heading font-bold text-xs sm:text-[13px]">
                     {currentTab.tableProducts.length}
                   </strong>
                 </span>
               </span>
 
-              <span className="text-[10px] text-gray-500 font-mono flex items-center gap-1">
-                <span>{isRTL ? "مرّر للأسفل لعرض الكل" : "Scroll to view all"}</span>
-                <ChevronDown className="w-3 h-3 animate-bounce" />
+              <span className="text-[10.5px] sm:text-[11px] text-gray-400 font-mono flex items-center gap-1.5">
+                <span className="text-gold-main/90 font-semibold">
+                  {isRTL ? "مرّر للأسفل لعرض درجات إضافية" : "Scroll inside table to view more"}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-gold-main animate-bounce" />
               </span>
             </div>
 
