@@ -265,66 +265,31 @@ export default function AdminDashboardPage() {
     return tf || "Last 7 days";
   };
 
-  // Main Dashboard Stats Loader (Silent Background + Manual Trigger)
+  // Main Dashboard Stats Loader (Single Consolidated Fast Endpoint + Manual Trigger)
   const fetchDashboardData = useCallback(async (isManual = false) => {
     if (isManual) setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      const leadParams = ["limit=5", `_t=${Date.now()}`];
-      if (dateBounds.start) leadParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
-      if (dateBounds.end) leadParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
-      const leadQuery = `?${leadParams.join("&")}`;
-
-      let analyticsQuery = `?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
+      let summaryQuery = `?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
       if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
-        analyticsQuery += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
+        summaryQuery += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
+      } else if (dateBounds.start && dateBounds.end) {
+        summaryQuery += `&startDate=${encodeURIComponent(dateBounds.start)}&endDate=${encodeURIComponent(dateBounds.end)}`;
       }
 
-      const [leadsRes, productsRes, blogsRes, eventsRes, analyticsRes] = await Promise.allSettled([
-        apiRequest(`/leads${leadQuery}`, { method: "GET" }),
-        apiRequest(`/products?limit=1&_t=${Date.now()}`, { method: "GET" }),
-        apiRequest(`/blogs?limit=5&_t=${Date.now()}`, { method: "GET" }),
-        apiRequest(`/events?limit=1&_t=${Date.now()}`, { method: "GET" }),
-        apiRequest(`/analytics/stats${analyticsQuery}`, { method: "GET" }),
-      ]);
+      // Single fast HTTP request to /admin/dashboard-summary (Executes in sub-15ms on server)
+      const res = await apiRequest(`/admin/dashboard-summary${summaryQuery}`, { method: "GET" });
 
-      if (leadsRes.status === "fulfilled" && leadsRes.value?.success) {
-        setDbLeadsTotal(leadsRes.value.total ?? 0);
-        setDbLeadsList(leadsRes.value.leads || []);
-      }
-
-      if (productsRes.status === "fulfilled" && productsRes.value?.success) {
-        const count =
-          productsRes.value.pagination?.total ??
-          (Array.isArray(productsRes.value.data) ? productsRes.value.data.length : 0);
-        setDbProductsTotal(count);
-      } else {
-        setDbProductsTotal(0);
-      }
-
-      if (blogsRes.status === "fulfilled" && blogsRes.value?.success) {
-        const bCount =
-          blogsRes.value.pagination?.total ??
-          (Array.isArray(blogsRes.value.data) ? blogsRes.value.data.length : 0);
-        setDbBlogsTotal(bCount);
-        setDbBlogsList(Array.isArray(blogsRes.value.data) ? blogsRes.value.data : []);
-      } else {
-        setDbBlogsTotal(0);
-        setDbBlogsList([]);
-      }
-
-      if (eventsRes.status === "fulfilled" && eventsRes.value?.success) {
-        const eCount =
-          eventsRes.value.total ??
-          eventsRes.value.count ??
-          (Array.isArray(eventsRes.value.data) ? eventsRes.value.data.length : 0);
-        setDbEventsTotal(eCount);
-      } else {
-        setDbEventsTotal(0);
-      }
-
-      if (analyticsRes.status === "fulfilled" && analyticsRes.value?.success) {
-        setAnalyticsData(analyticsRes.value);
+      if (res?.success && res.data) {
+        setDbLeadsTotal(res.data.leadsTotal ?? 0);
+        setDbLeadsList(res.data.leadsList || []);
+        setDbProductsTotal(res.data.productsTotal ?? 0);
+        setDbBlogsTotal(res.data.blogsTotal ?? 0);
+        setDbBlogsList(res.data.blogsList || []);
+        setDbEventsTotal(res.data.eventsTotal ?? 0);
+        if (res.data.analytics) {
+          setAnalyticsData(res.data.analytics);
+        }
       }
     } catch (err) {
       console.warn("Could not fetch dashboard live stats:", err);
@@ -340,20 +305,20 @@ export default function AdminDashboardPage() {
     }
   }, [dateBounds, selectedFilterOption, customStartDate, customEndDate]);
 
-  // Main Dashboard Stats Loader Effect (Auto 8s polling + Tab Focus)
+  // Main Dashboard Stats Loader Effect (Smart 30s polling + Instant Tab Focus Sync)
   useEffect(() => {
     let isCancelled = false;
 
     fetchDashboardData(false);
 
-    // Auto-refresh polling every 8s when visible
+    // Smart auto-refresh polling every 30s when visible
     const timer = setInterval(() => {
       if (document.visibilityState === "visible") {
         fetchDashboardData(false);
       }
-    }, 8000);
+    }, 30000);
 
-    // Instant Sync on Tab Focus / Return to Window
+    // Instant Sync on Tab Focus / Return to Window (Zero delay on focus)
     const handleFocus = () => {
       if (document.visibilityState === "visible") {
         fetchDashboardData(false);

@@ -404,14 +404,14 @@ export default function ProductsListing() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-4xl bg-[#0e1015] border border-gold-light/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto"
+            className="relative w-full max-w-4xl lg:max-w-5xl bg-[#0e1015] border border-gold-main/50 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-9 lg:p-10 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
           >
             <button
               onClick={() => setQuoteProduct(null)}
-              className="absolute top-5 right-5 w-9 h-9 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light flex items-center justify-center transition-all cursor-pointer z-20"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
               aria-label="Close quote modal"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
             </button>
 
             <div className="mb-6 bg-[#161822] border border-white/10 rounded-2xl p-4 sm:p-5 flex items-center gap-4 sm:gap-5 shadow-lg relative overflow-hidden">

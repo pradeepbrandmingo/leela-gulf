@@ -282,20 +282,44 @@ export default function OurJourney() {
             />
           </svg>
 
-          {/* Milestone Steps Container */}
-          <div className="relative z-10 flex flex-col gap-16 sm:gap-24 md:gap-32">
-            {steps.map((item) => {
+          {/* ═══════════════════════════════════════════
+              MILESTONE STEPS — DESKTOP: unchanged  |  MOBILE: vertical timeline connector
+              ═══════════════════════════════════════════ */}
+
+          {/* Mobile-only vertical timeline line (hidden on md+) */}
+          <div className="md:hidden absolute left-[22px] top-[80px] bottom-[60px] w-[3px] bg-gradient-to-b from-[var(--color-secondary-main)] via-[var(--color-secondary-light)]/30 to-[var(--color-secondary-main)] rounded-full z-[5] opacity-60" />
+          {/* Mobile-only glowing overlay on the line */}
+          <div className="md:hidden absolute left-[22px] top-[80px] bottom-[60px] w-[3px] rounded-full z-[5] opacity-40 blur-[4px] bg-gradient-to-b from-[var(--color-secondary-light)] via-transparent to-[var(--color-secondary-light)]" />
+
+          <div className="relative z-10 flex flex-col gap-0 md:gap-32">
+            {steps.map((item, index) => {
               // Layout is always LTR (dir="ltr" on wrapper) so SVG road and card positions stay aligned
               const isLeft = item.align === "left";
               const isActive = activeCardId === item.id;
+              const isLast = index === steps.length - 1;
 
               return (
                 <div
                   key={item.id}
-                  className={`flex items-center relative w-full ${isLeft ? "md:justify-start md:pl-6" : "md:justify-end md:pr-6"
-                    } justify-center`}
+                  className={`flex items-start relative w-full ${isLeft ? "md:justify-start md:pl-6" : "md:justify-end md:pr-6"
+                    } md:items-center`}
                 >
-                  {/* Flag Marker Pin (Positioned cleanly ON TOP of pole to eliminate card overlap) */}
+                  {/* ── MOBILE TIMELINE MARKER (hidden on md+) ── */}
+                  <div className="md:hidden flex flex-col items-center shrink-0 relative z-10 mr-4" style={{ width: '44px' }}>
+                    {/* Glowing dot on timeline */}
+                    <div className="relative mt-5">
+                      {/* Outer glow ring */}
+                      <div className="absolute -inset-2 rounded-full bg-[var(--color-secondary-main)]/20 animate-pulse" />
+                      {/* Solid dot */}
+                      <div className="w-[14px] h-[14px] rounded-full bg-gradient-to-br from-[var(--color-secondary-light)] to-[var(--color-secondary-main)] border-[2.5px] border-[var(--color-primary)] shadow-[0_0_12px_rgba(214,185,42,0.6)] relative z-10" />
+                    </div>
+                    {/* Year label below dot */}
+                    <div className="mt-2 text-[0.6rem] font-bold text-[var(--color-secondary-light)] tracking-wider whitespace-nowrap opacity-80">
+                      {item.year}
+                    </div>
+                  </div>
+
+                  {/* Flag Marker Pin — Desktop only (Positioned cleanly ON TOP of pole to eliminate card overlap) */}
                   <div
                     className={`hidden md:flex flex-col items-center absolute -top-16 ${isLeft ? "left-[170px]" : "right-[170px]"
                       } z-20 pointer-events-none`}
@@ -313,7 +337,7 @@ export default function OurJourney() {
                   <div
                     onClick={() => handleCardClick(item.id)}
                     dir={isRTL ? "rtl" : "ltr"}
-                    className="w-full max-w-[460px] bg-[#1d1d1d] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:-translate-y-2 hover:bg-[#222222] hover:border-gold-main/50 hover:shadow-[0_15px_30px_rgba(214,185,42,0.25)] group cursor-pointer select-none"
+                    className={`w-full max-w-[460px] bg-[#1d1d1d] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:-translate-y-2 hover:bg-[#222222] hover:border-gold-main/50 hover:shadow-[0_15px_30px_rgba(214,185,42,0.25)] group cursor-pointer select-none ${!isLast ? 'mb-6 sm:mb-8' : ''} md:mb-0`}
                   >
                     {/* Header Bar */}
                     <div className="flex flex-wrap sm:flex-nowrap justify-between items-center gap-2 px-5 sm:px-6 py-4 border-b border-white/5 bg-white/[0.02]">

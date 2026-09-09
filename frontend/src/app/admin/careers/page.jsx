@@ -153,12 +153,12 @@ export default function AdminCareersPage() {
 
     loadData(false);
 
-    // Auto-refresh polling every 8s when visible
+    // Auto-refresh polling every 30s when visible
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         loadData(false);
       }
-    }, 8000);
+    }, 30000);
 
     // Instant Sync on Tab Focus / Return to Window
     const handleFocus = () => {

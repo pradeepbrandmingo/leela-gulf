@@ -627,7 +627,17 @@ export default function AdminEventsPage() {
                             <h3 className="font-heading font-bold text-sm text-gray-900 truncate group-hover:text-gold-dark transition-colors leading-snug">
                               {event.title}
                             </h3>
-                            <span className="block text-xs text-gray-600 line-clamp-1 mt-0.5 font-normal leading-normal">
+                            <span
+                              className="block text-xs text-gray-500 mt-0.5 font-normal leading-relaxed"
+                              style={{
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                              title={event.description}
+                            >
                               {event.description}
                             </span>
                           </div>

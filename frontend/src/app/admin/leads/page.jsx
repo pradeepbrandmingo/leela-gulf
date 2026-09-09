@@ -300,27 +300,112 @@ export default function AdminLeadsPage() {
 
   // Selected Checkboxes State
   const [selectedLeadIds, setSelectedLeadIds] = useState([]);
+  const [serverPageSources, setServerPageSources] = useState(["All Pages"]);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // Fetch Live Leads from Backend API (Silent Background + Manual Trigger)
+  // Compute ISO date bounds for server query
+  const dateBounds = useMemo(() => {
+    const now = new Date();
+    if (selectedFilterOption === "Today") {
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    if (selectedFilterOption === "Yesterday") {
+      const start = new Date(now);
+      start.setDate(now.getDate() - 1);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now);
+      end.setDate(now.getDate() - 1);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    if (selectedFilterOption === "Last 7 days") {
+      const start = new Date(now);
+      start.setDate(now.getDate() - 6);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    if (selectedFilterOption === "Last 30 days") {
+      const start = new Date(now);
+      start.setDate(now.getDate() - 29);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    if (selectedFilterOption === "This Month") {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    if (selectedFilterOption === "Last Month") {
+      const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now.getFullYear(), now.getMonth(), 0);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
+      const start = new Date(customStartDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(customEndDate);
+      end.setHours(23, 59, 59, 999);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+    return { start: null, end: null };
+  }, [selectedFilterOption, customStartDate, customEndDate]);
+
+  // Fetch Live Paginated Leads from Backend API (Server-Side Filtered & Paginated)
   const fetchLeads = useCallback(async (isManual = false) => {
     if (isManual) setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      let endpoint = `/leads?limit=500&_t=${Date.now()}`;
+      const queryParams = [
+        `page=${currentPage}`,
+        `limit=${itemsPerPage}`,
+        `_t=${Date.now()}`
+      ];
 
       if (searchQuery.trim()) {
-        endpoint += `&search=${encodeURIComponent(searchQuery.trim())}`;
+        queryParams.push(`search=${encodeURIComponent(searchQuery.trim())}`);
       }
 
-      const res = await apiRequest(endpoint, { method: "GET" });
+      if (activeTab !== "overview") {
+        queryParams.push(`tab=${encodeURIComponent(activeTab)}`);
+      }
+
+      if (pageSourceFilter !== "All Pages") {
+        queryParams.push(`sourcePage=${encodeURIComponent(pageSourceFilter)}`);
+      }
+
+      if (dateBounds.start) {
+        queryParams.push(`startDate=${encodeURIComponent(dateBounds.start)}`);
+      }
+      if (dateBounds.end) {
+        queryParams.push(`endDate=${encodeURIComponent(dateBounds.end)}`);
+      }
+
+      const res = await apiRequest(`/leads?${queryParams.join("&")}`, { method: "GET" });
 
       if (res && res.success) {
         setLeadsData(res.leads || []);
-        setTotalLeadsCount(res.total || (res.leads ? res.leads.length : 0));
+        setTotalLeadsCount(res.total ?? 0);
+        setTotalPages(res.pages || 1);
+        if (Array.isArray(res.pageSources) && res.pageSources.length > 0) {
+          setServerPageSources(res.pageSources);
+        }
         setErrorMsg("");
       } else {
         setLeadsData([]);
         setTotalLeadsCount(0);
+        setTotalPages(1);
       }
     } catch (err) {
       console.error("Failed to fetch leads:", err);
@@ -337,19 +422,19 @@ export default function AdminLeadsPage() {
         }, remainingDelay);
       }
     }
-  }, [searchQuery]);
+  }, [currentPage, itemsPerPage, searchQuery, activeTab, pageSourceFilter, dateBounds]);
 
   useEffect(() => {
     let isCancelled = false;
 
     fetchLeads(false);
 
-    // Auto-refresh polling every 8s when visible
+    // Auto-refresh polling every 30s when visible
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         fetchLeads(false);
       }
-    }, 8000);
+    }, 30000);
 
     // Instant Sync on Tab Focus / Return to Window
     const handleFocus = () => {
@@ -397,6 +482,7 @@ export default function AdminLeadsPage() {
     setPageSourceFilter("All Pages");
     setSelectedFilterOption("All Time");
     setDateRangeText("All Time");
+    setActiveTab("overview");
     setCurrentPage(1);
   };
 
@@ -408,12 +494,11 @@ export default function AdminLeadsPage() {
       });
 
       if (res && res.success) {
-        setLeadsData((prev) => prev.filter((item) => item._id !== leadId));
-        setTotalLeadsCount((prev) => Math.max(0, prev - 1));
         setDeleteConfirmLead(null);
         if (selectedLeadModal && selectedLeadModal._id === leadId) {
           setSelectedLeadModal(null);
         }
+        fetchLeads(false);
       }
     } catch (err) {
       alert("Failed to delete lead. Please try again.");
@@ -423,7 +508,7 @@ export default function AdminLeadsPage() {
   // Checkbox Select Handlers
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedLeadIds(displayedLeads.map((l) => l._id));
+      setSelectedLeadIds(leadsData.map((l) => l._id));
     } else {
       setSelectedLeadIds([]);
     }
@@ -445,94 +530,41 @@ export default function AdminLeadsPage() {
       await Promise.allSettled(
         selectedLeadIds.map((id) => apiRequest(`/leads/${id}`, { method: "DELETE" }))
       );
-      setLeadsData((prev) => prev.filter((item) => !selectedLeadIds.includes(item._id)));
-      setTotalLeadsCount((prev) => Math.max(0, prev - selectedLeadIds.length));
       setSelectedLeadIds([]);
+      fetchLeads(false);
     } catch (err) {
       console.error("Bulk delete leads error:", err);
-      setLeadsData((prev) => prev.filter((item) => !selectedLeadIds.includes(item._id)));
       setSelectedLeadIds([]);
+      fetchLeads(false);
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Dynamic Page Sources extracted from actual database leads
-  const dynamicPageSources = useMemo(() => {
-    const pagesSet = new Set(["All Pages"]);
+  // Dynamic Page Sources list from server
+  const dynamicPageSources = serverPageSources;
 
-    // Add unique sourcePage values from actual live leads (excluding blogs)
-    leadsData.forEach((lead) => {
-      if (lead.sourcePage && lead.sourcePage.trim()) {
-        const pageName = lead.sourcePage.trim();
-        if (!pageName.toLowerCase().includes("blog")) {
-          pagesSet.add(pageName);
-        }
-      }
-    });
+  // Direct server-paginated data references
+  const displayedLeads = leadsData;
+  const paginatedLeads = leadsData;
 
-    return Array.from(pagesSet);
-  }, [leadsData]);
-
-  // Filtered Leads Calculation based on Dynamic Page Source, Date Range, & Active Tab
-  const displayedLeads = useMemo(() => {
-    return leadsData.filter((lead) => {
-      // 1. Date Range Filter
-      if (
-        !isDateInSelectedRange(
-          lead.createdAt,
-          selectedFilterOption,
-          customStartDate,
-          customEndDate
-        )
-      ) {
-        return false;
-      }
-
-      // 2. Tab Filtering
-      if (activeTab === "contactUs") {
-        if (
-          lead.sourcePage !== "Contact Page" &&
-          !lead.sourcePage?.toLowerCase().includes("contact")
-        ) {
-          return false;
-        }
-      }
-      if (activeTab === "byProduct") {
-        if (
-          !lead.productName &&
-          !lead.service?.toLowerCase().includes("product") &&
-          !lead.sourcePage?.toLowerCase().includes("product")
-        ) {
-          return false;
-        }
-      }
-
-      // 3. Dynamic Page Source Filter
-      if (pageSourceFilter !== "All Pages") {
-        if (lead.sourcePage !== pageSourceFilter) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }, [leadsData, activeTab, pageSourceFilter, selectedFilterOption, customStartDate, customEndDate]);
-
-  // Working Client Pagination Calculations
-  const totalPages = Math.max(1, Math.ceil(displayedLeads.length / itemsPerPage));
-
-  // Ensure current page does not exceed totalPages when filters change
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
+  // Smart 5-page sliding window for pagination buttons
+  const visiblePages = useMemo(() => {
+    const maxButtons = 5;
+    if (totalPages <= maxButtons) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, start + maxButtons - 1);
+    if (end - start < maxButtons - 1) {
+      start = Math.max(1, end - maxButtons + 1);
+    }
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }, [totalPages, currentPage]);
-
-  const paginatedLeads = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return displayedLeads.slice(startIndex, startIndex + itemsPerPage);
-  }, [displayedLeads, currentPage, itemsPerPage]);
 
   return (
     <div className="space-y-5 pb-10">
@@ -561,7 +593,7 @@ export default function AdminLeadsPage() {
                   Total Leads:
                 </span>
                 <span className="text-xs font-heading font-extrabold text-gray-900">
-                  {displayedLeads.length}
+                  {totalLeadsCount.toLocaleString()}
                 </span>
               </div>
               <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.2 rounded-md border border-emerald-200">
@@ -973,13 +1005,13 @@ export default function AdminLeadsPage() {
             <div>
               Showing{" "}
               <span className="font-bold text-gray-900">
-                {displayedLeads.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}
+                {totalLeadsCount > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}
               </span>{" "}
               to{" "}
               <span className="font-bold text-gray-900">
-                {Math.min(currentPage * itemsPerPage, displayedLeads.length)}
+                {Math.min(currentPage * itemsPerPage, totalLeadsCount)}
               </span>{" "}
-              of <span className="font-bold text-gray-900">{displayedLeads.length}</span> leads
+              of <span className="font-bold text-gray-900">{totalLeadsCount}</span> leads
             </div>
 
             <div className="flex items-center gap-4">
@@ -1036,8 +1068,8 @@ export default function AdminLeadsPage() {
                   <ChevronLeft className="w-4 h-4" />
                 </button>
 
-                {/* Dynamic Page Numbers */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                {/* Sliding Dynamic Page Numbers (Max 5 buttons) */}
+                {visiblePages.map((pageNum) => (
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}

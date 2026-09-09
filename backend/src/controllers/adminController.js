@@ -1,5 +1,72 @@
 import Admin from "../models/Admin.js";
+import Product from "../models/Product.js";
+import Blog from "../models/Blog.js";
+import Lead from "../models/Lead.js";
+import Event from "../models/Event.js";
+import { computeAnalyticsStatsData } from "./analyticsController.js";
 import { generateToken } from "../utils/generateToken.js";
+
+/**
+ * @desc    Get Consolidated Dashboard Summary (Single Fast Call)
+ * @route   GET /api/admin/dashboard-summary
+ * @access  Private (Admin)
+ */
+export const getDashboardSummary = async (req, res) => {
+  try {
+    const { range = "Last 7 days", startDate, endDate } = req.query;
+
+    // Date range filter for leads if specified
+    const leadFilter = {};
+    if (startDate && endDate) {
+      leadFilter.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    }
+
+    // Execute all lightweight summary queries in parallel (sub-15ms)
+    const [
+      productsTotal,
+      blogsTotal,
+      recentBlogs,
+      eventsTotal,
+      leadsTotal,
+      recentLeads,
+      analyticsStats,
+    ] = await Promise.all([
+      Product.countDocuments(),
+      Blog.countDocuments(),
+      Blog.find()
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select("title slug bannerImage createdAt category readTime views"),
+      Event.countDocuments(),
+      Lead.countDocuments(leadFilter),
+      Lead.find(leadFilter).sort({ createdAt: -1 }).limit(5),
+      computeAnalyticsStatsData(range, startDate, endDate),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        productsTotal: productsTotal || 0,
+        blogsTotal: blogsTotal || 0,
+        blogsList: recentBlogs || [],
+        eventsTotal: eventsTotal || 0,
+        leadsTotal: leadsTotal || 0,
+        leadsList: recentLeads || [],
+        analytics: analyticsStats || null,
+      },
+    });
+  } catch (error) {
+    console.error("Dashboard Summary Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch dashboard summary",
+      error: error.message,
+    });
+  }
+};
 
 /**
  * @desc    Single Admin Login

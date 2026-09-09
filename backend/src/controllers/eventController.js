@@ -81,9 +81,18 @@ export async function getEventById(req, res) {
       });
     }
 
-    // Increment views safely
-    event.views = (event.views || 0) + 1;
-    await event.save();
+    // Increment views atomically in background for real public visitors (Skip admin edits / previews)
+    const authHeader = req.headers.authorization;
+    const hasAdminToken =
+      (authHeader && authHeader.startsWith("Bearer ")) ||
+      Boolean(req.cookies?.token) ||
+      req.query.admin === "true";
+
+    if (!hasAdminToken) {
+      Event.updateOne({ _id: event._id }, { $inc: { views: 1 } }).catch((err) => {
+        console.error("[Event] View counter increment error:", err.message);
+      });
+    }
 
     return res.status(200).json({
       success: true,

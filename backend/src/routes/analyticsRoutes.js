@@ -24,8 +24,8 @@ const trackLimiter = rateLimit({
 // Public Beacon tracking endpoint (Called silently from client)
 router.post("/track", trackLimiter, trackHit);
 
-// Analytics Statistics endpoint (Used by /admin/visitors dashboard)
-router.get("/stats", getAnalyticsStats);
+// Protected: Analytics Statistics endpoint (Requires authenticated admin)
+router.get("/stats", protectAdmin, getAnalyticsStats);
 
 // Protected: Clear all visitor logs (Requires authenticated admin)
 router.delete("/clear", protectAdmin, clearAllLogs);

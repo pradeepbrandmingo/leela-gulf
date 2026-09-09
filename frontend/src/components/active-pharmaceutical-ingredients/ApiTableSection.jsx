@@ -452,7 +452,7 @@ export default function ApiTableSection() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-3xl bg-[#0e1015] border border-gold-main/50 rounded-3xl p-5 sm:p-7 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
+            className="relative w-full max-w-4xl lg:max-w-5xl bg-[#0e1015] border border-gold-main/50 rounded-3xl p-5 sm:p-7 md:p-9 lg:p-10 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
           >
             {/* Close Button */}
             <button

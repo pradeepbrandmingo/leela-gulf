@@ -1,6 +1,11 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-import { loginAdmin, getAdminProfile, logoutAdmin } from "../controllers/adminController.js";
+import {
+  loginAdmin,
+  getAdminProfile,
+  logoutAdmin,
+  getDashboardSummary,
+} from "../controllers/adminController.js";
 import { protectAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -23,5 +28,6 @@ router.post("/login", loginLimiter, loginAdmin);
 // Protected routes (Single Admin authentication required)
 router.get("/me", protectAdmin, getAdminProfile);
 router.post("/logout", protectAdmin, logoutAdmin);
+router.get("/dashboard-summary", protectAdmin, getDashboardSummary);
 
 export default router;

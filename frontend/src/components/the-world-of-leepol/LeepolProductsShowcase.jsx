@@ -811,7 +811,7 @@ export default function LeepolProductsShowcase() {
       </div>
 
       {/* ────────────────────────────────────────────
-          5. QUOTE MODAL
+          5. QUOTE MODAL (Spacious Luxury Dialog)
           ──────────────────────────────────────────── */}
       {isQuoteModalOpen && selectedProduct && (
         <div
@@ -820,15 +820,15 @@ export default function LeepolProductsShowcase() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-3xl bg-[#0e1015] border border-gold-main/50 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="relative w-full max-w-4xl lg:max-w-5xl bg-[#0e1015] border border-gold-main/50 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-9 lg:p-10 shadow-2xl shadow-black/90 max-h-[92vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-all duration-300"
           >
             {/* Close */}
             <button
               onClick={() => setIsQuoteModalOpen(false)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#1b1e2a] border border-[#2e3344] text-gray-400 hover:text-white hover:border-gold-light hover:bg-[#252a3a] flex items-center justify-center transition-all cursor-pointer z-20 shadow-lg"
               aria-label="Close quote modal"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
             </button>
 
             {/* Product info header */}

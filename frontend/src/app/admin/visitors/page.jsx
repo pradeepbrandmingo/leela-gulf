@@ -221,12 +221,12 @@ export default function AdminVisitorsPage() {
 
     loadData();
 
-    // Live Real-Time Auto Refresh every 8 seconds (Smart Polling)
+    // Live Real-Time Auto Refresh every 30 seconds (Smart Polling)
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         loadData();
       }
-    }, 8000);
+    }, 30000);
 
     // Instant Sync on Tab Focus / Return to Window
     const handleFocus = () => {

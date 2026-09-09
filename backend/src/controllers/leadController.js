@@ -108,21 +108,41 @@ export const createLead = async (req, res, next) => {
 export const getAllLeads = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
+    const limit = Math.min(100, parseInt(req.query.limit, 10) || 10);
     const skip = (page - 1) * limit;
 
-    const { status, emailStatus, search, startDate, endDate } = req.query;
+    const { status, emailStatus, search, startDate, endDate, sourcePage, tab } = req.query;
 
     const query = {};
 
-    if (status) {
+    if (status && status !== "All") {
       query.status = status;
     }
 
-    if (emailStatus) {
+    if (emailStatus && emailStatus !== "All") {
       query.emailStatus = emailStatus;
     }
 
+    // Tab-based filtering (contactUs vs byProduct)
+    if (tab === "contactUs") {
+      query.$or = [
+        { sourcePage: "Contact Page" },
+        { sourcePage: { $regex: "contact", $options: "i" } },
+      ];
+    } else if (tab === "byProduct") {
+      query.$or = [
+        { productName: { $exists: true, $ne: "" } },
+        { service: { $regex: "product", $options: "i" } },
+        { sourcePage: { $regex: "product", $options: "i" } },
+      ];
+    }
+
+    // Specific source page filter
+    if (sourcePage && sourcePage !== "All Pages") {
+      query.sourcePage = sourcePage;
+    }
+
+    // Date range filter
     if (startDate || endDate) {
       query.createdAt = {};
       if (startDate) {
@@ -135,28 +155,53 @@ export const getAllLeads = async (req, res, next) => {
       }
     }
 
-    if (search) {
-      query.$or = [
-        { firstName: { $regex: search, $options: "i" } },
-        { lastName: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-        { service: { $regex: search, $options: "i" } },
-        { country: { $regex: search, $options: "i" } },
+    // Comprehensive text search
+    if (search && search.trim()) {
+      const searchRegex = { $regex: search.trim(), $options: "i" };
+      const searchConditions = [
+        { firstName: searchRegex },
+        { lastName: searchRegex },
+        { email: searchRegex },
+        { phone: searchRegex },
+        { service: searchRegex },
+        { country: searchRegex },
+        { productName: searchRegex },
+        { message: searchRegex },
       ];
+
+      if (query.$or) {
+        // Combine tab $or condition with search $or condition using $and
+        query.$and = [{ $or: query.$or }, { $or: searchConditions }];
+        delete query.$or;
+      } else {
+        query.$or = searchConditions;
+      }
     }
 
-    const total = await Lead.countDocuments(query);
-    const leads = await Lead.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    // Execute queries in parallel
+    const [total, leads, distinctPages] = await Promise.all([
+      Lead.countDocuments(query),
+      Lead.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Lead.distinct("sourcePage"),
+    ]);
+
+    const pageSources = Array.from(
+      new Set(
+        ["All Pages", ...(distinctPages || []).filter((p) => p && !p.toLowerCase().includes("blog"))]
+      )
+    );
 
     return res.status(200).json({
       success: true,
       total,
       page,
-      pages: Math.ceil(total / limit),
+      pages: Math.ceil(total / limit) || 1,
+      limit,
       leads,
+      pageSources,
     });
   } catch (error) {
     next(error);

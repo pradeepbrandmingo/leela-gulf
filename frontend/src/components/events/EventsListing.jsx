@@ -169,8 +169,17 @@ export default function EventsListing({ eventsData, activeTab }) {
                           {displayTitle}
                         </h3>
 
-                        {/* Event Description Paragraph (Automatically clamped to 2-3 lines on card) */}
-                        <p className="font-subheading text-xs sm:text-xs text-gray-500 leading-relaxed font-normal break-words line-clamp-3 mb-3.5">
+                        {/* Event Description Paragraph (Clamped to 2 lines on card) */}
+                        <p
+                          className="font-subheading text-xs sm:text-xs text-gray-500 leading-relaxed font-normal break-words mb-3.5"
+                          style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
                           {displayDesc}
                         </p>
                       </div>
