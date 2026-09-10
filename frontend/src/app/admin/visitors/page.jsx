@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { API_BASE_URL } from "@/config/api";
+import { API_BASE_URL, apiRequest } from "@/config/api";
 import {
   Users,
   UserPlus,
@@ -158,18 +158,11 @@ export default function AdminVisitorsPage() {
     if (isManual) setIsRefreshing(true);
     const startTime = Date.now();
     try {
-      let url = `${API_BASE_URL}/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
+      let endpoint = `/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
       if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
-        url += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
+        endpoint += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
       }
-      const res = await fetch(url, {
-        cache: "no-store",
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
-        },
-      });
-      const data = await res.json();
+      const data = await apiRequest(endpoint, { method: "GET" });
       if (data && data.success) {
         setApiData(data);
         if (data.dateRangeText && selectedFilterOption !== "Custom") {
@@ -192,46 +185,19 @@ export default function AdminVisitorsPage() {
   useEffect(() => {
     let isCancelled = false;
 
-    const loadData = async () => {
-      try {
-        let url = `${API_BASE_URL}/analytics/stats?range=${encodeURIComponent(selectedFilterOption)}&_t=${Date.now()}`;
-        if (selectedFilterOption === "Custom" && customStartDate && customEndDate) {
-          url += `&startDate=${encodeURIComponent(customStartDate.toISOString())}&endDate=${encodeURIComponent(customEndDate.toISOString())}`;
-        }
-        const res = await fetch(url, {
-          cache: "no-store",
-          headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            Pragma: "no-cache",
-          },
-        });
-        const data = await res.json();
-        if (!isCancelled && data && data.success) {
-          setApiData(data);
-          if (data.dateRangeText && selectedFilterOption !== "Custom") {
-            setDateRangeText(data.dateRangeText);
-          }
-        }
-      } catch (err) {
-        if (!isCancelled) {
-          console.warn("Using offline analytics defaults:", err?.message);
-        }
-      }
-    };
-
-    loadData();
+    fetchLiveAnalytics(false);
 
     // Live Real-Time Auto Refresh every 30 seconds (Smart Polling)
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
-        loadData();
+        fetchLiveAnalytics(false);
       }
     }, 30000);
 
     // Instant Sync on Tab Focus / Return to Window
     const handleFocus = () => {
       if (document.visibilityState === "visible") {
-        loadData();
+        fetchLiveAnalytics(false);
       }
     };
 
@@ -244,7 +210,7 @@ export default function AdminVisitorsPage() {
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleFocus);
     };
-  }, [selectedFilterOption, customStartDate, customEndDate]);
+  }, [fetchLiveAnalytics]);
 
   const handleSelectFilter = (option) => {
     setSelectedFilterOption(option.value);
