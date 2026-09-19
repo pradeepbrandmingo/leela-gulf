@@ -47,7 +47,7 @@ function ServiceSectionItem({ service, isReversed, index }) {
       }`}
     >
       {/* ═══════════════════════════════════════════
-          IMAGE CONTAINER (Alternates left/right based on isReversed)
+          IMAGE CONTAINER (Alternates left/right with Luxury Gold Frame)
           ═══════════════════════════════════════════ */}
       <div
         className={`lg:col-span-6 relative transition-all duration-[1200ms] ease-out ${
@@ -62,22 +62,26 @@ function ServiceSectionItem({ service, isReversed, index }) {
               : "opacity-0 -translate-x-12"
         }`}
       >
-        <div className="relative mx-auto w-full max-w-[580px] lg:max-w-none rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden border border-white/10 shadow-2xl bg-[var(--color-card-dark)] group aspect-[1.38/1] sm:aspect-[1.45/1] md:aspect-[1.5/1]">
-          {/* High-res Image */}
-          <Image
-            src={service.image}
-            alt={service.titlePart1 + " " + service.titlePart2}
-            fill
-            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 650px"
-            priority={index === 0}
-          />
+        {/* Subtle Gold Ambient Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gold-main/[0.06] rounded-3xl blur-2xl pointer-events-none" />
 
-          {/* Smooth Dark Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 pointer-events-none" />
+        {/* Luxury Dual-Layer Metallic Accent Frame */}
+        <div className="relative mx-auto w-full max-w-[580px] lg:max-w-none p-1 sm:p-1.5 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white/15 via-gold-main/25 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] group">
+          {/* Inner Image Container */}
+          <div className="relative w-full rounded-[14px] sm:rounded-[22px] overflow-hidden bg-[var(--color-card-dark)] aspect-[1.38/1] sm:aspect-[1.45/1] md:aspect-[1.5/1]">
+            {/* High-res Image */}
+            <Image
+              src={service.image}
+              alt={service.titlePart1 + " " + service.titlePart2}
+              fill
+              className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 650px"
+              priority={index === 0}
+            />
 
-          {/* Ambient Corner Accent */}
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-gold-main/[0.08] rounded-full blur-3xl pointer-events-none" />
+            {/* Smooth Dark Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10 pointer-events-none" />
+          </div>
         </div>
       </div>
 

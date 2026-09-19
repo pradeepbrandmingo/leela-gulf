@@ -145,7 +145,7 @@ export default function SustainableSupplyChain() {
           </div>
 
           {/* ═══════════════════════════════════════════
-              RIGHT COLUMN: Centered High-Res Image with Vertically Centered Card
+              RIGHT COLUMN: High-Res Image with Luxury Gold Accent Frame & Floating Card
               ═══════════════════════════════════════════ */}
           <div
             className={`lg:col-span-6 relative transition-all duration-[1200ms] delay-200 ease-out ${
@@ -156,58 +156,65 @@ export default function SustainableSupplyChain() {
                   : "opacity-0 translate-x-12"
             }`}
           >
-            {/* Aspect container with centered image - Compact Height */}
-            <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none rounded-2xl sm:rounded-3xl lg:rounded-[30px] overflow-hidden border border-white/10 shadow-2xl bg-[var(--color-card-dark)] group min-h-[370px] sm:min-h-[410px] md:min-h-[430px]">
+            {/* Subtle Gold Ambient Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gold-main/[0.06] rounded-3xl blur-2xl pointer-events-none" />
+
+            {/* Luxury Dual-Layer Metallic Accent Frame */}
+            <div className="relative mx-auto w-full max-w-[580px] lg:max-w-none p-1 sm:p-1.5 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white/15 via-gold-main/25 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] group">
               
-              {/* Main Image with object-center */}
-              <Image
-                src="/images/Sustainability And Compliance/solutions.avif"
-                alt="Sustainable Supply Chain - Leela Gulf FZC"
-                fill
-                className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 620px"
-                priority
-              />
+              {/* Inner Image Container */}
+              <div className="relative w-full rounded-[14px] sm:rounded-[22px] overflow-hidden bg-[var(--color-card-dark)] min-h-[380px] sm:min-h-[410px] md:min-h-[430px]">
+                
+                {/* Main High-Res Image */}
+                <Image
+                  src="/images/Sustainability And Compliance/solutions.avif"
+                  alt="Sustainable Supply Chain - Leela Gulf FZC"
+                  fill
+                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 620px"
+                  priority
+                />
 
-              {/* Gentle gradient vignette to accentuate the white card & image */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
+                {/* Smooth Dark Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10 pointer-events-none" />
 
-              {/* ═══════════════════════════════════════════
-                  COMPACT FLOATING WHITE CARD (Vertically Centered & Right Aligned)
-                  ═══════════════════════════════════════════ */}
-              <div
-                className={`absolute top-1/2 -translate-y-1/2 right-3 left-3 sm:left-auto sm:right-4 md:right-6 lg:right-7 sm:w-[280px] md:w-[300px] lg:w-[310px] bg-white text-gray-900 rounded-2xl sm:rounded-[22px] shadow-2xl p-3.5 sm:p-4 md:p-4.5 border border-gray-100/90 transition-all duration-[1000ms] delay-[600ms] ease-out ${
-                  isRTL
-                    ? "sm:right-auto sm:left-4 md:left-6 lg:left-7 text-right"
-                    : "text-left"
-                } ${
-                  isVisible
-                    ? "opacity-100 translate-y-[-50%] scale-100"
-                    : "opacity-0 translate-y-[-40%] scale-95"
-                }`}
-              >
-                <div className="flex flex-col divide-y divide-gray-100/90">
-                  {features.map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        className="flex items-center gap-3 py-2 sm:py-2.5 first:pt-0 last:pb-0 group/item transition-all duration-300"
-                      >
-                        {/* Soft Circle Icon Badge — Font Awesome CSS Icon Font (No SVG) */}
-                        <div className="flex-shrink-0 w-7.5 h-7.5 sm:w-8.5 sm:h-8.5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center transition-all duration-300 group-hover/item:bg-[var(--color-primary)] group-hover/item:text-gold-light group-hover/item:scale-105 shadow-xs">
-                          <i className={`${item.iconClass} text-[13px] sm:text-[14px]`} />
+                {/* ═══════════════════════════════════════════
+                    FLOATING WHITE FEATURE CARD (Vertically Centered)
+                    ═══════════════════════════════════════════ */}
+                <div
+                  className={`absolute top-1/2 -translate-y-1/2 right-3 left-3 sm:left-auto sm:right-4 md:right-6 lg:right-7 sm:w-[285px] md:w-[305px] lg:w-[315px] bg-white text-gray-900 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.35)] p-3.5 sm:p-4 md:p-4.5 border border-white transition-all duration-[1000ms] delay-[600ms] ease-out ${
+                    isRTL
+                      ? "sm:right-auto sm:left-4 md:left-6 lg:left-7 text-right"
+                      : "text-left"
+                  } ${
+                    isVisible
+                      ? "opacity-100 translate-y-[-50%] scale-100"
+                      : "opacity-0 translate-y-[-40%] scale-95"
+                  }`}
+                >
+                  <div className="flex flex-col divide-y divide-gray-100">
+                    {features.map((item) => {
+                      return (
+                        <div
+                          key={item.id}
+                          className="flex items-center gap-3 py-2 sm:py-2.5 first:pt-0 last:pb-0 group/item transition-all duration-300"
+                        >
+                          {/* Circular Icon Badge */}
+                          <div className="flex-shrink-0 w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full bg-amber-50/80 text-[var(--color-primary)] flex items-center justify-center transition-all duration-300 group-hover/item:bg-[var(--color-primary)] group-hover/item:text-gold-light group-hover/item:scale-105 shadow-xs border border-amber-100/60">
+                            <i className={`${item.iconClass} text-[13px] sm:text-[14px]`} />
+                          </div>
+
+                          {/* Feature Text */}
+                          <p className="font-heading font-medium text-[11px] sm:text-[12px] md:text-[12.5px] text-gray-800 leading-tight group-hover/item:text-black transition-colors">
+                            {item.text}
+                          </p>
                         </div>
-
-                        {/* Feature Text */}
-                        <p className="font-heading font-medium text-[11px] sm:text-[12px] md:text-[12.5px] text-slate-800 leading-tight group-hover/item:text-black transition-colors">
-                          {item.text}
-                        </p>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
+              </div>
             </div>
           </div>
 
