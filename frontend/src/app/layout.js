@@ -31,8 +31,12 @@ export const metadata = {
     "raw materials supplier",
   ],
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
+    icon: [
+      { url: "/logos/logo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    shortcut: "/logos/logo.png",
     apple: "/logos/logo.png",
   },
   openGraph: {
@@ -65,6 +69,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${raleway.variable}`} suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/logos/logo.png" type="image/png" sizes="any" />
+        <link rel="apple-touch-icon" href="/logos/logo.png" />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
