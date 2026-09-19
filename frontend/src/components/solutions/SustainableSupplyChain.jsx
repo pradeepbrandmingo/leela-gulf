@@ -99,12 +99,14 @@ export default function SustainableSupplyChain() {
               LEFT COLUMN: Eyebrow, Heading & Narrative
               ═══════════════════════════════════════════ */}
           <div
-            className={`lg:col-span-6 flex flex-col justify-center transition-all duration-1000 ease-out ${
+            className={`lg:col-span-6 flex flex-col justify-center transition-all duration-[1200ms] ease-out ${
               isRTL ? "text-right" : "text-left"
             } ${
               isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
+                ? "opacity-100 translate-x-0"
+                : isRTL
+                  ? "opacity-0 translate-x-12"
+                  : "opacity-0 -translate-x-12"
             }`}
           >
             {/* Eyebrow with gold accent dash */}
@@ -146,10 +148,12 @@ export default function SustainableSupplyChain() {
               RIGHT COLUMN: Centered High-Res Image with Vertically Centered Card
               ═══════════════════════════════════════════ */}
           <div
-            className={`lg:col-span-6 relative transition-all duration-1000 delay-200 ease-out ${
+            className={`lg:col-span-6 relative transition-all duration-[1200ms] delay-200 ease-out ${
               isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
+                ? "opacity-100 translate-x-0"
+                : isRTL
+                  ? "opacity-0 -translate-x-12"
+                  : "opacity-0 translate-x-12"
             }`}
           >
             {/* Aspect container with centered image - Compact Height */}
@@ -172,14 +176,14 @@ export default function SustainableSupplyChain() {
                   COMPACT FLOATING WHITE CARD (Vertically Centered & Right Aligned)
                   ═══════════════════════════════════════════ */}
               <div
-                className={`absolute top-1/2 -translate-y-1/2 right-3 left-3 sm:left-auto sm:right-4 md:right-6 lg:right-7 sm:w-[280px] md:w-[300px] lg:w-[310px] bg-white text-gray-900 rounded-2xl sm:rounded-[22px] shadow-2xl p-3.5 sm:p-4 md:p-4.5 border border-gray-100/90 transition-all duration-700 delay-400 ease-out ${
+                className={`absolute top-1/2 -translate-y-1/2 right-3 left-3 sm:left-auto sm:right-4 md:right-6 lg:right-7 sm:w-[280px] md:w-[300px] lg:w-[310px] bg-white text-gray-900 rounded-2xl sm:rounded-[22px] shadow-2xl p-3.5 sm:p-4 md:p-4.5 border border-gray-100/90 transition-all duration-[1000ms] delay-[600ms] ease-out ${
                   isRTL
                     ? "sm:right-auto sm:left-4 md:left-6 lg:left-7 text-right"
                     : "text-left"
                 } ${
                   isVisible
-                    ? "opacity-100 translate-y-[-50%]"
-                    : "opacity-0 translate-y-[-40%]"
+                    ? "opacity-100 translate-y-[-50%] scale-100"
+                    : "opacity-0 translate-y-[-40%] scale-95"
                 }`}
               >
                 <div className="flex flex-col divide-y divide-gray-100/90">

@@ -50,14 +50,16 @@ function ServiceSectionItem({ service, isReversed, index }) {
           IMAGE CONTAINER (Alternates left/right based on isReversed)
           ═══════════════════════════════════════════ */}
       <div
-        className={`lg:col-span-6 relative transition-all duration-1000 ease-out ${
+        className={`lg:col-span-6 relative transition-all duration-[1200ms] ease-out ${
           isReversed
             ? "lg:order-2"
             : "lg:order-1"
         } ${
           isVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
+            ? "opacity-100 translate-x-0"
+            : isReversed
+              ? "opacity-0 translate-x-12"
+              : "opacity-0 -translate-x-12"
         }`}
       >
         <div className="relative mx-auto w-full max-w-[580px] lg:max-w-none rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden border border-white/10 shadow-2xl bg-[var(--color-card-dark)] group aspect-[1.38/1] sm:aspect-[1.45/1] md:aspect-[1.5/1]">
@@ -83,7 +85,7 @@ function ServiceSectionItem({ service, isReversed, index }) {
           TEXT CONTENT (Alternates opposite to image)
           ═══════════════════════════════════════════ */}
       <div
-        className={`lg:col-span-6 flex flex-col justify-center transition-all duration-1000 delay-200 ease-out ${
+        className={`lg:col-span-6 flex flex-col justify-center transition-all duration-[1200ms] delay-200 ease-out ${
           isRTL ? "text-right items-start" : "text-left items-start"
         } ${
           isReversed
@@ -91,8 +93,10 @@ function ServiceSectionItem({ service, isReversed, index }) {
             : "lg:order-2"
         } ${
           isVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
+            ? "opacity-100 translate-x-0"
+            : isReversed
+              ? "opacity-0 -translate-x-12"
+              : "opacity-0 translate-x-12"
         }`}
       >
         {/* Main Title (Dual-tone white + animated gold gradient) */}
