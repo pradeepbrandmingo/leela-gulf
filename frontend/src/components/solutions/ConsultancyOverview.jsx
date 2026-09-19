@@ -705,7 +705,7 @@ export default function ConsultancyOverview() {
                   type="button"
                   key={service.id}
                   onClick={() => setSelectedService(service)}
-                  className="group/card relative flex flex-col items-center justify-center text-center bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 md:p-5 shadow-xs hover:shadow-xl border border-gray-100 hover:border-gold-main/40 transition-all duration-300 hover:-translate-y-1 focus:outline-hidden cursor-pointer h-full min-h-[160px] sm:min-h-[185px] md:min-h-[195px] overflow-hidden"
+                  className="group/card relative flex flex-col items-center justify-center text-center bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 md:p-5 shadow-xs hover:shadow-xl border border-gray-100 hover:border-gold-main/40 transition-all duration-300 hover:-translate-y-1 focus:outline-hidden cursor-pointer h-full min-h-[165px] sm:min-h-[185px] md:min-h-[195px] overflow-hidden"
                   style={{
                     transitionDelay: `${index * 50}ms`,
                   }}
@@ -715,24 +715,31 @@ export default function ConsultancyOverview() {
                   <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-transparent group-hover/card:bg-gradient-gold-animated transition-all duration-300" />
 
                   {/* Icon Badge: Directly above heading */}
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#fbf5dc] border border-[#f5eac0] flex items-center justify-center mb-2.5 sm:mb-3 transition-all duration-300 group-hover/card:scale-110 group-hover/card:bg-[var(--color-primary)] group-hover/card:border-[var(--color-primary)] shadow-2xs">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-[#fbf5dc] border border-[#f5eac0] flex items-center justify-center mb-2.5 sm:mb-3 transition-all duration-300 group-hover/card:scale-110 group-hover/card:bg-[var(--color-primary)] group-hover/card:border-[var(--color-primary)] shadow-2xs">
                     <i
                       className={`${service.iconClass} text-gold-dark text-sm sm:text-base transition-colors duration-300 group-hover/card:text-gold-light`}
                     />
                   </div>
 
-                  {/* Service Title (Noticeably Larger & Bolder than subtitle on all devices) */}
-                  <h3 className="font-heading font-bold text-[13.5px] sm:text-base md:text-[16.5px] text-gray-950 leading-tight tracking-tight group-hover/card:text-gold-dark transition-colors mb-1 max-w-[170px]">
+                  {/* Service Title (Noticeably Larger & Bolder than subtitle) */}
+                  <h3 className="font-heading font-bold text-[13.5px] sm:text-base md:text-[16px] text-gray-950 leading-tight tracking-tight group-hover/card:text-gold-dark transition-colors mb-1 max-w-[170px]">
                     {service.title}
                   </h3>
 
-                  {/* Service Subtitle (Smaller, lighter, secondary text) */}
-                  <p className="font-subheading text-[10px] sm:text-[11.5px] text-gray-400 font-normal leading-tight mb-2.5 line-clamp-1">
+                  {/* Service Subtitle */}
+                  <p className="font-subheading text-[10px] sm:text-[11px] md:text-[11.5px] text-gray-500 font-normal leading-tight mb-2.5 line-clamp-1">
                     {service.subtitle}
                   </p>
 
-                  {/* Bottom: Accent Gold Dash + Hover Indicator */}
-                  <div className="w-7 sm:w-8 h-[2px] bg-gradient-gold-animated rounded-full transition-all duration-300 group-hover/card:w-12" />
+                  {/* Minimalist 'View Details' Action (Clean & Matches Card UI) */}
+                  <div className="inline-flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-[12px] font-heading font-semibold text-gray-700 group-hover/card:text-gold-dark transition-colors duration-300">
+                    <span className="tracking-tight">{isRTL ? "عرض التفاصيل" : "View Details"}</span>
+                    <i
+                      className={`text-[9px] sm:text-[10px] text-gold-dark group-hover/card:translate-x-1 transition-transform duration-300 ${
+                        isRTL ? "fa-solid fa-arrow-left group-hover/card:-translate-x-1" : "fa-solid fa-arrow-right"
+                      }`}
+                    />
+                  </div>
                 </button>
               ))}
             </div>
