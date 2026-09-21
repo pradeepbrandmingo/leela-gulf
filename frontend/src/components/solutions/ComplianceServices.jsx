@@ -24,12 +24,12 @@ function ServiceSectionItem({ service, isReversed, index }) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.15 }
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -40px 0px",
+      }
     );
 
     if (rowRef.current) {
@@ -47,19 +47,19 @@ function ServiceSectionItem({ service, isReversed, index }) {
       }`}
     >
       {/* ═══════════════════════════════════════════
-          IMAGE CONTAINER (Alternates left/right with Luxury Gold Frame)
+          IMAGE CONTAINER (Alternates left/right with 3D Flip-In Animation)
           ═══════════════════════════════════════════ */}
       <div
-        className={`lg:col-span-6 relative transition-all duration-[1200ms] ease-out ${
+        className={`lg:col-span-6 relative [perspective:1400px] transition-all duration-[1300ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] ${
           isReversed
             ? "lg:order-2"
             : "lg:order-1"
         } ${
           isVisible
-            ? "opacity-100 translate-x-0"
-            : isReversed
-              ? "opacity-0 translate-x-12"
-              : "opacity-0 -translate-x-12"
+            ? "opacity-100 [transform:perspective(1400px)_rotateY(0deg)_translateX(0)_scale(1)]"
+            : (isReversed !== isRTL)
+              ? "opacity-0 [transform:perspective(1400px)_rotateY(32deg)_translateX(60px)_scale(0.92)] origin-right"
+              : "opacity-0 [transform:perspective(1400px)_rotateY(-32deg)_translateX(-60px)_scale(0.92)] origin-left"
         }`}
       >
         {/* Subtle Gold Ambient Glow */}

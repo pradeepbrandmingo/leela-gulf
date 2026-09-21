@@ -22,12 +22,12 @@ export default function SustainableSupplyChain() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.15 }
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -40px 0px",
+      }
     );
 
     if (sectionRef.current) {
@@ -145,15 +145,15 @@ export default function SustainableSupplyChain() {
           </div>
 
           {/* ═══════════════════════════════════════════
-              RIGHT COLUMN: High-Res Image with Luxury Gold Accent Frame & Floating Card
+              RIGHT COLUMN: High-Res Image with 3D Flip-In Animation & Luxury Accent Frame
               ═══════════════════════════════════════════ */}
           <div
-            className={`lg:col-span-6 relative transition-all duration-[1200ms] delay-200 ease-out ${
+            className={`lg:col-span-6 relative [perspective:1400px] transition-all duration-[1300ms] delay-150 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] ${
               isVisible
-                ? "opacity-100 translate-x-0"
+                ? "opacity-100 [transform:perspective(1400px)_rotateY(0deg)_translateX(0)_scale(1)]"
                 : isRTL
-                  ? "opacity-0 -translate-x-12"
-                  : "opacity-0 translate-x-12"
+                  ? "opacity-0 [transform:perspective(1400px)_rotateY(-32deg)_translateX(-60px)_scale(0.92)] origin-left"
+                  : "opacity-0 [transform:perspective(1400px)_rotateY(32deg)_translateX(60px)_scale(0.92)] origin-right"
             }`}
           >
             {/* Subtle Gold Ambient Glow */}
