@@ -156,14 +156,27 @@ export default function SustainableSupplyChain() {
                   : "opacity-0 [transform:perspective(1400px)_rotateY(32deg)_translateX(60px)_scale(0.92)] origin-right"
             }`}
           >
-            {/* Subtle Gold Ambient Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gold-main/[0.06] rounded-3xl blur-2xl pointer-events-none" />
+            {/* Ambient Gold Atmospheric Glow */}
+            <div className="absolute -inset-4 bg-gold-main/[0.08] rounded-full blur-3xl pointer-events-none" />
 
-            {/* Luxury Dual-Layer Metallic Accent Frame */}
-            <div className="relative mx-auto w-full max-w-[580px] lg:max-w-none p-1 sm:p-1.5 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white/15 via-gold-main/25 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] group">
+            {/* 1. Layered Offset Architectural Backing Panel */}
+            <div
+              className={`absolute inset-0 ${
+                isRTL
+                  ? "-translate-x-3 translate-y-3 sm:-translate-x-4 sm:translate-y-4"
+                  : "translate-x-3 translate-y-3 sm:translate-x-4 sm:translate-y-4"
+              } rounded-2xl sm:rounded-3xl border border-gold-main/30 bg-gradient-to-br from-[#181c2b]/90 via-[#10131f]/80 to-black/90 shadow-xl pointer-events-none -z-10 group-hover:border-gold-main/60 transition-all duration-500`}
+            >
+              {/* Subtle gold corner accents */}
+              <div className="absolute top-3 left-3 w-8 h-[1.5px] bg-gradient-gold-animated opacity-70" />
+              <div className="absolute bottom-3 right-3 w-8 h-[1.5px] bg-gradient-gold-animated opacity-70" />
+            </div>
+
+            {/* 2. Main Luxury Metallic Rim Container */}
+            <div className="relative mx-auto w-full max-w-[580px] lg:max-w-none p-[1.5px] rounded-2xl sm:rounded-3xl bg-gradient-to-br from-gold-light/60 via-white/20 to-gold-main/40 shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(202,154,53,0.12)] group">
               
               {/* Inner Image Container */}
-              <div className="relative w-full rounded-[14px] sm:rounded-[22px] overflow-hidden bg-[var(--color-card-dark)] min-h-[380px] sm:min-h-[410px] md:min-h-[430px]">
+              <div className="relative w-full rounded-[14.5px] sm:rounded-[22.5px] overflow-hidden bg-[var(--color-card-dark)] min-h-[380px] sm:min-h-[410px] md:min-h-[430px]">
                 
                 {/* Main High-Res Image */}
                 <Image
@@ -176,7 +189,19 @@ export default function SustainableSupplyChain() {
                 />
 
                 {/* Smooth Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15 pointer-events-none" />
+
+                {/* Sleek Minimalist Luxury Glass Badge */}
+                <div
+                  className={`absolute top-3.5 sm:top-4.5 ${
+                    isRTL ? "right-3.5 sm:right-4.5" : "left-3.5 sm:left-4.5"
+                  } z-20 flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-gold-light/40 shadow-xl transition-all duration-300 group-hover:border-gold-light/70`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold-light animate-pulse shadow-[0_0_8px_rgba(202,154,53,0.9)]" />
+                  <span className="font-heading font-semibold text-[10px] sm:text-[11px] text-gold-light tracking-wider uppercase">
+                    {isRTL ? "سلسلة توريد مستدامة" : "Sustainable Supply"}
+                  </span>
+                </div>
 
                 {/* ═══════════════════════════════════════════
                     FLOATING WHITE FEATURE CARD (Vertically Centered)
