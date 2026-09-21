@@ -43,10 +43,10 @@ export default function Footer() {
 
   const quickLinks = [
     { name: isRTL ? "الرئيسية" : "Home", href: "/" },
-    { name: isRTL ? "من نحن" : "About", href: "/about", hasDot: true },
+    { name: isRTL ? "من نحن" : "About", href: "/about" },
     { name: isRTL ? "المنتجات" : "Products", href: "/products" },
     { name: isRTL ? "الاستدامة والامتثال" : "Sustainability & Compliance", href: "/solutions" },
-    { name: isRTL ? "مركز المعرفة" : "Knowledge Center", href: "/knowledge-center", hasDot: true },
+    { name: isRTL ? "مركز المعرفة" : "Knowledge Center", href: "/knowledge-center" },
     { name: isRTL ? "الوظائف" : "Careers", href: "/careers" },
     { name: isRTL ? "الفعاليات" : "Events", href: "/events" },
     { name: isRTL ? "اتصل بنا" : "Contact", href: "/contact" },
@@ -202,7 +202,7 @@ export default function Footer() {
               ) : (
                 <form
                   onSubmit={handleSubscribe}
-                  className="relative flex items-center bg-white/5 border border-white/10 rounded-full p-1 max-w-md focus-within:border-gold-main focus-within:bg-white/10 transition-all duration-300"
+                  className="relative flex items-center bg-white/5 border border-white/15 rounded-full p-1 max-w-md focus-within:border-gold-main focus-within:bg-white/10 focus-within:shadow-[0_0_15px_rgba(202,154,53,0.25)] transition-all duration-300 overflow-hidden"
                 >
                   <input
                     type="email"
@@ -214,13 +214,13 @@ export default function Footer() {
                         ? "أدخل عنوان بريدك الإلكتروني"
                         : "Enter your email address"
                     }
-                    className="w-full bg-transparent px-4 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 outline-none font-subheading"
+                    className="w-full min-w-0 bg-transparent px-4 py-2 text-xs sm:text-sm text-white placeholder-gray-500 border-none outline-none focus:outline-none focus:ring-0 focus:border-none shadow-none font-subheading"
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     aria-label="Submit Email Subscription"
-                    className="bg-gradient-gold-animated w-10 h-10 rounded-full text-black flex items-center justify-center shrink-0 hover:scale-108 active:scale-95 transition-all duration-300 cursor-pointer shadow-md"
+                    className="bg-gradient-gold-animated w-9 h-9 sm:w-10 sm:h-10 rounded-full text-black flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer shadow-md"
                   >
                     <ArrowRight className={`w-4 h-4 text-black ${isRTL ? "rotate-180" : ""}`} />
                   </button>
@@ -302,9 +302,6 @@ export default function Footer() {
                     className="inline-flex items-center text-gray-300 hover:text-gold-light hover:translate-x-1.5 rtl:hover:-translate-x-1.5 transition-all duration-300 group"
                   >
                     <span>{link.name}</span>
-                    {link.hasDot && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-gold-main ml-2 rtl:mr-2 rtl:ml-0 shadow-xs shrink-0" />
-                    )}
                   </Link>
                 </li>
               ))}

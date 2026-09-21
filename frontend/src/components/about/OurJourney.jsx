@@ -80,7 +80,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s1TitleHighlight"),
       desc: t("ourJourney.s1Desc"),
       location: t("ourJourney.s1Loc"),
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/1.The Foundation 2016.png",
       align: "left",
     },
     {
@@ -91,7 +91,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s2TitleHighlight"),
       desc: t("ourJourney.s2Desc"),
       location: t("ourJourney.s2Loc"),
-      image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/2.Scaling Trust - 2018.png",
       align: "right",
     },
     {
@@ -102,7 +102,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s3TitleHighlight"),
       desc: t("ourJourney.s3Desc"),
       location: t("ourJourney.s3Loc"),
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/3. Formalizing the Business - 2019.png",
       align: "left",
     },
     {
@@ -113,7 +113,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s4TitleHighlight"),
       desc: t("ourJourney.s4Desc"),
       location: t("ourJourney.s4Loc"),
-      image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/4. Going Global - 2020.png",
       align: "right",
     },
     {
@@ -124,7 +124,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s5TitleHighlight"),
       desc: t("ourJourney.s5Desc"),
       location: t("ourJourney.s5Loc"),
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/4.Two New Entities - 2023.png",
       align: "left",
     },
     {
@@ -135,7 +135,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s6TitleHighlight"),
       desc: t("ourJourney.s6Desc"),
       location: t("ourJourney.s6Loc"),
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/5.Proof of scale - 2024.png",
       align: "right",
     },
     {
@@ -146,7 +146,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s7TitleHighlight"),
       desc: t("ourJourney.s7Desc"),
       location: t("ourJourney.s7Loc"),
-      image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/6.Rebrand & Circular Economy_ Leela Partner Limited and Pure Leela - 2025.png",
       align: "left",
     },
     {
@@ -157,7 +157,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s8TitleHighlight"),
       desc: t("ourJourney.s8Desc"),
       location: t("ourJourney.s8Loc"),
-      image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/7.Diversification - 2026.png",
       align: "right",
     },
     {
@@ -168,7 +168,7 @@ export default function OurJourney() {
       highlightTitle: t("ourJourney.s9TitleHighlight"),
       desc: t("ourJourney.s9Desc"),
       location: t("ourJourney.s9Loc"),
-      image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=800",
+      image: "/images/OurJourney/8.August 2026.png",
       align: "left",
     },
   ];
