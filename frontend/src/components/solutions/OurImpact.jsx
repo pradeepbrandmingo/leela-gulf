@@ -114,13 +114,9 @@ export default function OurImpact() {
               : "opacity-0 translate-y-6"
           }`}
         >
-          {/* ── "OUR IMPACT" Eyebrow INSIDE White Card ── */}
-          <div
-            className={`mb-3.5 sm:mb-4 md:mb-5 flex items-center ${
-              isRTL ? "justify-start flex-row-reverse" : "justify-start"
-            }`}
-          >
-            <span className="font-heading font-bold text-[11px] sm:text-xs md:text-[12.5px] tracking-[0.2em] text-gradient-gold-animated uppercase select-none">
+          {/* ── "OUR IMPACT" Eyebrow INSIDE White Card (Centered Horizontally) ── */}
+          <div className="mb-4 sm:mb-5 md:mb-6 flex items-center justify-center text-center">
+            <span className="font-heading font-bold text-[11px] sm:text-xs md:text-[12.5px] tracking-[0.22em] text-gradient-gold-animated uppercase select-none">
               {isRTL ? "تأثيرنا" : "OUR IMPACT"}
             </span>
           </div>
