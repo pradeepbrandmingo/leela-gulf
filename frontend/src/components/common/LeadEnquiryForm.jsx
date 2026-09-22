@@ -260,7 +260,32 @@ export default function LeadEnquiryForm({
       leadClassification: emailScore.quality, // 'VALID_WORK_EMAIL' vs 'SUSPICIOUS_SPAM'
     };
 
-    console.log("🚀 [LEELA GULF PRODUCTION LEAD SUBMITTED]:", leadPayload);
+    // ── DIRECT GOOGLE SHEET INSTANT SYNC (Dual-Layer Redundancy) ──
+    try {
+      const googleSheetUrl =
+        process.env.NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL ||
+        "https://script.google.com/macros/s/AKfycbyepOp2Jx45rkJreesfHCjVqVHatfRCDJiNhfBROVBwuEy4JuQz7-yb11Gzj6qLcTws/exec";
+      if (googleSheetUrl) {
+        fetch(googleSheetUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            firstName: leadPayload.firstName,
+            lastName: leadPayload.lastName,
+            email: leadPayload.email,
+            phone: leadPayload.phone,
+            country: leadPayload.country,
+            service: leadPayload.service || leadPayload.productName || "General Inquiry",
+            message: leadPayload.message,
+            sourcePage: leadPayload.sourcePage,
+            productUrl: leadPayload.productUrl || "",
+          }),
+        }).catch(() => {});
+      }
+    } catch {
+      // Silent fail-safe
+    }
 
     try {
       const res = await apiRequest("/leads", {

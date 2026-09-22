@@ -84,7 +84,9 @@ export const createLead = async (req, res, next) => {
     });
 
     // Trigger Asynchronous Google Sheet Sync in Background
-    const googleSheetWebhook = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    const googleSheetWebhook =
+      process.env.GOOGLE_SHEET_WEBHOOK_URL ||
+      "https://script.google.com/macros/s/AKfycbyepOp2Jx45rkJreesfHCjVqVHatfRCDJiNhfBROVBwuEy4JuQz7-yb11Gzj6qLcTws/exec";
     if (googleSheetWebhook) {
       fetch(googleSheetWebhook, {
         method: "POST",
