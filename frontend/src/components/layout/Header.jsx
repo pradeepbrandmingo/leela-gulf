@@ -79,11 +79,10 @@ export default function Header() {
     <>
       {/* Top Header Bar */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 py-2.5 md:py-3 transition-all duration-300 ${
-          isScrolled
-            ? "bg-[var(--color-primary)]/95 backdrop-blur-md border-b border-[#393C3F]/30 shadow-xl"
-            : "bg-transparent border-b border-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 py-2.5 md:py-3 transition-all duration-300 ${isScrolled
+          ? "bg-[var(--color-primary)]/95 backdrop-blur-md border-b border-[#393C3F]/30 shadow-xl"
+          : "bg-transparent border-b border-transparent"
+          }`}
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 flex items-center justify-between">
           {/* LOGO */}
@@ -103,11 +102,11 @@ export default function Header() {
             {/* Language Switcher Badge */}
             <button
               onClick={() => setLang(lang === "en" ? "ar" : "en")}
-              className="hidden md:flex w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] items-center justify-center font-bold text-xs md:text-sm shadow-lg transition-transform hover:scale-105 cursor-pointer"
+              className="hidden md:flex w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] items-center justify-center font-bold text-xs md:text-sm shadow-lg transition-transform hover:scale-105 cursor-pointer select-none"
               title={lang === "en" ? "Switch to Arabic" : "Switch to English"}
               aria-label="Switch Language"
             >
-              文A
+              عA
             </button>
 
             {/* Hamburger Menu Toggle Button */}
@@ -159,11 +158,10 @@ export default function Header() {
                       >
                         <div className="flex items-center gap-2">
                           <span
-                            className={`text-base md:text-lg font-heading tracking-wide transition-colors ${
-                              isActive
-                                ? "text-gradient-gold-animated font-bold"
-                                : "text-gray-200 group-hover:text-gradient-gold-animated"
-                            }`}
+                            className={`text-base md:text-lg font-heading tracking-wide transition-colors ${isActive
+                              ? "text-gradient-gold-animated font-bold"
+                              : "text-gray-200 group-hover:text-gradient-gold-animated"
+                              }`}
                           >
                             {item.name}
                           </span>
@@ -173,9 +171,8 @@ export default function Header() {
                         </div>
 
                         <ChevronDown
-                          className={`w-4 h-4 text-gold-main transition-transform duration-200 ${
-                            isIndustriesSubmenuOpen ? "rotate-180" : ""
-                          }`}
+                          className={`w-4 h-4 text-gold-main transition-transform duration-200 ${isIndustriesSubmenuOpen ? "rotate-180" : ""
+                            }`}
                         />
                       </button>
 
@@ -190,11 +187,10 @@ export default function Header() {
                                 key={ind.id}
                                 href={indHref}
                                 onClick={() => setIsMenuOpen(false)}
-                                className={`block text-xs sm:text-sm font-subheading transition-colors py-0.5 ${
-                                  isIndActive
-                                    ? "text-gradient-gold-animated font-bold"
-                                    : "text-gray-300 hover:text-gradient-gold-animated"
-                                }`}
+                                className={`block text-xs sm:text-sm font-subheading transition-colors py-0.5 ${isIndActive
+                                  ? "text-gradient-gold-animated font-bold"
+                                  : "text-gray-300 hover:text-gradient-gold-animated"
+                                  }`}
                               >
                                 {isRTL ? ind.ar : ind.name}
                               </Link>
@@ -211,11 +207,10 @@ export default function Header() {
                     <Link
                       href={item.href}
                       onClick={() => setIsMenuOpen(false)}
-                      className={`text-base md:text-lg font-heading tracking-wide transition-colors ${
-                        isActive
-                          ? "text-gradient-gold-animated font-bold"
-                          : "text-gray-200 hover:text-gradient-gold-animated"
-                      }`}
+                      className={`text-base md:text-lg font-heading tracking-wide transition-colors ${isActive
+                        ? "text-gradient-gold-animated font-bold"
+                        : "text-gray-200 hover:text-gradient-gold-animated"
+                        }`}
                     >
                       {item.name}
                     </Link>
@@ -231,10 +226,11 @@ export default function Header() {
             <div className="pt-4 flex justify-end rtl:justify-start border-t border-[#393C3F]/30 mt-4">
               <button
                 onClick={() => setLang(lang === "en" ? "ar" : "en")}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] flex items-center justify-center font-bold text-xs md:text-sm shadow-xl transition-transform hover:scale-105 cursor-pointer"
+                className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-gold-animated text-[#1a1a1a] flex items-center justify-center font-bold text-xs md:text-sm shadow-xl transition-transform hover:scale-105 cursor-pointer select-none"
+                title={lang === "en" ? "Switch to Arabic" : "Switch to English"}
                 aria-label="Language Switcher"
               >
-                文A
+                عA
               </button>
             </div>
           </div>

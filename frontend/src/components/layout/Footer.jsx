@@ -345,14 +345,11 @@ export default function Footer() {
           <p>© {currentYear} Leela Gulf F.Z.C. {isRTL ? "جميع الحقوق محفوظة." : "All rights reserved."}</p>
           
           <div className="flex flex-wrap items-center gap-6">
-            <Link href="/contact" className="hover:text-gold-light transition-colors">
+            <Link href="/privacy-policy" className="hover:text-gold-light transition-colors">
               {isRTL ? "سياسة الخصوصية" : "Privacy Policy"}
             </Link>
-            <Link href="/contact" className="hover:text-gold-light transition-colors">
+            <Link href="/terms-and-conditions" className="hover:text-gold-light transition-colors">
               {isRTL ? "الشروط والأحكام" : "Terms & Conditions"}
-            </Link>
-            <Link href="/solutions" className="hover:text-gold-light transition-colors">
-              {isRTL ? "السياسات التنظيمية" : "Regulatory Policies"}
             </Link>
           </div>
         </div>

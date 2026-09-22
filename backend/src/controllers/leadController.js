@@ -83,6 +83,28 @@ export const createLead = async (req, res, next) => {
       emailScore: verification.score,
     });
 
+    // Trigger Asynchronous Google Sheet Sync in Background
+    const googleSheetWebhook = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    if (googleSheetWebhook) {
+      fetch(googleSheetWebhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: newLead.firstName,
+          lastName: newLead.lastName,
+          email: newLead.email,
+          phone: newLead.phone || "",
+          country: newLead.country || "",
+          service: newLead.service || newLead.productName || "General Inquiry",
+          message: newLead.message || "",
+          sourcePage: newLead.sourcePage || "Contact Page",
+          productUrl: newLead.productUrl || "",
+        }),
+      }).catch((sheetErr) => {
+        console.error("Google Sheet webhook sync warning:", sheetErr.message);
+      });
+    }
+
     return res.status(201).json({
       success: true,
       message: "Thank you! Your inquiry has been submitted successfully.",
