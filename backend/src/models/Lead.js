@@ -95,11 +95,14 @@ const leadSchema = new mongoose.Schema(
   }
 );
 
-// Indexing for fast search in Admin Dashboard
+// Ultra-Fast Indexes for High Scale Admin Filtering & Search
 leadSchema.index({ email: 1 });
 leadSchema.index({ status: 1 });
 leadSchema.index({ emailStatus: 1 });
+leadSchema.index({ sourcePage: 1 });
+leadSchema.index({ service: 1 });
 leadSchema.index({ createdAt: -1 });
+leadSchema.index({ sourcePage: 1, createdAt: -1 });
 
 const Lead = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 

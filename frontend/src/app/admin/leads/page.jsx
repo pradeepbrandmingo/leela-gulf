@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Users,
   Search,
@@ -27,7 +28,8 @@ import {
   Filter,
   FileText,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Newspaper,
 } from "lucide-react";
 import { apiRequest } from "@/config/api";
 
@@ -258,9 +260,23 @@ const getInitials = (firstName, lastName) => {
   return f + l || "U";
 };
 
-export default function AdminLeadsPage() {
-  // Navigation Active Tab: 'overview' | 'byProduct' | 'contactUs'
-  const [activeTab, setActiveTab] = useState("overview");
+function AdminLeadsContent() {
+  const searchParams = useSearchParams();
+  const initialTab = searchParams?.get("tab") || "overview";
+
+  // Navigation Active Tab: 'overview' | 'byProduct' | 'contactUs' | 'newsletter'
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Sync tab if URL changes (e.g. clicking sidebar menu items)
+  useEffect(() => {
+    const tabFromUrl = searchParams?.get("tab");
+    if (tabFromUrl && tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+      setCurrentPage(1);
+    } else if (!tabFromUrl && activeTab !== "overview" && !searchParams?.toString()) {
+      setActiveTab("overview");
+    }
+  }, [searchParams]);
 
   // Global Header Date Filter
   const [selectedFilterOption, setSelectedFilterOption] = useState("All Time");
@@ -276,7 +292,16 @@ export default function AdminLeadsPage() {
 
   // Search & Dynamic Page Source Filter
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [pageSourceFilter, setPageSourceFilter] = useState("All Pages");
+
+  // 250ms Debounce on Search Input to ensure silky smooth 60fps typing without spamming requests
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   // Open Dropdown Popover Toggle
   const [openDropdown, setOpenDropdown] = useState(null); // 'pageSource'
@@ -373,8 +398,8 @@ export default function AdminLeadsPage() {
         `_t=${Date.now()}`
       ];
 
-      if (searchQuery.trim()) {
-        queryParams.push(`search=${encodeURIComponent(searchQuery.trim())}`);
+      if (debouncedSearch.trim()) {
+        queryParams.push(`search=${encodeURIComponent(debouncedSearch.trim())}`);
       }
 
       if (activeTab !== "overview") {
@@ -422,7 +447,7 @@ export default function AdminLeadsPage() {
         }, remainingDelay);
       }
     }
-  }, [currentPage, itemsPerPage, searchQuery, activeTab, pageSourceFilter, dateBounds]);
+  }, [currentPage, itemsPerPage, debouncedSearch, activeTab, pageSourceFilter, dateBounds]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -718,6 +743,22 @@ export default function AdminLeadsPage() {
           >
             <Mail className="w-4 h-4 text-gold-dark" />
             <span>Contact Us Leads</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("newsletter");
+              setPageSourceFilter("All Pages");
+              setCurrentPage(1);
+            }}
+            className={`flex items-center gap-2 pb-2.5 text-xs font-bold transition-all relative ${
+              activeTab === "newsletter"
+                ? "text-gray-900 border-b-2 border-gold-main"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
+          >
+            <Newspaper className="w-4 h-4 text-gold-dark" />
+            <span>Newsletter Subscribers</span>
           </button>
         </div>
       </div>
@@ -1388,5 +1429,20 @@ export default function AdminLeadsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminLeadsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-12 text-center text-gray-400 text-xs font-semibold flex flex-col items-center justify-center gap-3">
+          <div className="w-7 h-7 border-2 border-gold-main border-t-transparent rounded-full animate-spin"></div>
+          <span>Loading leads...</span>
+        </div>
+      }
+    >
+      <AdminLeadsContent />
+    </Suspense>
   );
 }

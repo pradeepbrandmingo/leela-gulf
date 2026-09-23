@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   LayoutGrid,
   Package,
@@ -17,7 +17,8 @@ import {
   ChevronUp,
   ChevronDown,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Newspaper,
 } from "lucide-react";
 import { apiRequest } from "@/config/api";
 
@@ -43,6 +44,11 @@ const sidebarMenuItems = [
     icon: Users,
   },
   {
+    name: "Newsletter",
+    href: "/admin/leads?tab=newsletter",
+    icon: Newspaper,
+  },
+  {
     name: "Visitors",
     href: "/admin/visitors",
     icon: Eye,
@@ -62,6 +68,7 @@ const sidebarMenuItems = [
 export default function AdminSidebar({ adminUser, isOpen, onClose }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false); // Collapsible Sidebar State (Desktop)
 
@@ -137,9 +144,18 @@ export default function AdminSidebar({ adminUser, isOpen, onClose }) {
         <nav className={`py-3 space-y-1.5 flex-1 overflow-y-auto ${isCollapsed ? "px-2" : "px-3"}`}>
           {sidebarMenuItems.map((item) => {
             const Icon = item.icon;
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/admin/dashboard" && pathname?.startsWith(item.href));
+            const currentTab = searchParams?.get("tab");
+            
+            let isActive = false;
+            if (item.name === "Newsletter") {
+              isActive = pathname === "/admin/leads" && currentTab === "newsletter";
+            } else if (item.name === "Leads") {
+              isActive = pathname === "/admin/leads" && currentTab !== "newsletter";
+            } else if (item.href === "/admin/dashboard") {
+              isActive = pathname === "/admin/dashboard";
+            } else {
+              isActive = pathname?.startsWith(item.href);
+            }
 
             return (
               <Link

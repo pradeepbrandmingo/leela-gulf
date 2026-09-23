@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Menu, Loader2 } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -48,11 +48,13 @@ export default function AdminLayout({ children }) {
   return (
     <div className="h-screen bg-gray-50 text-gray-900 flex flex-col lg:flex-row font-subheading overflow-hidden">
       {/* Fixed Sticky Sidebar Component (Left Side Viewport Anchored) */}
-      <AdminSidebar
-        adminUser={adminUser}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
+      <Suspense fallback={<div className="w-56 bg-white border-r border-gray-200" />}>
+        <AdminSidebar
+          adminUser={adminUser}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
+      </Suspense>
 
       {/* Mobile Backdrop Overlay */}
       {isSidebarOpen && (

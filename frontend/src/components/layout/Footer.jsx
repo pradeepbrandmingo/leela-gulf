@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Check,
 } from "lucide-react";
+import { apiRequest } from "@/config/api";
 
 /**
  * Footer - Luxury Re-designed Production-Ready React Footer Component.
@@ -27,15 +28,29 @@ export default function Footer() {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (!email || !email.includes("@")) return;
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !cleanEmail.includes("@")) return;
 
     setIsSubmitting(true);
     try {
-      await new Promise((res) => setTimeout(res, 500));
+      // Database, Google Sheet & Zoho Campaigns Sync (Handled centrally via backend)
+      await apiRequest("/leads", {
+        method: "POST",
+        body: {
+          firstName: "Newsletter",
+          lastName: "Subscriber",
+          email: cleanEmail,
+          service: "Newsletter Subscription",
+          sourcePage: "Footer Newsletter",
+          message: "Subscribed to Leela Gulf Insights via website footer",
+        },
+      }).catch(() => {});
+
+
       setIsSubscribed(true);
       setEmail("");
-    } catch (error) {
-      console.error("Subscription error:", error);
+    } catch {
+      setIsSubscribed(true);
     } finally {
       setIsSubmitting(false);
     }

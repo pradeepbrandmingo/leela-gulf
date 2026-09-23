@@ -83,6 +83,35 @@ export const createLead = async (req, res, next) => {
       emailScore: verification.score,
     });
 
+    // Trigger Zoho Campaigns Sync for Newsletters
+    if (newLead.sourcePage && newLead.sourcePage.toLowerCase().includes("newsletter")) {
+      try {
+        const zohoParams = new URLSearchParams();
+        zohoParams.append("CONTACT_EMAIL", newLead.email);
+        zohoParams.append("LASTNAME", newLead.lastName || "Subscriber");
+        zohoParams.append("submitType", "optinCustomView");
+        zohoParams.append("formType", "QuickForm");
+        zohoParams.append("zx", "1dfd92a030");
+        zohoParams.append("zcvers", "2.0");
+        zohoParams.append("mode", "OptinCreateView");
+        zohoParams.append("zcld", "153dff9e80d002bf");
+        zohoParams.append("zc_Url", "zgp4-zgp4.maillist-manage.in");
+        zohoParams.append("new_optin_response_in", "0");
+        zohoParams.append("duplicate_optin_response_in", "0");
+        zohoParams.append("zc_trackCode", "ZCFORMVIEW");
+        zohoParams.append("zc_formIx", "3z63e1c7aed760f17b037d033f11fa89d75a2a107fc1b337e30f4042082b5f4877");
+        zohoParams.append("viewFrom", "URL_ACTION");
+
+        fetch("https://zgp4-zgp4.maillist-manage.in/weboptin.zc", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: zohoParams.toString(),
+        }).catch(() => {});
+      } catch {
+        // Silent
+      }
+    }
+
     // Trigger Asynchronous Google Sheet Sync in Background
     const googleSheetWebhook =
       process.env.GOOGLE_SHEET_WEBHOOK_URL ||
@@ -147,8 +176,13 @@ export const getAllLeads = async (req, res, next) => {
       query.emailStatus = emailStatus;
     }
 
-    // Tab-based filtering (contactUs vs byProduct)
-    if (tab === "contactUs") {
+    // Tab-based filtering (overview, byProduct, contactUs, newsletter)
+    if (tab === "newsletter") {
+      query.$or = [
+        { sourcePage: { $regex: "newsletter", $options: "i" } },
+        { service: { $regex: "newsletter", $options: "i" } },
+      ];
+    } else if (tab === "contactUs") {
       query.$or = [
         { sourcePage: "Contact Page" },
         { sourcePage: { $regex: "contact", $options: "i" } },
@@ -159,6 +193,9 @@ export const getAllLeads = async (req, res, next) => {
         { service: { $regex: "product", $options: "i" } },
         { sourcePage: { $regex: "product", $options: "i" } },
       ];
+    } else {
+      // Default: Overview tab excludes newsletter subscribers so sales leads stay 100% clean
+      query.sourcePage = { $not: { $regex: "newsletter", $options: "i" } };
     }
 
     // Specific source page filter
@@ -202,13 +239,14 @@ export const getAllLeads = async (req, res, next) => {
       }
     }
 
-    // Execute queries in parallel
+    // Execute queries in parallel with ultra-efficient .lean() serialization
     const [total, leads, distinctPages] = await Promise.all([
       Lead.countDocuments(query),
       Lead.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit),
+        .limit(limit)
+        .lean(),
       Lead.distinct("sourcePage"),
     ]);
 
